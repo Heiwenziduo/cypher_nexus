@@ -33,18 +33,18 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import org.slf4j.Logger;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
-@Mod(Untitled_world.MODID)
+//@Mod(UntitledWorld.MOD_ID)
 public class Untitled_world {
     // Define mod id in a common place for everything to reference
-    public static final String MODID = "untitled_world";
+    public static final String MOD_ID = "untitled_world";
     // Directly reference a slf4j logger
     private static final Logger LOGGER = LogUtils.getLogger();
     // Create a Deferred Register to hold Blocks which will all be registered under the "untitled_world" namespace
-    public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
+    public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MOD_ID);
     // Create a Deferred Register to hold Items which will all be registered under the "untitled_world" namespace
-    public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
+    public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MOD_ID);
     // Create a Deferred Register to hold CreativeModeTabs which will all be registered under the "untitled_world" namespace
-    public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
+    public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MOD_ID);
 
     // Creates a new Block with the id "untitled_world:example_block", combining the namespace and path
     public static final DeferredBlock<Block> EXAMPLE_BLOCK = BLOCKS.registerSimpleBlock("example_block", BlockBehaviour.Properties.of().mapColor(MapColor.STONE));
@@ -101,16 +101,16 @@ public class Untitled_world {
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
-    @SubscribeEvent
+//    @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
         // Do something when the server starts
         LOGGER.info("HELLO from server starting");
     }
 
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
-    @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+//    @EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)
     public static class ClientModEvents {
-        @SubscribeEvent
+        // @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
             // Some client setup code
             LOGGER.info("HELLO FROM CLIENT SETUP");
