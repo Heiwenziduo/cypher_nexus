@@ -1,5 +1,7 @@
 {
-  "itemGroup.untitled_world": "Example Mod Tab",
-  "block.untitled_world.example_block": "Example Block",
+  "itemGroup.untitled_world": "Untitled World",
+
+  "block.untitled_world.spell_index_block": "Spell Index",
+
   "item.untitled_world.example_item": "Example Item"
 }

@@ -1,5 +1,7 @@
 package com.github.heiwenziduo.untitled_world
 
+import com.github.heiwenziduo.untitled_world.init.ModBlocks
+import com.github.heiwenziduo.untitled_world.init.ModItems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -28,6 +30,8 @@ object UntitledWorld {
 
     init {
         LOGGER.log(Level.INFO, "Hello world!")
+        ModBlocks.register()
+        ModItems.register()
 
 //        val obj = runForDist(
 //            clientTarget = {
