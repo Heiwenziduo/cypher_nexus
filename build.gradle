@@ -28,6 +28,10 @@ neoForge {
     // Specify the version of NeoForge to use.
     version = project.neo_version
 
+    // Validate AT files and raise errors when they have invalid targets
+    // This option is false by default, but turning it on is recommended
+    validateAccessTransformers = true
+
     parchment {
         mappingsVersion = project.parchment_mappings_version
         minecraftVersion = project.parchment_minecraft_version
