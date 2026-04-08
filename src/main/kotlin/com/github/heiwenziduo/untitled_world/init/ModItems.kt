@@ -6,13 +6,13 @@ import thedarkcolour.kotlinforforge.neoforge.forge.MOD_BUS
 import thedarkcolour.kotlinforforge.neoforge.forge.getValue
 
 object ModItems {
-    val REGISTRY: DeferredRegister.Items = DeferredRegister.createItems(UntitledWorld.MOD_ID)
+    val DEFERRED_REGISTER: DeferredRegister.Items = DeferredRegister.createItems(UntitledWorld.MOD_ID)
 
     fun register() {
-        REGISTRY.register(MOD_BUS)
+        DEFERRED_REGISTER.register(MOD_BUS)
     }
 
-    val SPELL_INDEX_BLOCK_ITEM by REGISTRY.registerSimpleBlockItem("spell_index_block_item") { ->
+    val SPELL_INDEX_BLOCK_ITEM by DEFERRED_REGISTER.registerSimpleBlockItem("spell_index_block") { ->
         ModBlocks.SPELL_INDEX_BLOCK
     }
 }

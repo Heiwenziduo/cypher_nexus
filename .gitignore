@@ -120,3 +120,5 @@ runs/
 
 # test
 _test/
+__test/
+test_data/
