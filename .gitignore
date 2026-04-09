@@ -119,6 +119,6 @@ runs/
 !gradle-wrapper.jar
 
 # test
-_test/
-__test/
-test_data/
+**/_test/
+**/__test/
+**/test_data/
