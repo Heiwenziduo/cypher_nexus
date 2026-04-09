@@ -14,6 +14,9 @@ object ClientSetup {
     /**
      * This is used for initializing client specific things such as renderers and keymaps.
      * Fired on the mod specific event bus.
+     *
+     * Sided setup event's dist seems to be auto-detected, "...The sided setup is fired:
+     * FMLClientSetupEvent if on a physical client, and FMLDedicatedServerSetupEvent if on a physical server..."
      */
     @SubscribeEvent
     private fun onClientStarting(event: FMLClientSetupEvent) {

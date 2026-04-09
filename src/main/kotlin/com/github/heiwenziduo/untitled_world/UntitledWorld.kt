@@ -24,11 +24,11 @@ import org.apache.logging.log4j.Logger
 import kotlin.time.Duration.Companion.seconds
 
 
-/*
-* An entry in neoforge.mods.toml does not need a corresponding @Mod annotation.
+/* @doc
+ * An entry in neoforge.mods.toml does not need a corresponding @Mod annotation.
  * Likewise, an entry in the neoforge.mods.toml can have multiple @Mod annotations,
  * for example if you want to separate common logic and client only logic.
-* */
+ * */
 @Mod(UntitledWorld.MOD_ID)
 @EventBusSubscriber(modid = UntitledWorld.MOD_ID)
 object UntitledWorld {
@@ -86,6 +86,11 @@ object UntitledWorld {
 //    }
 
     @SubscribeEvent
+    fun registerRegistries(event: NewRegistryEvent) {
+        event.register(CipherRegistry.REGISTRY)
+    }
+
+    @SubscribeEvent
     private fun commonSetup(event: FMLCommonSetupEvent) {
         /**
          * Most non-specific mod setup will be performed here.
@@ -102,10 +107,5 @@ object UntitledWorld {
     @SubscribeEvent
     private fun onServerStarting(event: ServerStartingEvent) {
         LOGGER.info("HELLO from server starting")
-    }
-
-    @SubscribeEvent // on the mod event bus
-    fun registerRegistries(event: NewRegistryEvent) {
-        event.register(CipherRegistry.REGISTRY)
     }
 }

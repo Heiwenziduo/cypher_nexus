@@ -7,6 +7,10 @@ import net.neoforged.neoforge.registries.DeferredRegister
 import thedarkcolour.kotlinforforge.neoforge.forge.MOD_BUS
 import thedarkcolour.kotlinforforge.neoforge.forge.getValue
 
+/* @doc
+ * The rule of thumb here is that if you have a finite and reasonably small amount of states (= a few hundred states at most),
+ * use blockstates, and if you have an infinite or near-infinite amount of states, use a block entity.
+ * */
 object ModBlocks {
     val DEFERRED_REGISTER: DeferredRegister.Blocks = DeferredRegister.createBlocks(UntitledWorld.MOD_ID)
 
@@ -15,10 +19,13 @@ object ModBlocks {
     }
 
     /*
-    * DeferredHolder<R, T extends R> is a subclass of Supplier<T>.
-    * "by" make it automatically go inside the container and get the Block itself instead of a DeferredHolder<Block, T extends Block>.
-    * */
-    val SPELL_INDEX_BLOCK by DEFERRED_REGISTER.register("spell_index_block") { ->
-        Block(BlockBehaviour.Properties.of().lightLevel { 15 }.strength(3.0f))
+     * DeferredHolder<R, T extends R> is a subclass of Supplier<T>.
+     * "by" make it automatically go inside the container and get the Block itself instead of a DeferredHolder<Block, T extends Block>.
+     * */
+    val SPELL_INDEX_BLOCK: Block by DEFERRED_REGISTER.register("spell_index_block") { registryName ->
+        Block(BlockBehaviour.Properties.of()
+            .lightLevel { 15 }
+            .strength(3.0f)
+            .explosionResistance(1200.0f))
     }
 }
