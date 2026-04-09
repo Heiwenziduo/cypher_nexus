@@ -30,7 +30,7 @@ import kotlin.time.Duration.Companion.seconds
  * for example if you want to separate common logic and client only logic.
 * */
 @Mod(UntitledWorld.MOD_ID)
-@EventBusSubscriber
+@EventBusSubscriber(modid = UntitledWorld.MOD_ID)
 object UntitledWorld {
     const val MOD_ID: String = "untitled_world"
 
@@ -87,6 +87,10 @@ object UntitledWorld {
 
     @SubscribeEvent
     private fun commonSetup(event: FMLCommonSetupEvent) {
+        /**
+         * Most non-specific mod setup will be performed here.
+         * Note that this is a parallel dispatched event - you cannot interact with game state in this event.
+         * */
         LOGGER.info("HELLO FROM COMMON SETUP")
 
         if (Config.logDirtBlock) LOGGER.info("DIRT BLOCK >> {}", BuiltInRegistries.BLOCK.getKey(Blocks.DIRT))
@@ -95,11 +99,6 @@ object UntitledWorld {
         // Config.items.forEach(Consumer { item: Item? -> LOGGER.info("ITEM >> {}", item.toString()) })
     }
 
-    @SubscribeEvent
-    private fun onClientStarting(event: FMLClientSetupEvent) {
-        LOGGER.info("HELLO FROM CLIENT SETUP")
-        LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().user.name)
-    }
     @SubscribeEvent
     private fun onServerStarting(event: ServerStartingEvent) {
         LOGGER.info("HELLO from server starting")
