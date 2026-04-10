@@ -1,7 +1,9 @@
 {
-  "itemGroup.untitled_world": "Untitled World",
-
   "block.untitled_world.spell_index_block": "Spell Index",
+
+  "gui.untitled_world.spell_index.button1": "click me!!",
+
+  "itemGroup.untitled_world": "Untitled World",
 
   "item.untitled_world.example_item": "Example Item"
 }

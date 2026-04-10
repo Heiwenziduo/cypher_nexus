@@ -10,6 +10,7 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent
 
 @EventBusSubscriber(modid = UntitledWorld.MOD_ID, value = [Dist.CLIENT])
 object ClientSetup {
+    // TODO: separate logical and physical clients?
 
     /**
      * This is used for initializing client specific things such as renderers and keymaps.
