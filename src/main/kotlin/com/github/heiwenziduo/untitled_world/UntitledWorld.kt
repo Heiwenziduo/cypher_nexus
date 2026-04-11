@@ -2,12 +2,15 @@ package com.github.heiwenziduo.untitled_world
 
 import com.github.heiwenziduo.untitled_world.init.ModBlocks
 import com.github.heiwenziduo.untitled_world.init.ModItems
-import com.github.heiwenziduo.untitled_world.init.mod.CypherRegistry
+import com.github.heiwenziduo.untitled_world.api.registries.CypherRegistry
+import com.github.heiwenziduo.untitled_world.init.ModTabs
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.block.Blocks
 import net.neoforged.bus.api.SubscribeEvent
@@ -37,12 +40,18 @@ object UntitledWorld {
     fun modResource(path: String): ResourceLocation =
         ResourceLocation.fromNamespaceAndPath(MOD_ID, path)
 
+    fun modTranslation(namespace: String, path: String = ""): MutableComponent =
+        Component.translatable("$namespace.$MOD_ID${if (!path.isEmpty()) ".$path" else ""}")
+
     init {
         LOGGER.log(Level.INFO, "Hello world!")
         ModBlocks.register()
         ModItems.register()
 
+        ModTabs.register()
+
         CypherRegistry.register()
+
 //        // Kotlin style events register
 //        val obj = runForDist(
 //            clientTarget = {

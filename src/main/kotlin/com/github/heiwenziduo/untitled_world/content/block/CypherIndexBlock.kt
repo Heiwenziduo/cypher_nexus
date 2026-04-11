@@ -16,7 +16,7 @@ import net.minecraft.world.phys.BlockHitResult
  *
  * */
 class CypherIndexBlock(): Block(
-    BlockBehaviour.Properties.of()
+    Properties.of()
         .lightLevel { 15 }
         .strength(3.0f)
         .explosionResistance(1200.0f)

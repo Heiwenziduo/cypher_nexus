@@ -1,9 +1,9 @@
 {
-  "block.untitled_world.spell_index_block": "Spell Index",
+  "block.untitled_world.cypher_index_block": "Cypher Index",
 
-  "gui.untitled_world.spell_index.button1": "click me!!",
+  "gui.untitled_world.cypher_index.button1": "click me!!",
 
-  "itemGroup.untitled_world": "Untitled World",
+  "item_group.untitled_world": "Untitled World All",
 
-  "item.untitled_world.example_item": "Example Item"
+  "item.untitled_world.basic_wand": "Basic Wand"
 }

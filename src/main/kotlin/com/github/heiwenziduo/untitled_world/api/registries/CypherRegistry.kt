@@ -1,7 +1,6 @@
-package com.github.heiwenziduo.untitled_world.init.mod
+package com.github.heiwenziduo.untitled_world.api.registries
 
 import com.github.heiwenziduo.untitled_world.UntitledWorld
-import com.github.heiwenziduo.untitled_world.UntitledWorld.modResource
 import com.github.heiwenziduo.untitled_world.api.cyphers.AbstractCypher
 import net.minecraft.core.Registry
 import net.minecraft.resources.ResourceKey
@@ -14,10 +13,11 @@ import thedarkcolour.kotlinforforge.neoforge.forge.MOD_BUS
  * */
 object CypherRegistry {
     val RESOURCE_KEY: ResourceKey<Registry<AbstractCypher>> =
-        ResourceKey.createRegistryKey(modResource("cypher"))
+        ResourceKey.createRegistryKey(UntitledWorld.modResource("cypher"))
     val REGISTRY: Registry<AbstractCypher> = RegistryBuilder(RESOURCE_KEY).create()
 
-    val DEFERRED_REGISTER = DeferredRegister.create(REGISTRY, UntitledWorld.MOD_ID)
+    val DEFERRED_REGISTER: DeferredRegister<AbstractCypher> =
+        DeferredRegister.create(REGISTRY, UntitledWorld.MOD_ID)
 
     fun register() {
         UntitledWorld.LOGGER.info("Registering Cypher...")

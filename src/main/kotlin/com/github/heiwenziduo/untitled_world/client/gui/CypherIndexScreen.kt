@@ -31,7 +31,7 @@ class CypherIndexScreen(title: Component, val value: Int = 1): Screen(title) {
     override fun init() {
         super.init()
         this.addRenderableWidget(Button.builder(
-            Component.translatable("gui.untitled_world.spell_index.button1"),
+            UntitledWorld.modTranslation("gui", "cypher_index.button1"),
             { p -> UntitledWorld.LOGGER.debug("button1 clicked  {}", p) }
             ).bounds(this.width / 2 + 5, this.height - 52, 150, 20).build())
     }
