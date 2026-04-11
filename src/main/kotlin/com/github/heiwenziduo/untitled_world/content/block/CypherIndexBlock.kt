@@ -1,7 +1,6 @@
 package com.github.heiwenziduo.untitled_world.content.block
 
-import com.github.heiwenziduo.untitled_world.UntitledWorld
-import com.github.heiwenziduo.untitled_world.client.gui.SpellIndexScreen
+import com.github.heiwenziduo.untitled_world.client.gui.CypherIndexScreen
 import net.minecraft.client.Minecraft
 import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.Component
@@ -16,7 +15,7 @@ import net.minecraft.world.phys.BlockHitResult
 /**
  *
  * */
-class SpellIndexBlock(): Block(
+class CypherIndexBlock(): Block(
     BlockBehaviour.Properties.of()
         .lightLevel { 15 }
         .strength(3.0f)
@@ -36,7 +35,7 @@ class SpellIndexBlock(): Block(
         // triggered on both logical sides
         // UntitledWorld.LOGGER.info("SpellIndexBlock clicking, side: ${ if(level.isClientSide) "client" else "server" }")
         if (level.isClientSide) {
-            Minecraft.getInstance().setScreen(SpellIndexScreen(Component.empty()))
+            Minecraft.getInstance().setScreen(CypherIndexScreen(Component.empty()))
         }
         return InteractionResult.SUCCESS
     }

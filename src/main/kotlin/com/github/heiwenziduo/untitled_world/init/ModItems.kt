@@ -13,7 +13,7 @@ object ModItems {
     }
 
     // When it comes to mass, guess I can make a factory function to auto register block-item.
-    val SPELL_INDEX_BLOCK_ITEM by DEFERRED_REGISTER.registerSimpleBlockItem("spell_index_block") { ->
-        ModBlocks.SPELL_INDEX_BLOCK
+    val SPELL_INDEX_BLOCK_ITEM by DEFERRED_REGISTER.registerSimpleBlockItem("cypher_index_block") { ->
+        ModBlocks.CYPHER_INDEX_BLOCK
     }
 }

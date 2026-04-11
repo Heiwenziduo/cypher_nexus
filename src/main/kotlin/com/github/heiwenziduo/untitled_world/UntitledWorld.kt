@@ -2,19 +2,17 @@ package com.github.heiwenziduo.untitled_world
 
 import com.github.heiwenziduo.untitled_world.init.ModBlocks
 import com.github.heiwenziduo.untitled_world.init.ModItems
-import com.github.heiwenziduo.untitled_world.init.mod.CipherRegistry
+import com.github.heiwenziduo.untitled_world.init.mod.CypherRegistry
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import net.minecraft.client.Minecraft
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.block.Blocks
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.fml.common.Mod
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent
 import net.neoforged.neoforge.event.server.ServerStartingEvent
 import net.neoforged.neoforge.registries.NewRegistryEvent
@@ -44,7 +42,7 @@ object UntitledWorld {
         ModBlocks.register()
         ModItems.register()
 
-        CipherRegistry.register()
+        CypherRegistry.register()
 //        // Kotlin style events register
 //        val obj = runForDist(
 //            clientTarget = {
@@ -87,7 +85,7 @@ object UntitledWorld {
 
     @SubscribeEvent
     fun registerRegistries(event: NewRegistryEvent) {
-        event.register(CipherRegistry.REGISTRY)
+        event.register(CypherRegistry.REGISTRY)
     }
 
     @SubscribeEvent

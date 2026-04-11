@@ -1,9 +1,8 @@
 package com.github.heiwenziduo.untitled_world.init
 
 import com.github.heiwenziduo.untitled_world.UntitledWorld
-import com.github.heiwenziduo.untitled_world.content.block.SpellIndexBlock
+import com.github.heiwenziduo.untitled_world.content.block.CypherIndexBlock
 import net.minecraft.world.level.block.Block
-import net.minecraft.world.level.block.state.BlockBehaviour
 import net.neoforged.neoforge.registries.DeferredRegister
 import thedarkcolour.kotlinforforge.neoforge.forge.MOD_BUS
 import thedarkcolour.kotlinforforge.neoforge.forge.getValue
@@ -23,7 +22,7 @@ object ModBlocks {
      * DeferredHolder<R, T extends R> is a subclass of Supplier<T>.
      * "by" make it automatically go inside the container and get the Block itself instead of a DeferredHolder<Block, T extends Block>.
      * */
-    val SPELL_INDEX_BLOCK: Block by DEFERRED_REGISTER.register("spell_index_block") {
-        registryName -> SpellIndexBlock()
+    val CYPHER_INDEX_BLOCK: Block by DEFERRED_REGISTER.register("cypher_index_block") {
+        registryName -> CypherIndexBlock()
     }
 }

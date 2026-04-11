@@ -9,7 +9,7 @@ import net.neoforged.api.distmarker.Dist
 import net.neoforged.api.distmarker.OnlyIn
 
 @OnlyIn(Dist.CLIENT)
-class SpellIndexScreen(title: Component, val value: Int = 1): Screen(title) {
+class CypherIndexScreen(title: Component, val value: Int = 1): Screen(title) {
     init {
         /**
          * Initializer blocks run when the primary constructor executes.
