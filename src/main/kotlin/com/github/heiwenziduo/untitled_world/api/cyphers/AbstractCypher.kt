@@ -9,13 +9,10 @@ import net.minecraft.world.level.Level
  *
  * */
 abstract class AbstractCypher {
-    abstract val MANA_DRAIN: Int
+    abstract val MANA_DRAIN: Float
     abstract val CAST_DELAY: Int
     abstract val RECHARGE_TIME: Int
     abstract val DRAW: Int
-
-    abstract val SPREAD: Float
-    abstract val SPEED: Float
 
     abstract fun cast(level: Level, player: Player, stack: ItemStack, helper: CypherModifierHelper)
 }

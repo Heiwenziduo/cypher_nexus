@@ -5,15 +5,49 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 
-open class BasicProjectileCypher(
-    val DAMAGE: Float,
-    override val MANA_DRAIN: Int,
+open class BasicProjectileCypher private constructor(
+    override val MANA_DRAIN: Float,
     override val CAST_DELAY: Int,
     override val RECHARGE_TIME: Int,
-    override val DRAW: Int = 0,
-    override val SPREAD: Float,
-    override val SPEED: Float
+    override val DRAW: Int,
+    // TODO: maybe build a registry? in case someone want to add new properties to a few cypher-types
+    val DAMAGE: Float,
+    val SPEED: Float,
+    val SPREAD: Float,
+    val RECOIL: Int,
+    val RADIUS: Float,
+    val CRIT_CHANCE: Float,
+    val BOUNCE: Int,
 ) : AbstractCypher() {
+    /* @doc
+     * The base class initialization is done as the first step, which is prior to the initialization of the derived class
+     * */
+    constructor(
+        MANA_DRAIN: Float,
+        CAST_DELAY: Int,
+        RECHARGE_TIME: Int,
+        DAMAGE: Float,
+        SPEED: Float,
+        SPREAD: Float,
+        RECOIL: Int,
+        RADIUS: Float,
+        CRIT_CHANCE: Float,
+        BOUNCE: Int,
+    ) : this(
+        MANA_DRAIN,
+        CAST_DELAY,
+        RECHARGE_TIME,
+        0,
+        DAMAGE,
+        SPEED,
+        SPREAD,
+        RECOIL,
+        RADIUS,
+        CRIT_CHANCE,
+        BOUNCE,
+    ) {
+
+    }
     override fun cast(level: Level, player: Player, stack: ItemStack, helper: CypherModifierHelper) {
         TODO("Not yet implemented")
     }

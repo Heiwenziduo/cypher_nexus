@@ -7,13 +7,16 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 
 object SnowballCypher : BasicProjectileCypher(
-    0.0f,
-    50,
-    2,
-    2,
-    0,
-    4.0f,
-    10.0f
+    MANA_DRAIN = 50f,
+    CAST_DELAY = -2,
+    RECHARGE_TIME = 0,
+    DAMAGE = 0f,
+    SPEED = 100f,
+    SPREAD = 2f,
+    RECOIL = 100,
+    RADIUS = 0f,
+    CRIT_CHANCE = 0f,
+    BOUNCE = 0,
 ) {
     /**
      *

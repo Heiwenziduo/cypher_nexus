@@ -19,8 +19,8 @@ import net.minecraft.world.level.Level
  *
  * */
 open class BasicWandItem(
-    override val MANA_MAX: Int,
-    override val MANA_REGEN: Int,
+    override val MANA_MAX: Float,
+    override val MANA_REGEN: Float,
     override val CAPACITY: Int,
     override val DRAW: Int,
     override val CAST_DELAY: Int,
@@ -36,17 +36,17 @@ open class BasicWandItem(
 
     // item is singleton, cypher data should be put in itemstack
     var INDEX = 0
-    val cypherList: List<AbstractCypher> = listOf(DamageBoostCypher, DamageBoostCypher, SnowballCypher)
+    val cypherList: List<AbstractCypher> = listOf(SnowballCypher)
 
     /**
      * on manually cast
      * */
-    fun cast(level: Level, player: Player, stack: ItemStack) {
+    override fun cast(level: Level, player: Player, stack: ItemStack) {
         if (level.isClientSide) return
         UntitledWorld.LOGGER.debug("Casting start, is client side? {}\nCypherList: {}", level.isClientSide, cypherList)
         // read things from stack
         val _index = 0
-        val _mana = 200
+        val _mana = 200f
         // ... handle "always cast" things
         val helper = CypherModifierHelper(MANA_CURRENT = _mana, INDEX_CURRENT = _index, CYPHER_LIST = cypherList)
         castLoop(level, player, stack, helper)
@@ -54,7 +54,7 @@ open class BasicWandItem(
 
         UntitledWorld.LOGGER.debug("Casting finish...")
     }
-    fun castLoop(level: Level, player: Player, stack: ItemStack, helper: CypherModifierHelper) {
+    override fun castLoop(level: Level, player: Player, stack: ItemStack, helper: CypherModifierHelper) {
         val cypherList = cypherList // read list from stack
         UntitledWorld.LOGGER.info("\nindex: ${helper.INDEX_CURRENT}\nmana: ${helper.MANA_CURRENT}")
         cypherList[helper.INDEX_CURRENT].cast(level, player, stack, helper)
@@ -79,8 +79,8 @@ open class BasicWandItem(
     companion object {
         fun testWand(): BasicWandItem {
             return object : BasicWandItem(
-                1000,
-                5,
+                1000f,
+                5f,
                 10,
                 40,
                 6,

@@ -3,14 +3,15 @@ package com.github.heiwenziduo.untitled_world.content.cypher
 import com.github.heiwenziduo.untitled_world.UntitledWorld
 import com.github.heiwenziduo.untitled_world.api.cyphers.AbstractCypher
 
-/***/
+/** a modifier carrier created when user manually cast, or a trigger-cypher is fired */
 data class CypherModifierHelper(
-    var MANA_CURRENT: Int,
+    var MANA_CURRENT: Float,
     var INDEX_CURRENT: Int = 0,
     var DRAW: Int = 1,
     val CYPHER_LIST: List<AbstractCypher>
 ) {
 
+    // the operation-system
     var DAMAGE = 0.0f
 
     fun modifierProjectileProperty(property: ProjectileProperties, operation: Operations, value: Number) {
