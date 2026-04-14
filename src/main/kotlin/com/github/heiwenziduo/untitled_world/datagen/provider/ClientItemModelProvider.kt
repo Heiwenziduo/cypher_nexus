@@ -7,7 +7,7 @@ import net.neoforged.neoforge.client.model.generators.ItemModelProvider
 import net.neoforged.neoforge.common.data.ExistingFileHelper
 
 // item models don't have an equivalent to blockstate files and are instead used directly
-class ModItemModelProvider(output: PackOutput, existingFileHelper: ExistingFileHelper) :
+class ClientItemModelProvider(output: PackOutput, existingFileHelper: ExistingFileHelper) :
     ItemModelProvider(output, UntitledWorld.MOD_ID, existingFileHelper
 ) {
     override fun registerModels() {

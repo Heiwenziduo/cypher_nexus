@@ -1,0 +1,25 @@
+{
+  "parent": "untitled_world:literacy/root",
+  "criteria": {
+    "obtain_wand": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.literacy.untitled_world.first_wand.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "untitled_world:basic_wand"
+    },
+    "title": {
+      "translate": "advancements.literacy.untitled_world.first_wand.title"
+    }
+  },
+  "requirements": [
+    [
+      "obtain_wand"
+    ]
+  ]
+}

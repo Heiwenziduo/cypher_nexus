@@ -1,9 +1,9 @@
 package com.github.heiwenziduo.untitled_world.datagen
 
 import com.github.heiwenziduo.untitled_world.UntitledWorld
-import com.github.heiwenziduo.untitled_world.datagen.provider.ModBlockModelProvider
-import com.github.heiwenziduo.untitled_world.datagen.provider.ModBlockStateProvider
-import com.github.heiwenziduo.untitled_world.datagen.provider.ModItemModelProvider
+import com.github.heiwenziduo.untitled_world.datagen.provider.ClientBlockStateProvider
+import com.github.heiwenziduo.untitled_world.datagen.provider.ClientItemModelProvider
+import com.github.heiwenziduo.untitled_world.datagen.provider.ServerAdvancementProvider
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.neoforge.data.event.GatherDataEvent
@@ -36,9 +36,9 @@ object ModData {
         val client = event.includeClient()
 
         // assets on the client
-        generator.addProvider(client, ModItemModelProvider(output, existingFileHelper))
-        // generator.addProvider(client, ModBlockModelProvider(output, existingFileHelper))
-        generator.addProvider(client, ModBlockStateProvider(output, existingFileHelper))
+        generator.addProvider(client, ClientItemModelProvider(output, existingFileHelper))
+        generator.addProvider(client, ClientBlockStateProvider(output, existingFileHelper))
         // and data on the server
+        generator.addProvider(server, ServerAdvancementProvider(output, lookupProvider, existingFileHelper))
     }
 }

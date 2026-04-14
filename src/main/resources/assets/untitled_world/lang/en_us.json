@@ -1,4 +1,9 @@
 {
+  "advancements.literacy.untitled_world.root.title": "Cyphers",
+  "advancements.literacy.untitled_world.root.description": "The language of gods",
+  "advancements.literacy.untitled_world.first_wand.title": "First Wand",
+  "advancements.literacy.untitled_world.first_wand.description": "Obtain your first wand",
+
   "block.untitled_world.cypher_index": "Cypher Index",
 
   "gui.untitled_world.cypher_index.button1": "click me!!",

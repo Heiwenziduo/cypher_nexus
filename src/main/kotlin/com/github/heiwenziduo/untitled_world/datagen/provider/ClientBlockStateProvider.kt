@@ -10,7 +10,7 @@ import net.neoforged.neoforge.client.model.generators.ModelFile
 import net.neoforged.neoforge.common.data.ExistingFileHelper
 
 
-class ModBlockStateProvider(output: PackOutput, exFileHelper: ExistingFileHelper) :
+class ClientBlockStateProvider(output: PackOutput, exFileHelper: ExistingFileHelper) :
     BlockStateProvider(output, UntitledWorld.MOD_ID, exFileHelper
 ) {
     override fun registerStatesAndModels() {
