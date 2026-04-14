@@ -22,7 +22,7 @@ object ModBlocks {
      * DeferredHolder<R, T extends R> is a subclass of Supplier<T>.
      * "by" make it automatically go inside the container and get the Block itself instead of a DeferredHolder<Block, T extends Block>.
      * */
-    val CYPHER_INDEX_BLOCK: Block by DEFERRED_REGISTER.register("cypher_index_block") {
+    val CYPHER_INDEX_BLOCK: Block by DEFERRED_REGISTER.register("cypher_index") {
         registryName -> CypherIndexBlock()
     }
 }
