@@ -6,10 +6,10 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 
 open class BasicProjectileCypher private constructor(
-    override val MANA_DRAIN: Float,
-    override val CAST_DELAY: Int,
-    override val RECHARGE_TIME: Int,
-    override val DRAW: Int,
+    val MANA_DRAIN: Float,
+    val CAST_DELAY: Int,
+    val RECHARGE_TIME: Int,
+    val DRAW: Int,
     // TODO: maybe build a registry? in case someone want to add new properties to a few cypher-types
     val DAMAGE: Float,
     val SPEED: Float,

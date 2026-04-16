@@ -94,5 +94,7 @@ class ServerAdvancementGenerator : AdvancementProvider.AdvancementGenerator {
             .addCriterion("obtain_wand",
                 CriteriaTriggers.IMPOSSIBLE.createCriterion(ImpossibleTrigger.TriggerInstance()))
             .save(saver, saveTo("first_wand"), existingFileHelper)
+
+        // TODO: CriteriaTrigger subclasses check cyphers usage, wand properties, etc.
     }
 }

@@ -1,5 +1,6 @@
 package com.github.heiwenziduo.untitled_world
 
+import com.github.heiwenziduo.untitled_world.api.registries.CypherAttributeRegistry
 import com.github.heiwenziduo.untitled_world.init.ModBlocks
 import com.github.heiwenziduo.untitled_world.init.ModItems
 import com.github.heiwenziduo.untitled_world.api.registries.CypherRegistry
@@ -51,6 +52,7 @@ object UntitledWorld {
         ModTabs.register()
 
         CypherRegistry.register()
+        CypherAttributeRegistry.register()
 
 //        // Kotlin style events register
 //        val obj = runForDist(
@@ -95,6 +97,7 @@ object UntitledWorld {
     @SubscribeEvent
     fun registerRegistries(event: NewRegistryEvent) {
         event.register(CypherRegistry.REGISTRY)
+        event.register(CypherAttributeRegistry.REGISTRY)
     }
 
     @SubscribeEvent

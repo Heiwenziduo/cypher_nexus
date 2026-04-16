@@ -1,16 +1,15 @@
 package com.github.heiwenziduo.untitled_world.api.cyphers
 
-import com.github.heiwenziduo.untitled_world.api.cyphers.BasicProjectileCypher
 import com.github.heiwenziduo.untitled_world.content.cypher.CypherModifierHelper
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 
 open class BasicModifierCypher private constructor(
-    override val MANA_DRAIN: Float,
-    override val CAST_DELAY: Int,
-    override val RECHARGE_TIME: Int,
-    override val DRAW: Int,
+    val MANA_DRAIN: Float,
+    val CAST_DELAY: Int,
+    val RECHARGE_TIME: Int,
+    val DRAW: Int,
     val DAMAGE: Float,
     val SPEED: Float,
     val SPREAD: Float,
