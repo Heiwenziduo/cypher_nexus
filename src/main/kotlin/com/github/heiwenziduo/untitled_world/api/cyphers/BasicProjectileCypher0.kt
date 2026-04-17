@@ -10,13 +10,13 @@ open class BasicProjectileCypher0(
 
 ) : AbstractCypher() {
     init {
-        addProperty(Attrs.DAMAGE)
-        addProperty(Attrs.SPEED)
-        addProperty(Attrs.SPREAD)
-        addProperty(Attrs.RECOIL)
-        addProperty(Attrs.RADIUS)
-        addProperty(Attrs.BOUNCE)
-        addProperty(Attrs.CRIT_CHANCE)
+//        addAttribute(Attrs.DAMAGE)
+//        addAttribute(Attrs.SPEED)
+//        addAttribute(Attrs.SPREAD)
+//        addAttribute(Attrs.RECOIL)
+//        addAttribute(Attrs.RADIUS)
+//        addAttribute(Attrs.BOUNCE)
+//        addAttribute(Attrs.CRIT_CHANCE)
     }
 
     override fun cast(
@@ -25,6 +25,7 @@ open class BasicProjectileCypher0(
         stack: ItemStack,
         helper: CypherModifierHelper
     ) {
+        super.cast(level, player, stack, helper)
 
     }
 

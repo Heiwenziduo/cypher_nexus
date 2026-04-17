@@ -36,14 +36,17 @@ open class BasicWandItem(
 
     // item is singleton, cypher data should be put in itemstack
     var INDEX = 0
-    val cypherList: List<AbstractCypher> = listOf(SnowballCypher)
+    val cypherList: List<AbstractCypher> = listOf(SnowballCypher) // read list from stack
 
     /**
      * on manually cast
      * */
     override fun cast(level: Level, player: Player, stack: ItemStack) {
-        if (level.isClientSide) return
+        if (level.isClientSide)
+            // send casting info to server
+            return
         UntitledWorld.LOGGER.debug("Casting start, is client side? {}\nCypherList: {}", level.isClientSide, cypherList)
+
         // read things from stack
         val _index = 0
         val _mana = 200f
@@ -55,7 +58,8 @@ open class BasicWandItem(
         UntitledWorld.LOGGER.debug("Casting finish...")
     }
     override fun castLoop(level: Level, player: Player, stack: ItemStack, helper: CypherModifierHelper) {
-        val cypherList = cypherList // read list from stack
+        val cypherList = cypherList
+
         UntitledWorld.LOGGER.info("\nindex: ${helper.INDEX_CURRENT}\nmana: ${helper.MANA_CURRENT}")
         cypherList[helper.INDEX_CURRENT].cast(level, player, stack, helper)
         helper.INDEX_CURRENT++

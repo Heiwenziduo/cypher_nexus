@@ -19,16 +19,6 @@ object DamageBoostCypher : BasicModifierCypher(
     BOUNCE = 0,
 ) {
     override fun cast(level: Level, player: Player, stack: ItemStack, helper: CypherModifierHelper) {
-        if (helper.MANA_CURRENT < MANA_DRAIN) return // no mana, then skip
-        helper.DRAW--
-        helper.MANA_CURRENT -= MANA_DRAIN
 
-        helper.DRAW += this.DRAW
-
-        helper.modifierProjectileProperty(
-            CypherModifierHelper.ProjectileProperties.DAMAGE,
-            CypherModifierHelper.Operations.ADD,
-            DAMAGE
-        )
     }
 }

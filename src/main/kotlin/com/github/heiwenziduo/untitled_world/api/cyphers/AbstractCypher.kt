@@ -28,27 +28,43 @@ abstract class AbstractCypher(
      * property-map marks every property this specific cypher (-type) may have.
      * base value not contained, which may be injected using json, or determine whether it calculates
      * */
-    val ATTRIBUTE_MAP = HashMap<CypherAttribute<*>, CypherAttributeInstance<*>?>()
-    var MAP_IS_LOCKED = false
+    protected val ATTRIBUTE_MAP = HashMap<CypherAttribute<*>, CypherAttributeInstance<*>?>()
+    private var MAP_IS_LOCKED = false
+    // TODO
+    val CATEGORY = 0
 
     init {
-        addProperty(Attrs.MANA_DRAIN)
-        addProperty(Attrs.CAST_DELAY)
-        addProperty(Attrs.RECHARGE_TIME)
-        addProperty(Attrs.DRAW)
+        addAttribute(Attrs.MANA_DRAIN)
+        addAttribute(Attrs.CAST_DELAY)
+        addAttribute(Attrs.RECHARGE_TIME)
+        addAttribute(Attrs.DRAW)
     }
 
     /**
      * Add a "key" to the map, its value needs to be filled via {#genAttributeInstance} manually.
      * This defines what attribute is available on the specific cypher
      * */
-    fun addProperty(property: CypherAttribute<*>) {
+    protected fun addAttribute(property: CypherAttribute<*>) {
         if (!MAP_IS_LOCKED)
             ATTRIBUTE_MAP.put(property, null)
         else UntitledWorld.LOGGER.fatal("try add property $property while map is locked!")
     }
 
-    fun genAttributeInstance() {
+    /**
+     * add attribute with default value
+     * TODO
+     * */
+    protected fun <T : Number> addAttribute(property: CypherAttribute<T>, value: T) {
+        if (!MAP_IS_LOCKED)
+            ATTRIBUTE_MAP.put(property, null)
+        else UntitledWorld.LOGGER.fatal("try add property $property while map is locked!")
+    }
+
+    /**
+     * should be called after any subclass initialization
+     * TODO: Can it be managed here centrally?
+     * */
+    fun genAttributeInstance(): AbstractCypher {
         if (!MAP_IS_LOCKED) {
             ATTRIBUTE_MAP.forEach{(attr, instanceMaybeNull) ->
                 ATTRIBUTE_MAP[attr] = attr.instance()
@@ -56,13 +72,20 @@ abstract class AbstractCypher(
 
             MAP_IS_LOCKED = true
         } else {
-            UntitledWorld.LOGGER.fatal("try genAttributeInstance while map is locked!")
+//            UntitledWorld.LOGGER.fatal("try genAttributeInstance while map is locked!")
+            throw IllegalArgumentException("try genAttributeInstance while map is locked!")
         }
+        return this
     }
 
     fun initializeData() {
         // TODO: read from CODEC
     }
 
-    abstract fun cast(level: Level, player: Player, stack: ItemStack, helper: CypherModifierHelper)
+    /**
+     * basic cast logic, overrides should always call super.cast()
+     * */
+    open fun cast(level: Level, player: Player, stack: ItemStack, helper: CypherModifierHelper) {
+        helper.addCypherAttribute(ATTRIBUTE_MAP)
+    }
 }

@@ -28,6 +28,16 @@ open class CypherAttribute<T : Number>(
         CypherAttributeInstance(this).withDefault(base)
 
 
+    // ==========================================================================================================
+    override fun toString(): String {
+        return "attribute_${resource.path}"
+    }
+
+
+
+
+
+
 
 
 

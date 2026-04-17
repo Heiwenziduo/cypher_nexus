@@ -8,15 +8,30 @@ import com.github.heiwenziduo.untitled_world.content.cypher.CypherModifierHelper
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
+import com.github.heiwenziduo.untitled_world.api.registries.CypherAttributeRegistry as Attrs
 
 object SnowballCypher : BasicProjectileCypher0(
 
 ) {
+    init {
+        addAttribute(Attrs.DAMAGE)
+        addAttribute(Attrs.SPEED)
+        addAttribute(Attrs.SPREAD)
+        addAttribute(Attrs.RECOIL)
+        addAttribute(Attrs.RADIUS)
+        addAttribute(Attrs.BOUNCE)
+        addAttribute(Attrs.CRIT_CHANCE)
+
+        genAttributeInstance()
+        readAttributeFromDataList()
+    }
     /**
      *
      * */
     override fun cast(level: Level, player: Player, stack: ItemStack, helper: CypherModifierHelper) {
         super.cast(level, player, stack, helper)
+
+
 //        if (helper.MANA_CURRENT < MANA_DRAIN) return // no mana, then skip
 //        helper.DRAW--
 //        helper.MANA_CURRENT -= MANA_DRAIN
@@ -33,9 +48,11 @@ object SnowballCypher : BasicProjectileCypher0(
         CypherAttributeModifier(CypherAttributeRegistry.RECOIL, CypherAttributeOperation.ADD, 2f),
     )
     /**
-     * TODO: optimize structure
+     *
      * */
     fun readAttributeFromDataList() {
-        dataset.forEach { modifier -> ATTRIBUTE_MAP[modifier.attribute] }
+        dataset.forEach { modifier ->
+            ATTRIBUTE_MAP[modifier.attribute]?.addModifier(modifier)
+        }
     }
 }
