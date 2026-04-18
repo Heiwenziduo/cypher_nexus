@@ -30,8 +30,8 @@ object CypherRegistry {
     /* what's the meaning of this registry? map resources? */
     
     // projectile
-    val SNOWBALL_CYPHER: SnowballCypher by DEFERRED_REGISTER.register("snowball", { -> SnowballCypher})
-    
+    val SNOWBALL_CYPHER: SnowballCypher by DEFERRED_REGISTER.register("snowball") { -> SnowballCypher }
+
     // modifier
-    val DAMAGE_BOOST_CYPHER: DamageBoostCypher by DEFERRED_REGISTER.register("damage_boost", { -> DamageBoostCypher})
+    val DAMAGE_BOOST_CYPHER: DamageBoostCypher by DEFERRED_REGISTER.register("damage_boost") { -> DamageBoostCypher }
 }

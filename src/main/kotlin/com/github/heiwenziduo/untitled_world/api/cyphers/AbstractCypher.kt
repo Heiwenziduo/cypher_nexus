@@ -34,10 +34,11 @@ abstract class AbstractCypher(
     val CATEGORY = 0
 
     init {
-        addAttribute(Attrs.MANA_DRAIN)
-        addAttribute(Attrs.CAST_DELAY)
-        addAttribute(Attrs.RECHARGE_TIME)
-        addAttribute(Attrs.DRAW)
+        // crash, should I use DeferredHolder?
+//        addAttribute(Attrs.MANA_DRAIN)
+//        addAttribute(Attrs.CAST_DELAY)
+//        addAttribute(Attrs.RECHARGE_TIME)
+//        addAttribute(Attrs.DRAW)
     }
 
     /**
@@ -88,4 +89,7 @@ abstract class AbstractCypher(
     open fun cast(level: Level, player: Player, stack: ItemStack, helper: CypherModifierHelper) {
         helper.addCypherAttribute(ATTRIBUTE_MAP)
     }
+
+    /***/
+    open fun onCast(level: Level, player: Player, stack: ItemStack, helper: CypherModifierHelper) {}
 }

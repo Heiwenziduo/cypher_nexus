@@ -14,7 +14,7 @@ import thedarkcolour.kotlinforforge.neoforge.forge.getValue
  * */
 object CypherAttributeRegistry {
     val RESOURCE_KEY: ResourceKey<Registry<CypherAttribute<*>>> =
-        ResourceKey.createRegistryKey(UntitledWorld.modResource("cypher_attribute"))
+        ResourceKey.createRegistryKey(UntitledWorld.modResource("cypher/attribute"))
     val REGISTRY: Registry<CypherAttribute<*>> = RegistryBuilder(RESOURCE_KEY).create()
 
     val DEFERRED_REGISTER: DeferredRegister<CypherAttribute<*>> =

@@ -14,16 +14,16 @@ object SnowballCypher : BasicProjectileCypher0(
 
 ) {
     init {
-        addAttribute(Attrs.DAMAGE)
-        addAttribute(Attrs.SPEED)
-        addAttribute(Attrs.SPREAD)
-        addAttribute(Attrs.RECOIL)
-        addAttribute(Attrs.RADIUS)
-        addAttribute(Attrs.BOUNCE)
-        addAttribute(Attrs.CRIT_CHANCE)
-
-        genAttributeInstance()
-        readAttributeFromDataList()
+//        addAttribute(Attrs.DAMAGE)
+//        addAttribute(Attrs.SPEED)
+//        addAttribute(Attrs.SPREAD)
+//        addAttribute(Attrs.RECOIL)
+//        addAttribute(Attrs.RADIUS)
+//        addAttribute(Attrs.BOUNCE)
+//        addAttribute(Attrs.CRIT_CHANCE)
+//
+//        genAttributeInstance()
+//        readAttributeFromDataList()
     }
     /**
      *
@@ -39,20 +39,20 @@ object SnowballCypher : BasicProjectileCypher0(
 //        helper.applyPropertyTo()
     }
 
-    val dataset = listOf(
-        CypherAttributeModifier(CypherAttributeRegistry.MANA_DRAIN, CypherAttributeOperation.BASE, 50f),
-        CypherAttributeModifier(CypherAttributeRegistry.SPEED, CypherAttributeOperation.BASE, 50f),
-        CypherAttributeModifier(CypherAttributeRegistry.DAMAGE, CypherAttributeOperation.BASE, 0.0),
-        CypherAttributeModifier(CypherAttributeRegistry.CAST_DELAY, CypherAttributeOperation.ADD, 0),
-        CypherAttributeModifier(CypherAttributeRegistry.RECHARGE_TIME, CypherAttributeOperation.ADD, 0),
-        CypherAttributeModifier(CypherAttributeRegistry.RECOIL, CypherAttributeOperation.ADD, 2f),
-    )
+//    val dataset = listOf(
+//        CypherAttributeModifier(CypherAttributeRegistry.MANA_DRAIN, CypherAttributeOperation.BASE, 50f),
+//        CypherAttributeModifier(CypherAttributeRegistry.SPEED, CypherAttributeOperation.BASE, 50f),
+//        CypherAttributeModifier(CypherAttributeRegistry.DAMAGE, CypherAttributeOperation.BASE, 0.0),
+//        CypherAttributeModifier(CypherAttributeRegistry.CAST_DELAY, CypherAttributeOperation.ADD, 0),
+//        CypherAttributeModifier(CypherAttributeRegistry.RECHARGE_TIME, CypherAttributeOperation.ADD, 0),
+//        CypherAttributeModifier(CypherAttributeRegistry.RECOIL, CypherAttributeOperation.ADD, 2f),
+//    )
     /**
      *
      * */
-    fun readAttributeFromDataList() {
-        dataset.forEach { modifier ->
-            ATTRIBUTE_MAP[modifier.attribute]?.addModifier(modifier)
-        }
-    }
+//    fun readAttributeFromDataList() {
+//        dataset.forEach { modifier ->
+//            ATTRIBUTE_MAP[modifier.attribute]?.addModifier(modifier)
+//        }
+//    }
 }

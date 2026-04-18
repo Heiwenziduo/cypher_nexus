@@ -9,17 +9,17 @@ import net.minecraft.world.level.Level
  * Any ItemStack implemented the interface here should be able to conduct cyphers
  * */
 interface IWandLike {
-    val MANA_MAX: Float
-    val MANA_REGEN: Float
+//    val MANA_MAX: Float
+//    val MANA_REGEN: Float
     /** draw numbers for manually cast */
-    val DRAW: Int
-    val CAPACITY: Int
-    val CAST_DELAY: Int
-    val RECHARGE_TIME: Int
+//    val DRAW: Int
+//    val CAPACITY: Int
+//    val CAST_DELAY: Int
+//    val RECHARGE_TIME: Int
 
-    // TODO: think of a registry
+
 //    val SPEED: Float
-    val SPREAD: Float
+//    val SPREAD: Float
 //    val RECOIL: Int
 //    val RADIUS: Float
 //    val CRIT_CHANCE: Float

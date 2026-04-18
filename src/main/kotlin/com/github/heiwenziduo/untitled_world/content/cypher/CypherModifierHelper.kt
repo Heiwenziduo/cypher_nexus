@@ -5,6 +5,9 @@ import com.github.heiwenziduo.untitled_world.api.cyphers.AbstractCypher
 import com.github.heiwenziduo.untitled_world.api.cyphers.attribute.Calculator
 import com.github.heiwenziduo.untitled_world.api.cyphers.attribute.CypherAttribute
 import com.github.heiwenziduo.untitled_world.api.cyphers.attribute.CypherAttributeInstance
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.level.Level
 
 /** a modifier carrier created when user manually cast, or a trigger-cypher is fired */
 data class CypherModifierHelper(
@@ -44,5 +47,10 @@ data class CypherModifierHelper(
             "\nhelper apply to a projectile: {}\nCurrent property: ",
             CYPHER_LIST[INDEX_CURRENT].toString(),
         )
+    }
+
+    /***/
+    fun call(cypher: AbstractCypher, level: Level, player: Player, stack: ItemStack) {
+        cypher.onCast(level, player, stack, this)
     }
 }

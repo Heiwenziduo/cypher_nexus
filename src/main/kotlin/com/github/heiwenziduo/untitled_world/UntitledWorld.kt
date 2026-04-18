@@ -4,6 +4,7 @@ import com.github.heiwenziduo.untitled_world.api.registries.CypherAttributeRegis
 import com.github.heiwenziduo.untitled_world.init.ModBlocks
 import com.github.heiwenziduo.untitled_world.init.ModItems
 import com.github.heiwenziduo.untitled_world.api.registries.CypherRegistry
+import com.github.heiwenziduo.untitled_world.init.ModDataComponents
 import com.github.heiwenziduo.untitled_world.init.ModTabs
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -48,11 +49,12 @@ object UntitledWorld {
         LOGGER.log(Level.INFO, "Hello world!")
         ModBlocks.register()
         ModItems.register()
+        ModDataComponents.register()
 
         ModTabs.register()
 
-        CypherRegistry.register()
         CypherAttributeRegistry.register()
+        CypherRegistry.register()
 
 //        // Kotlin style events register
 //        val obj = runForDist(
