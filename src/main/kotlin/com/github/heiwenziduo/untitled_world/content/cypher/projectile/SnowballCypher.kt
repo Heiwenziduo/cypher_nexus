@@ -1,16 +1,12 @@
 package com.github.heiwenziduo.untitled_world.content.cypher.projectile
 
-import com.github.heiwenziduo.untitled_world.api.cyphers.BasicProjectileCypher0
-import com.github.heiwenziduo.untitled_world.api.cyphers.attribute.CypherAttributeModifier
-import com.github.heiwenziduo.untitled_world.api.cyphers.attribute.CypherAttributeOperation
-import com.github.heiwenziduo.untitled_world.api.registries.CypherAttributeRegistry
-import com.github.heiwenziduo.untitled_world.content.cypher.CypherModifierHelper
+import com.github.heiwenziduo.untitled_world.machinery.cypher.BasicProjectileCypher
+import com.github.heiwenziduo.untitled_world.machinery.cypher.CypherModifierHelper
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
-import com.github.heiwenziduo.untitled_world.api.registries.CypherAttributeRegistry as Attrs
 
-object SnowballCypher : BasicProjectileCypher0(
+object SnowballCypher : BasicProjectileCypher(
 
 ) {
     init {

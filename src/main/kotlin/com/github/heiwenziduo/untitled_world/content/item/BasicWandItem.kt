@@ -1,13 +1,10 @@
 package com.github.heiwenziduo.untitled_world.content.item
 
 import com.github.heiwenziduo.untitled_world.UntitledWorld
-import com.github.heiwenziduo.untitled_world.api.IWandLike
-import com.github.heiwenziduo.untitled_world.api.cyphers.AbstractCypher
-import com.github.heiwenziduo.untitled_world.content.cypher.CypherModifierHelper
-import com.github.heiwenziduo.untitled_world.content.cypher.modifier.DamageBoostCypher
-import com.github.heiwenziduo.untitled_world.content.cypher.projectile.SnowballCypher
+import com.github.heiwenziduo.untitled_world.machinery.wand.IWandLike
+import com.github.heiwenziduo.untitled_world.machinery.cypher.AbstractCypher
+import com.github.heiwenziduo.untitled_world.machinery.cypher.CypherModifierHelper
 import com.github.heiwenziduo.untitled_world.init.ModDataComponents
-import com.github.heiwenziduo.untitled_world.init.ModItems
 import com.github.heiwenziduo.untitled_world.machinery.wand.WandDataComponent
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResultHolder

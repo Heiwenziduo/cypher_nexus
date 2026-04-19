@@ -1,10 +1,7 @@
-package com.github.heiwenziduo.untitled_world.api.cyphers.attribute
+package com.github.heiwenziduo.untitled_world.machinery.cypher.attribute
 
 import com.github.heiwenziduo.untitled_world.UntitledWorld
 import net.minecraft.resources.ResourceLocation
-import com.github.heiwenziduo.untitled_world.api.cyphers.attribute.CypherAttributeInstance.AttributeInstanceFloat
-import com.github.heiwenziduo.untitled_world.api.cyphers.attribute.CypherAttributeInstance.AttributeInstanceInt
-import com.github.heiwenziduo.untitled_world.api.cyphers.attribute.CypherAttributeInstance.AttributeInstanceDouble
 
 /**
  * a bit like vanilla LivingEntity's Attribute system
@@ -51,18 +48,18 @@ open class CypherAttribute<T : Number>(
 
     // ============================================================================================================
     open class CypherAttributeInt(resource: ResourceLocation) : CypherAttribute<Int>(resource) {
-        override fun instance(): CypherAttributeInstance<Int> = AttributeInstanceInt(this)
+        override fun instance(): CypherAttributeInstance<Int> = CypherAttributeInstance.AttributeInstanceInt(this)
         override fun instance(base: Int): CypherAttributeInstance<Int> =
-            AttributeInstanceInt(this).withDefault(base)
+            CypherAttributeInstance.AttributeInstanceInt(this).withDefault(base)
     }
     open class CypherAttributeFloat(resource: ResourceLocation) : CypherAttribute<Float>(resource) {
-        override fun instance(): CypherAttributeInstance<Float> = AttributeInstanceFloat(this)
+        override fun instance(): CypherAttributeInstance<Float> = CypherAttributeInstance.AttributeInstanceFloat(this)
         override fun instance(base: Float): CypherAttributeInstance<Float> =
-            AttributeInstanceFloat(this).withDefault(base)
+            CypherAttributeInstance.AttributeInstanceFloat(this).withDefault(base)
     }
     open class CypherAttributeDouble(resource: ResourceLocation) : CypherAttribute<Double>(resource) {
-        override fun instance(): CypherAttributeInstance<Double> = AttributeInstanceDouble(this)
+        override fun instance(): CypherAttributeInstance<Double> = CypherAttributeInstance.AttributeInstanceDouble(this)
         override fun instance(base: Double): CypherAttributeInstance<Double> =
-            AttributeInstanceDouble(this).withDefault(base)
+            CypherAttributeInstance.AttributeInstanceDouble(this).withDefault(base)
     }
 }

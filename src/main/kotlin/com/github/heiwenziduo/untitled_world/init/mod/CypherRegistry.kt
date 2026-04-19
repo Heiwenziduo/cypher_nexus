@@ -1,7 +1,7 @@
-package com.github.heiwenziduo.untitled_world.api.registries
+package com.github.heiwenziduo.untitled_world.init.mod
 
 import com.github.heiwenziduo.untitled_world.UntitledWorld
-import com.github.heiwenziduo.untitled_world.api.cyphers.AbstractCypher
+import com.github.heiwenziduo.untitled_world.machinery.cypher.AbstractCypher
 import com.github.heiwenziduo.untitled_world.content.cypher.modifier.DamageBoostCypher
 import com.github.heiwenziduo.untitled_world.content.cypher.projectile.SnowballCypher
 import net.minecraft.core.Registry
@@ -23,12 +23,10 @@ object CypherRegistry {
         DeferredRegister.create(REGISTRY, UntitledWorld.MOD_ID)
 
     fun register() {
-        UntitledWorld.LOGGER.info("Registering Cypher...")
         DEFERRED_REGISTER.register(MOD_BUS)
     }
 
-    /* what's the meaning of this registry? map resources? */
-    
+
     // projectile
     val SNOWBALL_CYPHER: SnowballCypher by DEFERRED_REGISTER.register("snowball") { -> SnowballCypher }
 

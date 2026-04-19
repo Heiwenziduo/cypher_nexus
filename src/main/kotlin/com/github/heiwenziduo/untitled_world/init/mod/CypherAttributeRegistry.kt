@@ -1,7 +1,7 @@
-package com.github.heiwenziduo.untitled_world.api.registries
+package com.github.heiwenziduo.untitled_world.init.mod
 
 import com.github.heiwenziduo.untitled_world.UntitledWorld
-import com.github.heiwenziduo.untitled_world.api.cyphers.attribute.CypherAttribute
+import com.github.heiwenziduo.untitled_world.machinery.cypher.attribute.CypherAttribute
 import net.minecraft.core.Registry
 import net.minecraft.resources.ResourceKey
 import net.neoforged.neoforge.registries.DeferredRegister
@@ -21,9 +21,9 @@ object CypherAttributeRegistry {
         DeferredRegister.create(REGISTRY, UntitledWorld.MOD_ID)
 
     fun register() {
-        UntitledWorld.LOGGER.info("Registering Cypher Attribute...")
         DEFERRED_REGISTER.register(MOD_BUS)
     }
+
 
     val MANA_DRAIN by DEFERRED_REGISTER.register("mana_drain") { resource -> CypherAttribute<Float>(resource) }
     val CAST_DELAY by DEFERRED_REGISTER.register("cast_delay") { resource -> CypherAttribute<Int>(resource) }
