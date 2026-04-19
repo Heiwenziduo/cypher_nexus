@@ -1,13 +1,12 @@
-package com.github.heiwenziduo.untitled_world.api.cyphers
+package com.github.heiwenziduo.untitled_world.machinery.cypher
 
 import com.github.heiwenziduo.untitled_world.UntitledWorld
-import com.github.heiwenziduo.untitled_world.api.cyphers.attribute.CypherAttribute
-import com.github.heiwenziduo.untitled_world.api.cyphers.attribute.CypherAttributeInstance
+import com.github.heiwenziduo.untitled_world.machinery.cypher.attribute.CypherAttribute
+import com.github.heiwenziduo.untitled_world.machinery.cypher.attribute.CypherAttributeInstance
 import com.github.heiwenziduo.untitled_world.content.cypher.CypherModifierHelper
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
-import com.github.heiwenziduo.untitled_world.api.registries.CypherAttributeRegistry as Attrs
 
 /**
  *

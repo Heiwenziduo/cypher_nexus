@@ -1,6 +1,6 @@
 package com.github.heiwenziduo.untitled_world.content.cypher.modifier
 
-import com.github.heiwenziduo.untitled_world.api.cyphers.BasicModifierCypher
+import com.github.heiwenziduo.untitled_world.machinery.cypher.BasicModifierCypher
 import com.github.heiwenziduo.untitled_world.content.cypher.CypherModifierHelper
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack

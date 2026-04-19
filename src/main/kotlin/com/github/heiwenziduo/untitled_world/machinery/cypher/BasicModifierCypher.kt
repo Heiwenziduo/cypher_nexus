@@ -1,16 +1,15 @@
-package com.github.heiwenziduo.untitled_world.api.cyphers
+package com.github.heiwenziduo.untitled_world.machinery.cypher
 
 import com.github.heiwenziduo.untitled_world.content.cypher.CypherModifierHelper
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 
-open class BasicProjectileCypher private constructor(
+open class BasicModifierCypher private constructor(
     val MANA_DRAIN: Float,
     val CAST_DELAY: Int,
     val RECHARGE_TIME: Int,
     val DRAW: Int,
-    // TODO: maybe build a registry? in case someone want to add new properties to a few cypher-types
     val DAMAGE: Float,
     val SPEED: Float,
     val SPREAD: Float,
@@ -19,9 +18,6 @@ open class BasicProjectileCypher private constructor(
     val CRIT_CHANCE: Float,
     val BOUNCE: Int,
 ) : AbstractCypher() {
-    /* @doc
-     * The base class initialization is done as the first step, which is prior to the initialization of the derived class
-     * */
     constructor(
         MANA_DRAIN: Float,
         CAST_DELAY: Int,
@@ -37,7 +33,7 @@ open class BasicProjectileCypher private constructor(
         MANA_DRAIN,
         CAST_DELAY,
         RECHARGE_TIME,
-        0,
+        1,
         DAMAGE,
         SPEED,
         SPREAD,

@@ -1,4 +1,4 @@
-package com.github.heiwenziduo.untitled_world.api
+package com.github.heiwenziduo.untitled_world.machinery.wand
 
 import com.github.heiwenziduo.untitled_world.content.cypher.CypherModifierHelper
 import net.minecraft.world.entity.player.Player

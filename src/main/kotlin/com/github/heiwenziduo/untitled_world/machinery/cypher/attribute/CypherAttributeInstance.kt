@@ -1,4 +1,4 @@
-package com.github.heiwenziduo.untitled_world.api.cyphers.attribute
+package com.github.heiwenziduo.untitled_world.machinery.cypher.attribute
 
 import net.minecraft.resources.ResourceLocation
 
