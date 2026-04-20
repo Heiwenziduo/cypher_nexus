@@ -11,24 +11,27 @@ import java.util.function.BiFunction
 /** data component */
 object WandDataComponent {
     val WAND_DATA_CODEC: Codec<WandData> = RecordCodecBuilder.create{ it.group(
+        Codec.INT.fieldOf("index").forGetter(WandData::index),
         Codec.FLOAT.fieldOf("manaCurrent").forGetter(WandData::manaCurrent),
         Codec.FLOAT.fieldOf("manaMax").forGetter(WandData::manaMax),
         Codec.FLOAT.fieldOf("manaRegn").forGetter(WandData::manaRegn),
         Codec.INT.fieldOf("capacity").forGetter(WandData::capacity),
         Codec.INT.fieldOf("draw").forGetter(WandData::draw),
-    ).apply(it) { a,b,c,d,e -> WandData(a,b,c,d,e) } }
+    ).apply(it) { a,b,c,d,e,f -> WandData(a,b,c,d,e,f) } }
 
     val WAND_DATA_STREAM_CODEC: StreamCodec<ByteBuf, WandData> =
         StreamCodec.composite(
+            ByteBufCodecs.INT, WandData::index,
             ByteBufCodecs.FLOAT, WandData::manaCurrent,
             ByteBufCodecs.FLOAT, WandData::manaMax,
             ByteBufCodecs.FLOAT, WandData::manaRegn,
             ByteBufCodecs.INT, WandData::capacity,
             ByteBufCodecs.INT, WandData::draw,
-            { a,b,c,d,e -> WandData(a,b,c,d,e) }
+            { a,b,c,d,e,f -> WandData(a,b,c,d,e,f) }
         )
 
     data class WandData(
+        var index: Int,
         var manaCurrent: Float,
         val manaMax: Float,
         val manaRegn: Float,
@@ -41,6 +44,7 @@ object WandDataComponent {
 
         companion object {
             val DEFAULT = WandData(
+                0,
                 300f,
                 300f,
                 1.2f,

@@ -12,34 +12,24 @@ open class CypherAttributeInstance (
         get() = attribute.value().resource
     init {
     }
-    val OPERATION_MAP = HashMap<CypherAttributeOperation, MutableList<CypherAttributeModifier>>()
-    val COMPUTED_MAP = HashMap<CypherAttributeOperation, Double>()
-    var isDirty = false
+    private val OPERATION_MAP = HashMap<CypherAttributeOperation, MutableList<CypherAttributeModifier>>()
+    private val COMPUTED_MAP = HashMap<CypherAttributeOperation, Double>()
+    var isDirty = true
 
-    fun withDefault(value: Double) : CypherAttributeInstance {
-        OPERATION_MAP.put(
-            // TODO
-            CypherAttributeOperation.BASE,
-            mutableListOf(CypherAttributeModifier(
-                attribute =  attribute,
-                operator = CypherAttributeOperation.BASE,
-                value =  value,))
+    fun addModifier(operation: CypherAttributeOperation, value: Double): CypherAttributeInstance {
+        val list = OPERATION_MAP.getOrPut(operation) { -> mutableListOf() }
+        val modifier = CypherAttributeModifier(
+            attribute = attribute,
+            operator = operation,
+            value = value
         )
-        return this
-    }
-    fun withDefault() : CypherAttributeInstance {
-        return withDefault(0.0)
-    }
-
-
-    private fun addModifier(modifier: CypherAttributeModifier) {
-        if (this.attribute != modifier.attribute) return
-        val list = OPERATION_MAP.getOrPut(modifier.operator) { -> mutableListOf(modifier) }
         list.add(modifier)
         isDirty = true
+        return this
     }
 
     private fun computeAndCache() {
+        // FIXME compute along adding: only add/multiply newly added, or compute after all elements added
         if (!isDirty) return
 
         val b = OPERATION_MAP[CypherAttributeOperation.BASE].orEmpty()
@@ -65,7 +55,7 @@ open class CypherAttributeInstance (
     }
 
     /** return null if missing base value */
-    fun compute(): Double? {
+    fun computeValue(): Double? {
         val b = OPERATION_MAP[CypherAttributeOperation.BASE].orEmpty()
         if (b.isEmpty()) return null
         computeAndCache()
@@ -76,6 +66,11 @@ open class CypherAttributeInstance (
         val mt = COMPUTED_MAP.getOrDefault(CypherAttributeOperation.MULTIPLY_TOTAL, 1.0)
 
         return (base + a) * mb * mt
+    }
+
+    fun getComputedMap(): HashMap<CypherAttributeOperation, Double> {
+        computeAndCache()
+        return COMPUTED_MAP
     }
 
     /** merge from another Instance of same type */
@@ -90,31 +85,12 @@ open class CypherAttributeInstance (
                 this.OPERATION_MAP[operation]!!.addAll(other.OPERATION_MAP[operation]!!)
             }
         }
+        isDirty = true
     }
 
-//    inline fun <reified A : Number> calculate() : A? {
-//        val b = OPERATION_MAP[CypherAttributeOperation.BASE].orEmpty()
-//        if (b.isEmpty()) return null
-//        val s = OPERATION_MAP[CypherAttributeOperation.SET].orEmpty()
-//        if (s.isNotEmpty()) return s.last().value as A
-//
-//        var base = b.first().value
-//        val a = OPERATION_MAP[CypherAttributeOperation.ADD].orEmpty()
-//        val mb = OPERATION_MAP[CypherAttributeOperation.MULTIPLY_BASE].orEmpty()
-//        val mt = OPERATION_MAP[CypherAttributeOperation.MULTIPLY_TOTAL].orEmpty()
-////        val add = Calculator.sum(a.map { it.value })
-////        val mbase = Calculator.sum(mb.map { it.value })
-////        val mtotal = Calculator.multi(mt.map { it.value })
-////
-////        base = Calculator.sum(listOf(base, add))
-////        val result = Calculator.multi(listOf(base, mbase, mtotal))
-////
-////        return result as A
-//        return 0 as A
-//    }
 
     // ==========================================================================================================
     override fun toString(): String {
-        return "instanceof $attribute: $OPERATION_MAP"
+        return "\ninstance of ${attribute.value()}: \n$COMPUTED_MAP"
     }
 }

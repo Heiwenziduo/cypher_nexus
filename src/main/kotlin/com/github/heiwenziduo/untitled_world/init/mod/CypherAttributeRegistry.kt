@@ -26,17 +26,20 @@ object CypherAttributeRegistry {
         DEFERRED_REGISTER.register(MOD_BUS)
     }
 
+    fun registerAttribute(path: String): Holder<CypherAttribute> =
+        DEFERRED_REGISTER.register(path) { resource -> CypherAttribute(resource) }
 
-    val MANA_DRAIN: Holder<CypherAttribute> = DEFERRED_REGISTER.register("mana_drain") { resource -> CypherAttribute(resource) }
-    val CAST_DELAY: Holder<CypherAttribute> = DEFERRED_REGISTER.register("cast_delay") { resource -> CypherAttribute(resource) }
-    val RECHARGE_TIME: Holder<CypherAttribute> = DEFERRED_REGISTER.register("recharge_time") { resource -> CypherAttribute(resource) }
-    val DRAW: Holder<CypherAttribute> = DEFERRED_REGISTER.register("draw") { resource -> CypherAttribute(resource) }
 
-    val DAMAGE by DEFERRED_REGISTER.register("damage") { resource -> CypherAttribute(resource) }
-    val SPEED by DEFERRED_REGISTER.register("speed") { resource -> CypherAttribute(resource) }
-    val SPREAD by DEFERRED_REGISTER.register("spread") { resource -> CypherAttribute(resource) }
-    val RECOIL by DEFERRED_REGISTER.register("recoil") { resource -> CypherAttribute(resource) }
-    val RADIUS by DEFERRED_REGISTER.register("redius") { resource -> CypherAttribute(resource) }
-    val BOUNCE by DEFERRED_REGISTER.register("bounce") { resource -> CypherAttribute(resource) }
-    val CRIT_CHANCE by DEFERRED_REGISTER.register("crit_chance") { resource -> CypherAttribute(resource) }
+    val MANA_DRAIN = registerAttribute("mana_drain")
+    val CAST_DELAY = registerAttribute("cast_delay")
+    val RECHARGE_TIME = registerAttribute("recharge_time")
+    val DRAW = registerAttribute("draw")
+
+    val DAMAGE = registerAttribute("damage")
+    val SPEED = registerAttribute("speed")
+    val SPREAD = registerAttribute("spread")
+    val RECOIL = registerAttribute("recoil")
+    val RADIUS = registerAttribute("redius")
+    val BOUNCE = registerAttribute("bounce")
+    val CRIT_CHANCE = registerAttribute("crit_chance")
 }

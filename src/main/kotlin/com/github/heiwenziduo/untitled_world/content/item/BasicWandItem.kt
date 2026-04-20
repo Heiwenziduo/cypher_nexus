@@ -1,13 +1,18 @@
 package com.github.heiwenziduo.untitled_world.content.item
 
 import com.github.heiwenziduo.untitled_world.UntitledWorld
+import com.github.heiwenziduo.untitled_world.content.cypher.modifier.DamageBoostCypher
+import com.github.heiwenziduo.untitled_world.content.cypher.projectile.SnowballCypher
 import com.github.heiwenziduo.untitled_world.machinery.wand.IWandLike
-import com.github.heiwenziduo.untitled_world.machinery.cypher.AbstractCypher
 import com.github.heiwenziduo.untitled_world.machinery.cypher.CypherModifierHelper
 import com.github.heiwenziduo.untitled_world.init.ModDataComponents
+import com.github.heiwenziduo.untitled_world.init.mod.CypherRegistry
+import com.github.heiwenziduo.untitled_world.machinery.CypherNotFoundException
 import com.github.heiwenziduo.untitled_world.machinery.wand.WandDataComponent
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResultHolder
+import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
@@ -23,6 +28,8 @@ open class BasicWandItem(
     Properties()
         .stacksTo(1)
         .component(ModDataComponents.WAND_DATA, WandDataComponent.WandData(
+            // FIXME values reset when starting game
+            0,
             500f,
             500f,
             1.6f,
@@ -36,14 +43,16 @@ open class BasicWandItem(
 
     // item is singleton, cypher data should be put in itemstack
     var INDEX = 0
-    // cypher&attr registry seems not registered yet, reaching from here (item) lead to crash (?)
-//    val cypherList: List<AbstractCypher> = listOf(SnowballCypher) // read list from stack
-    val cypherList: List<AbstractCypher> = listOf()
 
     /**
      * on manually cast
      * */
-    override fun cast(level: Level, player: Player, stack: ItemStack) {
+    override fun cast(level: Level, living: LivingEntity, stack: ItemStack) {
+        val cypherList: List<ResourceLocation> = listOf(
+            DamageBoostCypher.getResource(),
+            DamageBoostCypher.getResource(),
+            SnowballCypher.getResource()
+        )
         UntitledWorld.LOGGER.debug("Casting start, is client side? {}\nCypherList: {}", level.isClientSide, cypherList)
         UntitledWorld.LOGGER.debug("read from data component: {}", stack.get(ModDataComponents.WAND_DATA))
 
@@ -51,15 +60,12 @@ open class BasicWandItem(
             // send casting info to server
             return
 
-
         // read things from stack
         val _index = 0
         val _mana = 200f
         // ... handle "always cast" things
-        if (cypherList.isNotEmpty()) {
-            val helper = CypherModifierHelper(MANA_CURRENT = _mana, INDEX_CURRENT = _index, CYPHER_LIST = cypherList)
-            castLoop(level, player, stack, helper)
-        }
+        val helper = CypherModifierHelper(MANA_CURRENT = _mana, INDEX_CURRENT = _index, CYPHER_LIST = cypherList)
+        castLoop(level, living, stack, helper, cypherList)
         // update stack
 
 
@@ -77,15 +83,19 @@ open class BasicWandItem(
 
         UntitledWorld.LOGGER.debug("Casting finish...")
     }
-    override fun castLoop(level: Level, player: Player, stack: ItemStack, helper: CypherModifierHelper) {
-        cypherList
-        UntitledWorld.LOGGER.info("\nindex: ${helper.INDEX_CURRENT}\nmana: ${helper.MANA_CURRENT}")
+    override fun castLoop(level: Level, living: LivingEntity, stack: ItemStack, helper: CypherModifierHelper, list: List<ResourceLocation>) {
+        if (helper.DRAW <=0 || helper.INDEX_CURRENT >= list.size) return
 
-        helper.call(cypherList[helper.INDEX_CURRENT], level, player, stack)
-        // cypherList[helper.INDEX_CURRENT].cast(level, player, stack, helper)
+        UntitledWorld.LOGGER.info("\nindex: ${helper.INDEX_CURRENT}\nmana: ${helper.MANA_CURRENT}")
+        // check mana condition
+        val resource = list[helper.INDEX_CURRENT]
+        val cypher = CypherRegistry.REGISTRY.get(resource)
+        if (cypher == null)
+            throw CypherNotFoundException("missing cypher: ${resource.namespace}-${resource.path}")
+
+        helper.call(cypher, level, living, stack)
         helper.INDEX_CURRENT++
-        if (helper.DRAW > 0 && helper.INDEX_CURRENT < cypherList.size)
-            castLoop(level, player, stack, helper)
+        castLoop(level, living, stack, helper, list)
     }
 
 

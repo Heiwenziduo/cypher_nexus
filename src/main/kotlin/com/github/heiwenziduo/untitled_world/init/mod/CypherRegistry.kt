@@ -4,8 +4,10 @@ import com.github.heiwenziduo.untitled_world.UntitledWorld
 import com.github.heiwenziduo.untitled_world.machinery.cypher.AbstractCypher
 import com.github.heiwenziduo.untitled_world.content.cypher.modifier.DamageBoostCypher
 import com.github.heiwenziduo.untitled_world.content.cypher.projectile.SnowballCypher
+import net.minecraft.core.Holder
 import net.minecraft.core.Registry
 import net.minecraft.resources.ResourceKey
+import net.neoforged.neoforge.registries.DeferredHolder
 import net.neoforged.neoforge.registries.DeferredRegister
 import net.neoforged.neoforge.registries.RegistryBuilder
 import thedarkcolour.kotlinforforge.neoforge.forge.MOD_BUS
@@ -26,10 +28,18 @@ object CypherRegistry {
         DEFERRED_REGISTER.register(MOD_BUS)
     }
 
+    fun registerCypher(cypher: AbstractCypher): Holder<AbstractCypher> {
+        return DEFERRED_REGISTER.register(cypher.getResource().path) { -> cypher }
+    }
+
 
     // projectile
-    val SNOWBALL_CYPHER: SnowballCypher by DEFERRED_REGISTER.register("snowball") { -> SnowballCypher }
+    val SNOWBALL_CYPHER = registerCypher(SnowballCypher)
+
+    // static projectile
 
     // modifier
-    val DAMAGE_BOOST_CYPHER: DamageBoostCypher by DEFERRED_REGISTER.register("damage_boost") { -> DamageBoostCypher }
+    val DAMAGE_BOOST_CYPHER = registerCypher(DamageBoostCypher)
+
+    // other
 }

@@ -1,6 +1,8 @@
 package com.github.heiwenziduo.untitled_world.machinery.wand
 
 import com.github.heiwenziduo.untitled_world.machinery.cypher.CypherModifierHelper
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
@@ -24,7 +26,7 @@ interface IWandLike {
 //    val RADIUS: Float
 //    val CRIT_CHANCE: Float
 
-    fun cast(level: Level, player: Player, stack: ItemStack)
+    fun cast(level: Level, living: LivingEntity, stack: ItemStack)
 
-    fun castLoop(level: Level, player: Player, stack: ItemStack, helper: CypherModifierHelper)
+    fun castLoop(level: Level, living: LivingEntity, stack: ItemStack, helper: CypherModifierHelper, list: List<ResourceLocation>)
 }

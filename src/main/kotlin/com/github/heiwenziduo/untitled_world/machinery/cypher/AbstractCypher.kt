@@ -4,7 +4,10 @@ import com.github.heiwenziduo.untitled_world.UntitledWorld
 import com.github.heiwenziduo.untitled_world.init.mod.CypherAttributeRegistry
 import com.github.heiwenziduo.untitled_world.machinery.cypher.attribute.CypherAttribute
 import com.github.heiwenziduo.untitled_world.machinery.cypher.attribute.CypherAttributeInstance
+import com.github.heiwenziduo.untitled_world.machinery.cypher.attribute.CypherAttributeOperation
 import net.minecraft.core.Holder
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
@@ -26,26 +29,33 @@ abstract class AbstractCypher(
 
     init {
         initializeData()
-        addAttribute(CypherAttributeRegistry.MANA_DRAIN)
-        addAttribute(CypherAttributeRegistry.CAST_DELAY)
-        addAttribute(CypherAttributeRegistry.RECHARGE_TIME)
-        addAttribute(CypherAttributeRegistry.DRAW)
+        addAttribute(CypherAttributeRegistry.CAST_DELAY, CypherAttributeOperation.ADD, 0.0)
+        addAttribute(CypherAttributeRegistry.RECHARGE_TIME, CypherAttributeOperation.ADD, 0.0)
+        // TODO: should these be attributes?
+        addAttribute(CypherAttributeRegistry.MANA_DRAIN, CypherAttributeOperation.ADD, 0.0)
+        addAttribute(CypherAttributeRegistry.DRAW, CypherAttributeOperation.ADD, 0.0)
     }
 
     /**
-     * Add a "key" to the map, its value needs to be filled via {#genAttributeInstance} manually.
-     * This defines what attribute is available on the specific cypher
+     * add attribute without default value
      * */
     protected fun addAttribute(attribute: Holder<CypherAttribute>) {
-        addAttribute(attribute, 0.0)
+        if (!MAP_IS_LOCKED)
+            ATTRIBUTE_MAP.put(attribute, CypherAttributeInstance(attribute))
+        else UntitledWorld.LOGGER.fatal("try add attribute ${attribute.registeredName} while map is locked!")
     }
     /**
      * add attribute with default value
      * */
     protected fun addAttribute(attribute: Holder<CypherAttribute>, default: Double) {
+        addAttribute(attribute, CypherAttributeOperation.BASE, default)
+    }
+    /**
+     * */
+    protected fun addAttribute(attribute: Holder<CypherAttribute>, operation: CypherAttributeOperation, value: Double) {
         if (!MAP_IS_LOCKED)
-            ATTRIBUTE_MAP.put(attribute, CypherAttributeInstance(attribute).withDefault(default))
-        else UntitledWorld.LOGGER.fatal("try add property ${attribute.registeredName} while map is locked!")
+            ATTRIBUTE_MAP.put(attribute, CypherAttributeInstance(attribute).addModifier(operation, value))
+        else UntitledWorld.LOGGER.fatal("try add attribute ${attribute.registeredName} while map is locked!")
     }
 
     /**
@@ -70,13 +80,16 @@ abstract class AbstractCypher(
         // TODO: read from CODEC
     }
 
+    abstract fun getResource(): ResourceLocation
+
     /**
      * basic cast logic
      * */
-    fun cast(level: Level, player: Player, stack: ItemStack, helper: CypherModifierHelper) {
+    fun cast(level: Level, living: LivingEntity, stack: ItemStack, helper: CypherModifierHelper) {
         helper.addAttribute(ATTRIBUTE_MAP)
+        // handle draw, mana_drain
     }
 
-    /** custom logic leave to subclasses */
-    open fun onCast(level: Level, player: Player, stack: ItemStack, helper: CypherModifierHelper) {}
+    /** custom logic up to subclasses */
+    open fun onCastServer(level: Level, living: LivingEntity, stack: ItemStack, helper: CypherModifierHelper) {}
 }
