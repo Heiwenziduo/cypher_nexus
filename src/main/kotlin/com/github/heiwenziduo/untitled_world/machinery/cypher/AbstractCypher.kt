@@ -25,9 +25,9 @@ abstract class AbstractCypher(
 
     /**
      * property-map marks every property this specific cypher (-type) may have.
-     * base value not contained, which may be injected using json, or determine whether it calculates
+     * base value is not contained, which may be injected using JSON, or determine whether it calculates
      * */
-    protected val ATTRIBUTE_MAP = HashMap<CypherAttribute<*>, CypherAttributeInstance<*>?>()
+    protected val ATTRIBUTE_MAP = HashMap<CypherAttribute, CypherAttributeInstance?>()
     private var MAP_IS_LOCKED = false
     // TODO
     val CATEGORY = 0
@@ -44,7 +44,7 @@ abstract class AbstractCypher(
      * Add a "key" to the map, its value needs to be filled via {#genAttributeInstance} manually.
      * This defines what attribute is available on the specific cypher
      * */
-    protected fun addAttribute(property: CypherAttribute<*>) {
+    protected fun addAttribute(property: CypherAttribute) {
         if (!MAP_IS_LOCKED)
             ATTRIBUTE_MAP.put(property, null)
         else UntitledWorld.LOGGER.fatal("try add property $property while map is locked!")
@@ -54,7 +54,7 @@ abstract class AbstractCypher(
      * add attribute with default value
      * TODO
      * */
-    protected fun <T : Number> addAttribute(property: CypherAttribute<T>, value: T) {
+    protected fun addAttribute(property: CypherAttribute, value: Double) {
         if (!MAP_IS_LOCKED)
             ATTRIBUTE_MAP.put(property, null)
         else UntitledWorld.LOGGER.fatal("try add property $property while map is locked!")
