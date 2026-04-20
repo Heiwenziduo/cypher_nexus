@@ -1,9 +1,10 @@
 package com.github.heiwenziduo.untitled_world.machinery.cypher
 
 import com.github.heiwenziduo.untitled_world.UntitledWorld
+import com.github.heiwenziduo.untitled_world.init.mod.CypherAttributeRegistry
 import com.github.heiwenziduo.untitled_world.machinery.cypher.attribute.CypherAttribute
 import com.github.heiwenziduo.untitled_world.machinery.cypher.attribute.CypherAttributeInstance
-import com.github.heiwenziduo.untitled_world.machinery.cypher.CypherModifierHelper
+import net.minecraft.core.Holder
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
@@ -12,52 +13,39 @@ import net.minecraft.world.level.Level
  *
  * */
 abstract class AbstractCypher(
-//     val MANA_DRAIN: Float,
-//     val CAST_DELAY: Int,
-//     val RECHARGE_TIME: Int,
-//     val DRAW: Int,
+
 ) {
-//    abstract val MANA_DRAIN: Float
-//    abstract val CAST_DELAY: Int
-//    abstract val RECHARGE_TIME: Int
-//    abstract val DRAW: Int
-
-
     /**
      * property-map marks every property this specific cypher (-type) may have.
      * base value is not contained, which may be injected using JSON, or determine whether it calculates
      * */
-    protected val ATTRIBUTE_MAP = HashMap<CypherAttribute, CypherAttributeInstance?>()
+    protected val ATTRIBUTE_MAP = HashMap<Holder<CypherAttribute>, CypherAttributeInstance>()
     private var MAP_IS_LOCKED = false
     // TODO
     val CATEGORY = 0
 
     init {
-        // crash, should I use DeferredHolder?
-//        addAttribute(Attrs.MANA_DRAIN)
-//        addAttribute(Attrs.CAST_DELAY)
-//        addAttribute(Attrs.RECHARGE_TIME)
-//        addAttribute(Attrs.DRAW)
+        initializeData()
+        addAttribute(CypherAttributeRegistry.MANA_DRAIN)
+        addAttribute(CypherAttributeRegistry.CAST_DELAY)
+        addAttribute(CypherAttributeRegistry.RECHARGE_TIME)
+        addAttribute(CypherAttributeRegistry.DRAW)
     }
 
     /**
      * Add a "key" to the map, its value needs to be filled via {#genAttributeInstance} manually.
      * This defines what attribute is available on the specific cypher
      * */
-    protected fun addAttribute(property: CypherAttribute) {
-        if (!MAP_IS_LOCKED)
-            ATTRIBUTE_MAP.put(property, null)
-        else UntitledWorld.LOGGER.fatal("try add property $property while map is locked!")
+    protected fun addAttribute(attribute: Holder<CypherAttribute>) {
+        addAttribute(attribute, 0.0)
     }
-
     /**
      * add attribute with default value
-     * TODO
      * */
-    protected fun addAttribute(property: CypherAttribute, value: Double) {
+    protected fun addAttribute(attribute: Holder<CypherAttribute>, default: Double) {
         if (!MAP_IS_LOCKED)
-            ATTRIBUTE_MAP.put(property, null)
-        else UntitledWorld.LOGGER.fatal("try add property $property while map is locked!")
+            ATTRIBUTE_MAP.put(attribute, CypherAttributeInstance(attribute).withDefault(default))
+        else UntitledWorld.LOGGER.fatal("try add property ${attribute.registeredName} while map is locked!")
     }
 
     /**
@@ -67,7 +55,7 @@ abstract class AbstractCypher(
     fun genAttributeInstance(): AbstractCypher {
         if (!MAP_IS_LOCKED) {
             ATTRIBUTE_MAP.forEach{(attr, instanceMaybeNull) ->
-                ATTRIBUTE_MAP[attr] = attr.instance()
+                ATTRIBUTE_MAP[attr] = CypherAttributeInstance(attr)
             }
 
             MAP_IS_LOCKED = true
@@ -83,12 +71,12 @@ abstract class AbstractCypher(
     }
 
     /**
-     * basic cast logic, overrides should always call super.cast()
+     * basic cast logic
      * */
-    open fun cast(level: Level, player: Player, stack: ItemStack, helper: CypherModifierHelper) {
-        helper.addCypherAttribute(ATTRIBUTE_MAP)
+    fun cast(level: Level, player: Player, stack: ItemStack, helper: CypherModifierHelper) {
+        helper.addAttribute(ATTRIBUTE_MAP)
     }
 
-    /***/
+    /** custom logic leave to subclasses */
     open fun onCast(level: Level, player: Player, stack: ItemStack, helper: CypherModifierHelper) {}
 }

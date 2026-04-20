@@ -24,16 +24,16 @@ object SnowballCypher : BasicProjectileCypher(
     /**
      *
      * */
-    override fun cast(level: Level, player: Player, stack: ItemStack, helper: CypherModifierHelper) {
-        super.cast(level, player, stack, helper)
-
-
-//        if (helper.MANA_CURRENT < MANA_DRAIN) return // no mana, then skip
-//        helper.DRAW--
-//        helper.MANA_CURRENT -= MANA_DRAIN
+//    override fun cast(level: Level, player: Player, stack: ItemStack, helper: CypherModifierHelper) {
+//        super.cast(level, player, stack, helper)
 //
-//        helper.applyPropertyTo()
-    }
+//
+////        if (helper.MANA_CURRENT < MANA_DRAIN) return // no mana, then skip
+////        helper.DRAW--
+////        helper.MANA_CURRENT -= MANA_DRAIN
+////
+////        helper.applyPropertyTo()
+//    }
 
 //    val dataset = listOf(
 //        CypherAttributeModifier(CypherAttributeRegistry.MANA_DRAIN, CypherAttributeOperation.BASE, 50f),

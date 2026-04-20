@@ -7,18 +7,18 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 
 object DamageBoostCypher : BasicModifierCypher(
-    MANA_DRAIN = 50f,
-    CAST_DELAY = 0,
-    RECHARGE_TIME = 0,
-    DAMAGE = 1.0f,
-    SPEED = 0f,
-    SPREAD = 0f,
-    RECOIL = 0,
-    RADIUS = 0f,
-    CRIT_CHANCE = 0f,
-    BOUNCE = 0,
+//    MANA_DRAIN = 50f,
+//    CAST_DELAY = 0,
+//    RECHARGE_TIME = 0,
+//    DAMAGE = 1.0f,
+//    SPEED = 0f,
+//    SPREAD = 0f,
+//    RECOIL = 0,
+//    RADIUS = 0f,
+//    CRIT_CHANCE = 0f,
+//    BOUNCE = 0,
 ) {
-    override fun cast(level: Level, player: Player, stack: ItemStack, helper: CypherModifierHelper) {
-
+    override fun onCast(level: Level, player: Player, stack: ItemStack, helper: CypherModifierHelper) {
+        super.onCast(level, player, stack, helper)
     }
 }

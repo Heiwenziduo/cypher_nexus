@@ -18,14 +18,4 @@ open class BasicProjectileCypher(
 //        addAttribute(Attrs.CRIT_CHANCE)
     }
 
-    override fun cast(
-        level: Level,
-        player: Player,
-        stack: ItemStack,
-        helper: CypherModifierHelper
-    ) {
-        super.cast(level, player, stack, helper)
-
-    }
-
 }

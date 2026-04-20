@@ -17,12 +17,12 @@ open class CypherAttribute(
      * create an instance of the Attribute. An instance handles values from specific cyphers,
      * the instance will be created for each Attribute each Cypher
      * */
-    open fun instance() : CypherAttributeInstance = CypherAttributeInstance(this)
+//    open fun instance() : CypherAttributeInstance = CypherAttributeInstance(this)
     /**
      * create an instance with default value
      * */
-    open fun instance(base: Double) : CypherAttributeInstance =
-        CypherAttributeInstance(this).withDefault(base)
+//    open fun instance(base: Double) : CypherAttributeInstance =
+//        CypherAttributeInstance(this).withDefault(base)
 
 
     // ==========================================================================================================
