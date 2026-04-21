@@ -17,5 +17,5 @@ abstract class BasicModifierCypher (
 
     }
     override val DRAW: Int = 1
-    override val category: Holder<CypherCategory> = CypherCategoryRegistry.PROJECTILE
+    override val category: Holder<CypherCategory> = CypherCategoryRegistry.MODIFIER
 }

@@ -5,5 +5,5 @@ import net.minecraft.resources.ResourceLocation
 class CypherCategory(
     val resource: ResourceLocation
 ) {
-
+    fun registryName(): String = resource.path
 }

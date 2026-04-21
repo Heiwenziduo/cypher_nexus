@@ -7,6 +7,7 @@ import com.github.heiwenziduo.untitled_world.machinery.cypher.attribute.CypherAt
 import com.github.heiwenziduo.untitled_world.machinery.cypher.attribute.CypherAttributeOperation
 import com.github.heiwenziduo.untitled_world.machinery.cypher.category.CypherCategory
 import net.minecraft.core.Holder
+import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.entity.LivingEntity
@@ -91,7 +92,12 @@ abstract class AbstractCypher(
     // ============================================================================================================
     override fun toString(): String = getResource().path
 
-    /** in lang.JSON: cypher.{MOD_ID}.{cypher_category}.{cypher_name} */
+    /** lang-JSON key: cypher.{MOD_ID}.{cypher_category}.{cypher_name} */
     open fun translation(): MutableComponent =
-        UntitledWorld.modTranslation("cypher", "${category.registeredName}.${getResource().path}")
+        Component.translatable("cypher.${getResource().namespace}.${category.value().registryName()}.${getResource().path}")
+
+    /** icons: {MOD_ID}/textures/cypher/{cypher_category}/{cypher_name}.png */
+    open fun texture(): ResourceLocation =
+        ResourceLocation.fromNamespaceAndPath("${getResource().namespace}",
+            "textures/cypher/${category.value().registryName()}/${getResource().path}.png")
 }

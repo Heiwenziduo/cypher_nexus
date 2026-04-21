@@ -19,5 +19,5 @@ abstract class BasicProjectileCypher(
         // addAttribute(CypherAttributeRegistry.RADIUS, 1.0)
     }
 
-    override val category: Holder<CypherCategory> = CypherCategoryRegistry.MODIFIER
+    override val category: Holder<CypherCategory> = CypherCategoryRegistry.PROJECTILE
 }

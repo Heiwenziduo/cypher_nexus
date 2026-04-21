@@ -10,7 +10,7 @@ open class CypherAttribute(
     val resource: ResourceLocation
 ) {
     init {
-        UntitledWorld.LOGGER.debug("CypherAttribute created: {}", resource.toString())
+        // UntitledWorld.LOGGER.debug("CypherAttribute created: {}", resource.toString())
     }
 
     /**
