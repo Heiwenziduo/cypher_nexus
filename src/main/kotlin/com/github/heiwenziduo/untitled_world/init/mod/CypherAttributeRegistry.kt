@@ -30,10 +30,10 @@ object CypherAttributeRegistry {
         DEFERRED_REGISTER.register(path) { resource -> CypherAttribute(resource) }
 
 
-    val MANA_DRAIN = registerAttribute("mana_drain")
+//    val MANA_DRAIN = registerAttribute("mana_drain")
+//    val DRAW = registerAttribute("draw")
     val CAST_DELAY = registerAttribute("cast_delay")
     val RECHARGE_TIME = registerAttribute("recharge_time")
-    val DRAW = registerAttribute("draw")
 
     val DAMAGE = registerAttribute("damage")
     val SPEED = registerAttribute("speed")

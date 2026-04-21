@@ -1,32 +1,90 @@
 package com.github.heiwenziduo.untitled_world.machinery.wand
 
+import com.github.heiwenziduo.untitled_world.UntitledWorld
+import com.github.heiwenziduo.untitled_world.content.cypher.modifier.DamageBoostCypher
+import com.github.heiwenziduo.untitled_world.content.cypher.projectile.SnowballCypher
+import com.github.heiwenziduo.untitled_world.init.ModDataComponents
+import com.github.heiwenziduo.untitled_world.init.mod.CypherRegistry
+import com.github.heiwenziduo.untitled_world.machinery.CypherNotFoundException
 import com.github.heiwenziduo.untitled_world.machinery.cypher.CypherModifierHelper
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
+import kotlin.math.max
+import kotlin.math.min
 
 /**
- * Any ItemStack implemented the interface here should be able to conduct cyphers
+ * Any Item implemented the interface here should be able to conduct cyphers
  * */
 interface IWandLike {
-//    val MANA_MAX: Float
-//    val MANA_REGEN: Float
-    /** draw numbers for manually cast */
-//    val DRAW: Int
-//    val CAPACITY: Int
-//    val CAST_DELAY: Int
-//    val RECHARGE_TIME: Int
 
+    /**
+     * on manual cast
+     * */
+    fun cast(level: Level, living: LivingEntity, stack: ItemStack) {
+        // read cypher-list from stack
+        val cypherList: List<ResourceLocation> = listOf(
+            DamageBoostCypher.getResource(),
+            DamageBoostCypher.getResource(),
+            SnowballCypher.getResource()
+        )
+        UntitledWorld.LOGGER.debug("Casting start, is client side? {}\nCypherList: {}", level.isClientSide, cypherList)
+        UntitledWorld.LOGGER.debug("read from data component: {}", stack.get(ModDataComponents.WAND_DATA))
 
-//    val SPEED: Float
-//    val SPREAD: Float
-//    val RECOIL: Int
-//    val RADIUS: Float
-//    val CRIT_CHANCE: Float
+        if (level.isClientSide)
+        // send casting info to server
+            return
 
-    fun cast(level: Level, living: LivingEntity, stack: ItemStack)
+        // read things from stack
+        val wandData = stack.get(ModDataComponents.WAND_DATA)
+        if (wandData == null) {
+            UntitledWorld.LOGGER.warn("${living.name} try cast cyphers but missing wand-data! $stack")
+            return
+        }
 
-    fun castLoop(level: Level, living: LivingEntity, stack: ItemStack, helper: CypherModifierHelper, list: List<ResourceLocation>)
+        val (index, manaCurrent, manaMax, manaRegn, capacity, draw) = wandData
+
+        // ... handle "always cast" things
+        val helper = CypherModifierHelper(
+            manaCurrent = manaCurrent,
+            index = index,
+            draw = draw,
+            cypherList = cypherList
+        )
+        castLoop(level, living, stack, helper, cypherList)
+        val newMana = max(min(helper.manaCurrent, manaMax), 0f)
+        val newIndex = helper.index % cypherList.size
+
+        // update stack
+        /* @doc
+         * Any component values within the map should be treated as immutable.
+         * Always call #set or one of its referring methods discussed below after modifying the value of a data component.
+         * */
+        stack.set(ModDataComponents.WAND_DATA, wandData.update(newIndex, newMana))
+
+        castEnd()
+        // auto-sync
+        UntitledWorld.LOGGER.debug("server write to data component: {}", stack.get(ModDataComponents.WAND_DATA))
+
+        UntitledWorld.LOGGER.debug("Casting finish...")
+    }
+    fun castLoop(level: Level, living: LivingEntity, stack: ItemStack, helper: CypherModifierHelper, list: List<ResourceLocation>) {
+        if (helper.draw <=0 || helper.index >= list.size) return
+
+//        UntitledWorld.LOGGER.info("\nindex: ${helper.INDEX_CURRENT}\nmana: ${helper.MANA_CURRENT}")
+
+        val resource = list[helper.index]
+        val cypher = CypherRegistry.REGISTRY.get(resource)
+        if (cypher == null)
+            throw CypherNotFoundException("missing cypher: ${resource.namespace}-${resource.path}")
+
+        helper.call(cypher, level, living, stack)
+        helper.index++
+        helper.draw--
+        castLoop(level, living, stack, helper, list)
+    }
+
+    fun castEnd() {}
 }

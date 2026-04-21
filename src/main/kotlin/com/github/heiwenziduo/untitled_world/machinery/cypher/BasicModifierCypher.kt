@@ -8,9 +8,10 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 
 abstract class BasicModifierCypher (
-
+    override val MANA_DRAIN: Float
 ) : AbstractCypher(), IProviderCypher {
     init {
-        addAttribute(CypherAttributeRegistry.DRAW, CypherAttributeOperation.ADD, 1.0)
+
     }
+    override val DRAW: Int = 1
 }

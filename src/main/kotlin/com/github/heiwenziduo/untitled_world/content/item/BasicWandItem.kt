@@ -18,6 +18,8 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.UseAnim
 import net.minecraft.world.level.Level
+import kotlin.math.max
+import kotlin.math.min
 
 /**
  *
@@ -40,64 +42,6 @@ open class BasicWandItem(
     init {
 
     }
-
-    // item is singleton, cypher data should be put in itemstack
-    var INDEX = 0
-
-    /**
-     * on manually cast
-     * */
-    override fun cast(level: Level, living: LivingEntity, stack: ItemStack) {
-        val cypherList: List<ResourceLocation> = listOf(
-            DamageBoostCypher.getResource(),
-            DamageBoostCypher.getResource(),
-            SnowballCypher.getResource()
-        )
-        UntitledWorld.LOGGER.debug("Casting start, is client side? {}\nCypherList: {}", level.isClientSide, cypherList)
-        UntitledWorld.LOGGER.debug("read from data component: {}", stack.get(ModDataComponents.WAND_DATA))
-
-        if (level.isClientSide)
-            // send casting info to server
-            return
-
-        // read things from stack
-        val _index = 0
-        val _mana = 200f
-        // ... handle "always cast" things
-        val helper = CypherModifierHelper(MANA_CURRENT = _mana, INDEX_CURRENT = _index, CYPHER_LIST = cypherList)
-        castLoop(level, living, stack, helper, cypherList)
-        // update stack
-
-
-        /**
-         * Any component values within the map should be treated as immutable.
-         * Always call #set or one of its referring methods discussed below after modifying the value of a data component.
-         * */
-        stack.update(ModDataComponents.WAND_DATA, WandDataComponent.WandData.DEFAULT) {
-            it.manaCurrent -= 200
-            it
-        }
-
-        // auto-sync
-        UntitledWorld.LOGGER.debug("server write to data component: {}", stack.get(ModDataComponents.WAND_DATA))
-
-        UntitledWorld.LOGGER.debug("Casting finish...")
-    }
-    override fun castLoop(level: Level, living: LivingEntity, stack: ItemStack, helper: CypherModifierHelper, list: List<ResourceLocation>) {
-        if (helper.DRAW <=0 || helper.INDEX_CURRENT >= list.size) return
-
-        UntitledWorld.LOGGER.info("\nindex: ${helper.INDEX_CURRENT}\nmana: ${helper.MANA_CURRENT}")
-        // check mana condition
-        val resource = list[helper.INDEX_CURRENT]
-        val cypher = CypherRegistry.REGISTRY.get(resource)
-        if (cypher == null)
-            throw CypherNotFoundException("missing cypher: ${resource.namespace}-${resource.path}")
-
-        helper.call(cypher, level, living, stack)
-        helper.INDEX_CURRENT++
-        castLoop(level, living, stack, helper, list)
-    }
-
 
     override fun use(level: Level, player: Player, usedHand: InteractionHand): InteractionResultHolder<ItemStack> {
         val stack = player.getItemInHand(usedHand)

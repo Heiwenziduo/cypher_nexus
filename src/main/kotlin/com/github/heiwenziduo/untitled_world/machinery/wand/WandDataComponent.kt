@@ -31,15 +31,16 @@ object WandDataComponent {
         )
 
     data class WandData(
-        var index: Int,
-        var manaCurrent: Float,
+        val index: Int,
+        val manaCurrent: Float,
         val manaMax: Float,
         val manaRegn: Float,
         val capacity: Int,
         val draw: Int,
     ) {
-        fun drainMana(value: Float) {
-
+        // TODO maybe separate variables and invariables?
+        fun update(index: Int, manaCurrent: Float): WandData {
+            return WandData(index, manaCurrent, manaMax, manaRegn, capacity, draw)
         }
 
         companion object {

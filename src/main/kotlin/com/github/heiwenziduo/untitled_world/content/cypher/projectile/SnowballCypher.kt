@@ -13,19 +13,15 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 
 object SnowballCypher : BasicProjectileCypher(
-
+    MANA_DRAIN = 20f
 ) {
     override fun getResource() = UntitledWorld.modResource("snowball")
 
     init {
-        addAttribute(CypherAttributeRegistry.MANA_DRAIN, 20.0)
         addAttribute(CypherAttributeRegistry.DAMAGE, 0.0)
         addAttribute(CypherAttributeRegistry.SPEED, 1.0)
         addAttribute(CypherAttributeRegistry.SPREAD, 1.0)
-        addAttribute(CypherAttributeRegistry.RECOIL, 0.0)
-        addAttribute(CypherAttributeRegistry.RADIUS, 1.0)
-        addAttribute(CypherAttributeRegistry.BOUNCE, 0.0)
-        addAttribute(CypherAttributeRegistry.CRIT_CHANCE, 0.0)
+
 //
 //        genAttributeInstance()
 //        readAttributeFromDataList()
@@ -39,8 +35,8 @@ object SnowballCypher : BasicProjectileCypher(
         snowball.shoot(living.lookAngle.x, living.lookAngle.y, living.lookAngle.z, 1f, 0f)
         level.addFreshEntity(snowball)
 
-        //
-        println(helper.getComputedMap())
+        // debug
+        helper.peekComputedMap()
     }
 
 }

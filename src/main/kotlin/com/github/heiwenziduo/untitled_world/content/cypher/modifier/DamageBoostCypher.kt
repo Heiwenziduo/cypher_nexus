@@ -11,6 +11,7 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 
 object DamageBoostCypher : BasicModifierCypher(
+    MANA_DRAIN = 20f
 ) {
     init {
         addAttribute(CypherAttributeRegistry.DAMAGE, CypherAttributeOperation.ADD, 1.0)

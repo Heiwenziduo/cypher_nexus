@@ -18,10 +18,8 @@ import net.minecraft.world.level.Level
 abstract class AbstractCypher(
 
 ) {
-    /**
-     * property-map marks every property this specific cypher (-type) may have.
-     * base value is not contained, which may be injected using JSON, or determine whether it calculates
-     * */
+    open val MANA_DRAIN: Float = 0f
+    open val DRAW: Int = 0
     protected val ATTRIBUTE_MAP = HashMap<Holder<CypherAttribute>, CypherAttributeInstance>()
     private var MAP_IS_LOCKED = false
     // TODO
@@ -31,9 +29,6 @@ abstract class AbstractCypher(
         initializeData()
         addAttribute(CypherAttributeRegistry.CAST_DELAY, CypherAttributeOperation.ADD, 0.0)
         addAttribute(CypherAttributeRegistry.RECHARGE_TIME, CypherAttributeOperation.ADD, 0.0)
-        // TODO: should these be attributes?
-        addAttribute(CypherAttributeRegistry.MANA_DRAIN, CypherAttributeOperation.ADD, 0.0)
-        addAttribute(CypherAttributeRegistry.DRAW, CypherAttributeOperation.ADD, 0.0)
     }
 
     /**
@@ -92,4 +87,7 @@ abstract class AbstractCypher(
 
     /** custom logic up to subclasses */
     open fun onCastServer(level: Level, living: LivingEntity, stack: ItemStack, helper: CypherModifierHelper) {}
+
+    // ============================================================================================================
+    override fun toString(): String = getResource().path
 }
