@@ -1,7 +1,10 @@
 package com.github.heiwenziduo.untitled_world.machinery.cypher
 
 import com.github.heiwenziduo.untitled_world.init.mod.CypherAttributeRegistry
+import com.github.heiwenziduo.untitled_world.init.mod.CypherCategoryRegistry
 import com.github.heiwenziduo.untitled_world.machinery.cypher.CypherModifierHelper
+import com.github.heiwenziduo.untitled_world.machinery.cypher.category.CypherCategory
+import net.minecraft.core.Holder
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
@@ -15,4 +18,6 @@ abstract class BasicProjectileCypher(
         addAttribute(CypherAttributeRegistry.CRIT_CHANCE, 0.0)
         // addAttribute(CypherAttributeRegistry.RADIUS, 1.0)
     }
+
+    override val category: Holder<CypherCategory> = CypherCategoryRegistry.MODIFIER
 }

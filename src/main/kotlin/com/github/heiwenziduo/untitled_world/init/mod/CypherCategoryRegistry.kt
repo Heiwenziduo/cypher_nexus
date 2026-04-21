@@ -2,10 +2,10 @@ package com.github.heiwenziduo.untitled_world.init.mod
 
 import com.github.heiwenziduo.untitled_world.UntitledWorld
 import com.github.heiwenziduo.untitled_world.machinery.cypher.category.CypherCategory
+import net.minecraft.core.Holder
 import net.minecraft.core.Registry
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
-import net.neoforged.neoforge.registries.DeferredHolder
 import net.neoforged.neoforge.registries.DeferredRegister
 import net.neoforged.neoforge.registries.RegistryBuilder
 import thedarkcolour.kotlinforforge.neoforge.forge.MOD_BUS
@@ -25,7 +25,7 @@ object CypherCategoryRegistry {
         DEFERRED_REGISTER.register(MOD_BUS)
     }
 
-    fun registerCategory(category: CypherCategory): DeferredHolder<CypherCategory, CypherCategory> =
+    fun registerCategory(category: CypherCategory): Holder<CypherCategory> =
         DEFERRED_REGISTER.register(category.resource.path) { -> category }
 
     fun getCategory(resource: ResourceLocation): CypherCategory? = REGISTRY.get(resource)

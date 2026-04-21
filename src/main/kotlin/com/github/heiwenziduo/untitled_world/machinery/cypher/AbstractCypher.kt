@@ -5,10 +5,11 @@ import com.github.heiwenziduo.untitled_world.init.mod.CypherAttributeRegistry
 import com.github.heiwenziduo.untitled_world.machinery.cypher.attribute.CypherAttribute
 import com.github.heiwenziduo.untitled_world.machinery.cypher.attribute.CypherAttributeInstance
 import com.github.heiwenziduo.untitled_world.machinery.cypher.attribute.CypherAttributeOperation
+import com.github.heiwenziduo.untitled_world.machinery.cypher.category.CypherCategory
 import net.minecraft.core.Holder
+import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 
@@ -22,8 +23,7 @@ abstract class AbstractCypher(
     open val DRAW: Int = 0
     protected val ATTRIBUTE_MAP = HashMap<Holder<CypherAttribute>, CypherAttributeInstance>()
     private var MAP_IS_LOCKED = false
-    // TODO
-    val CATEGORY = 0
+    abstract val category: Holder<CypherCategory>
 
     init {
         initializeData()
@@ -90,4 +90,8 @@ abstract class AbstractCypher(
 
     // ============================================================================================================
     override fun toString(): String = getResource().path
+
+    /** in lang.JSON: cypher.{MOD_ID}.{cypher_category}.{cypher_name} */
+    open fun translation(): MutableComponent =
+        UntitledWorld.modTranslation("cypher", "${category.registeredName}.${getResource().path}")
 }

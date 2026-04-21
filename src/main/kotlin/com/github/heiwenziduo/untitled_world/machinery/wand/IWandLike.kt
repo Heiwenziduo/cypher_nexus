@@ -76,7 +76,7 @@ interface IWandLike {
 //        UntitledWorld.LOGGER.info("\nindex: ${helper.INDEX_CURRENT}\nmana: ${helper.MANA_CURRENT}")
 
         val resource = list[helper.index]
-        val cypher = CypherRegistry.REGISTRY.get(resource)
+        val cypher = CypherRegistry.getCypher(resource)
         if (cypher == null)
             throw CypherNotFoundException("missing cypher: ${resource.namespace}-${resource.path}")
 
