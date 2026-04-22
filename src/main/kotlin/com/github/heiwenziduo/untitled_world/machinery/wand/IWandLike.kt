@@ -26,9 +26,9 @@ interface IWandLike {
     fun cast(level: Level, living: LivingEntity, stack: ItemStack) {
         // read cypher-list from stack
         val cypherList: List<ResourceLocation> = listOf(
-            DamageBoostCypher.getResource(),
-            DamageBoostCypher.getResource(),
-            SnowballCypher.getResource()
+            DamageBoostCypher.resource,
+            DamageBoostCypher.resource,
+            SnowballCypher.resource
         )
         UntitledWorld.LOGGER.debug("Casting start, is client side? {}\nCypherList: {}", level.isClientSide, cypherList)
         UntitledWorld.LOGGER.debug("read from data component: {}", stack.get(ModDataComponents.WAND_DATA))
@@ -79,6 +79,14 @@ interface IWandLike {
         val cypher = CypherRegistry.getCypher(resource)
         if (cypher == null)
             throw CypherNotFoundException("missing cypher: ${resource.namespace}-${resource.path}")
+
+        helper.manaCurrent -= cypher.MANA_DRAIN
+        println("casting $cypher \ncurrent mana: ${helper.manaCurrent}")
+        if (helper.manaCurrent <= 0) {
+            println("mana not enough!!")
+            helper.manaCurrent = 0f
+            return
+        }
 
         helper.call(cypher, level, living, stack)
         helper.index++

@@ -26,7 +26,7 @@ class CypherIndexScreen(title: Component): Screen(title) {
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTick: Float) {
         super.render(guiGraphics, mouseX, mouseY, partialTick)
         guiGraphics.fill(0, 0, this.width, this.height, 0x333333)
-        guiGraphics.fill(0, 0, indexWidth, this.height, 0x333333)
+        guiGraphics.fill(0, 0, indexWidth, this.height, 0x333333) //
 
 
         drawCypher(guiGraphics, 5, 5)

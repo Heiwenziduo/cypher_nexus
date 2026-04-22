@@ -15,7 +15,7 @@ import net.minecraft.world.level.Level
 object SnowballCypher : BasicProjectileCypher(
     MANA_DRAIN = 20f
 ) {
-    override fun getResource() = UntitledWorld.modResource("snowball")
+    override val resource = UntitledWorld.modResource("snowball")
 
     init {
         addAttribute(CypherAttributeRegistry.DAMAGE, 0.0)

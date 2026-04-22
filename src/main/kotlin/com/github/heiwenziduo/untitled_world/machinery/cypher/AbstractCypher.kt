@@ -6,6 +6,7 @@ import com.github.heiwenziduo.untitled_world.machinery.cypher.attribute.CypherAt
 import com.github.heiwenziduo.untitled_world.machinery.cypher.attribute.CypherAttributeInstance
 import com.github.heiwenziduo.untitled_world.machinery.cypher.attribute.CypherAttributeOperation
 import com.github.heiwenziduo.untitled_world.machinery.cypher.category.CypherCategory
+import com.github.heiwenziduo.untitled_world.utility.i.IRegisterable
 import net.minecraft.core.Holder
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
@@ -19,15 +20,18 @@ import net.minecraft.world.level.Level
  * */
 abstract class AbstractCypher(
 
-) {
+): IRegisterable {
     open val MANA_DRAIN: Float = 0f
     open val DRAW: Int = 0
     protected val ATTRIBUTE_MAP = HashMap<Holder<CypherAttribute>, CypherAttributeInstance>()
     private var MAP_IS_LOCKED = false
+
     abstract val category: Holder<CypherCategory>
+    abstract override val resource: ResourceLocation
 
     init {
         initializeData()
+        registerHooks()
         addAttribute(CypherAttributeRegistry.CAST_DELAY, CypherAttributeOperation.ADD, 0.0)
         addAttribute(CypherAttributeRegistry.RECHARGE_TIME, CypherAttributeOperation.ADD, 0.0)
     }
@@ -36,9 +40,7 @@ abstract class AbstractCypher(
      * add attribute without default value
      * */
     protected fun addAttribute(attribute: Holder<CypherAttribute>) {
-        if (!MAP_IS_LOCKED)
-            ATTRIBUTE_MAP.put(attribute, CypherAttributeInstance(attribute))
-        else UntitledWorld.LOGGER.fatal("try add attribute ${attribute.registeredName} while map is locked!")
+        addAttribute(attribute, CypherAttributeOperation.ADD, 0.0)
     }
     /**
      * add attribute with default value
@@ -54,29 +56,16 @@ abstract class AbstractCypher(
         else UntitledWorld.LOGGER.fatal("try add attribute ${attribute.registeredName} while map is locked!")
     }
 
-    /**
-     * should be called after any subclass initialization
-     * TODO: Can it be managed here centrally?
-     * */
-    fun genAttributeInstance(): AbstractCypher {
-        if (!MAP_IS_LOCKED) {
-            ATTRIBUTE_MAP.forEach{(attr, instanceMaybeNull) ->
-                ATTRIBUTE_MAP[attr] = CypherAttributeInstance(attr)
-            }
 
-            MAP_IS_LOCKED = true
-        } else {
-//            UntitledWorld.LOGGER.fatal("try genAttributeInstance while map is locked!")
-            throw IllegalArgumentException("try genAttributeInstance while map is locked!")
-        }
-        return this
-    }
-
-    fun initializeData() {
+    protected open fun initializeData() {
         // TODO: read from CODEC
     }
 
-    abstract fun getResource(): ResourceLocation
+    /**
+     * register a hook to modifier projectile-AI at specific moments
+     * */
+    protected open fun registerHooks() {}
+
 
     /**
      * basic cast logic
@@ -87,17 +76,18 @@ abstract class AbstractCypher(
     }
 
     /** custom logic up to subclasses */
+    // TODO try change this to "hook"
     open fun onCastServer(level: Level, living: LivingEntity, stack: ItemStack, helper: CypherModifierHelper) {}
 
     // ============================================================================================================
-    override fun toString(): String = getResource().path
+    override fun toString(): String = resource.path
 
     /** lang-JSON key: cypher.{MOD_ID}.{cypher_category}.{cypher_name} */
     open fun translation(): MutableComponent =
-        Component.translatable("cypher.${getResource().namespace}.${category.value().registryName()}.${getResource().path}")
+        Component.translatable("cypher.${resource.namespace}.${category.value().registryName()}.${resource.path}")
 
     /** icons: {MOD_ID}/textures/cypher/{cypher_category}/{cypher_name}.png */
     open fun texture(): ResourceLocation =
-        ResourceLocation.fromNamespaceAndPath("${getResource().namespace}",
-            "textures/cypher/${category.value().registryName()}/${getResource().path}.png")
+        ResourceLocation.fromNamespaceAndPath("${resource.namespace}",
+            "textures/cypher/${category.value().registryName()}/${resource.path}.png")
 }

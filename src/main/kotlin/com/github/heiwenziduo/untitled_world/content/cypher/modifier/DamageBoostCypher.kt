@@ -16,5 +16,5 @@ object DamageBoostCypher : BasicModifierCypher(
     init {
         addAttribute(CypherAttributeRegistry.DAMAGE, CypherAttributeOperation.ADD, 1.0)
     }
-    override fun getResource() = UntitledWorld.modResource("damage_boost")
+    override val resource = UntitledWorld.modResource("damage_boost")
 }

@@ -33,6 +33,7 @@ object CypherCategoryRegistry {
     val PROJECTILE_RESOURCE = UntitledWorld.modResource("projectile")
     val STATIC_PROJECTILE_RESOURCE = UntitledWorld.modResource("static_projectile")
     val MODIFIER_RESOURCE = UntitledWorld.modResource("modifier")
+    val PASSIVE_RESOURCE = UntitledWorld.modResource("passive")
     val OTHER_RESOURCE = UntitledWorld.modResource("other")
 
 
@@ -46,6 +47,10 @@ object CypherCategoryRegistry {
 
     val MODIFIER = registerCategory(CypherCategory(
         MODIFIER_RESOURCE
+    ))
+
+    val PASSIVE = registerCategory(CypherCategory(
+        PASSIVE_RESOURCE
     ))
 
     val OTHER = registerCategory(CypherCategory(

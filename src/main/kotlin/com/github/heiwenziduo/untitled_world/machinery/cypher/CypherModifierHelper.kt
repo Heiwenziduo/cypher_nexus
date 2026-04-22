@@ -56,13 +56,6 @@ data class CypherModifierHelper(
     /***/
     fun call(cypher: AbstractCypher, level: Level, living: LivingEntity, stack: ItemStack) {
         // check mana
-        manaCurrent -= cypher.MANA_DRAIN
-        println("casting $cypher \ncurrent mana: $manaCurrent")
-        if (manaCurrent <= 0) {
-            println("mana not enough!!")
-            manaCurrent = 0f
-            return
-        }
         draw += cypher.DRAW
 
         cypher.cast(level, living, stack, this)

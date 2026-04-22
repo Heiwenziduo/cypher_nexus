@@ -1,14 +1,15 @@
 package com.github.heiwenziduo.untitled_world.machinery.cypher.attribute
 
 import com.github.heiwenziduo.untitled_world.UntitledWorld
+import com.github.heiwenziduo.untitled_world.utility.i.IRegisterable
 import net.minecraft.resources.ResourceLocation
 
 /**
  * a bit like vanilla LivingEntity's Attribute system
  * */
 open class CypherAttribute(
-    val resource: ResourceLocation
-) {
+    override val resource: ResourceLocation
+): IRegisterable {
     init {
         // UntitledWorld.LOGGER.debug("CypherAttribute created: {}", resource.toString())
     }

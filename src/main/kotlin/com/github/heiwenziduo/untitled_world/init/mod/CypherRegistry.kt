@@ -1,18 +1,17 @@
 package com.github.heiwenziduo.untitled_world.init.mod
 
 import com.github.heiwenziduo.untitled_world.UntitledWorld
-import com.github.heiwenziduo.untitled_world.machinery.cypher.AbstractCypher
 import com.github.heiwenziduo.untitled_world.content.cypher.modifier.DamageBoostCypher
+import com.github.heiwenziduo.untitled_world.content.cypher.modifier.HomingCypher
 import com.github.heiwenziduo.untitled_world.content.cypher.projectile.SnowballCypher
+import com.github.heiwenziduo.untitled_world.machinery.cypher.AbstractCypher
 import net.minecraft.core.Holder
 import net.minecraft.core.Registry
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
-import net.neoforged.neoforge.registries.DeferredHolder
 import net.neoforged.neoforge.registries.DeferredRegister
 import net.neoforged.neoforge.registries.RegistryBuilder
 import thedarkcolour.kotlinforforge.neoforge.forge.MOD_BUS
-import thedarkcolour.kotlinforforge.neoforge.forge.getValue
 
 /**
  *
@@ -30,7 +29,7 @@ object CypherRegistry {
     }
 
     fun registerCypher(cypher: AbstractCypher): Holder<AbstractCypher> {
-        return DEFERRED_REGISTER.register(cypher.getResource().path) { -> cypher }
+        return DEFERRED_REGISTER.register(cypher.resource.path) { -> cypher }
     }
 
     fun getCypher(resource: ResourceLocation): AbstractCypher? = REGISTRY.get(resource)
@@ -43,6 +42,9 @@ object CypherRegistry {
 
     // modifier
     val DAMAGE_BOOST_CYPHER = registerCypher(DamageBoostCypher)
+    val HOMING_CYPHER = registerCypher(HomingCypher)
+
+    // passive
 
     // other
 }

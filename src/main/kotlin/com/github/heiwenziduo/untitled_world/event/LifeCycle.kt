@@ -1,8 +1,7 @@
-package com.github.heiwenziduo.untitled_world.init
+package com.github.heiwenziduo.untitled_world.event
 
 import com.github.heiwenziduo.untitled_world.Config
 import com.github.heiwenziduo.untitled_world.UntitledWorld
-import com.github.heiwenziduo.untitled_world.UntitledWorld.LOGGER
 import com.github.heiwenziduo.untitled_world.utility.mod.CypherData
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.world.level.block.Blocks
@@ -22,13 +21,13 @@ object LifeCycle {
     @SubscribeEvent
     private fun commonSetup(event: FMLCommonSetupEvent) {
         // this is a parallel dispatched event - we cannot interact with game state in this event.
-        LOGGER.info("HELLO FROM COMMON SETUP")
+        UntitledWorld.LOGGER.info("HELLO FROM COMMON SETUP")
 
-        if (Config.logDirtBlock) LOGGER.info("DIRT BLOCK >> {}", BuiltInRegistries.BLOCK.getKey(Blocks.DIRT))
-        LOGGER.info(Config.magicNumberIntroduction + Config.magicNumber)
+        if (Config.logDirtBlock) UntitledWorld.LOGGER.info("DIRT BLOCK >> {}", BuiltInRegistries.BLOCK.getKey(Blocks.DIRT))
+        UntitledWorld.LOGGER.info(Config.magicNumberIntroduction + Config.magicNumber)
 
         // Config.items.forEach(Consumer { item: Item? -> LOGGER.info("ITEM >> {}", item.toString()) })
 
-        CypherData.init()
+        CypherData.Companion.init()
     }
 }

@@ -5,6 +5,7 @@ import com.github.heiwenziduo.untitled_world.init.ModDataComponents
 import com.github.heiwenziduo.untitled_world.init.ModItems
 import com.github.heiwenziduo.untitled_world.init.ModTabs
 import com.github.heiwenziduo.untitled_world.init.mod.CypherAttributeRegistry
+import com.github.heiwenziduo.untitled_world.init.mod.CypherBehaviorHookRegistry
 import com.github.heiwenziduo.untitled_world.init.mod.CypherCategoryRegistry
 import com.github.heiwenziduo.untitled_world.init.mod.CypherRegistry
 import kotlinx.coroutines.CoroutineScope
@@ -54,6 +55,7 @@ object UntitledWorld {
         CypherRegistry.register()
         CypherAttributeRegistry.register()
         CypherCategoryRegistry.register()
+        CypherBehaviorHookRegistry.register()
 
 //        // Kotlin style events register
 //        val obj = runForDist(
@@ -100,6 +102,7 @@ object UntitledWorld {
         event.register(CypherRegistry.REGISTRY)
         event.register(CypherAttributeRegistry.REGISTRY)
         event.register(CypherCategoryRegistry.REGISTRY)
+        event.register(CypherBehaviorHookRegistry.REGISTRY)
     }
 
     @SubscribeEvent

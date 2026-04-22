@@ -7,5 +7,5 @@ import net.minecraft.resources.ResourceLocation
 class TemporaryModifierCypher : BasicModifierCypher(
     MANA_DRAIN = 0f
 ) {
-    override fun getResource() = UntitledWorld.modResource("temporary_modifier")
+    override val resource = UntitledWorld.modResource("temporary_modifier")
 }
