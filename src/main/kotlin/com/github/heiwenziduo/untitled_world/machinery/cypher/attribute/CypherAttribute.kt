@@ -1,7 +1,10 @@
 package com.github.heiwenziduo.untitled_world.machinery.cypher.attribute
 
 import com.github.heiwenziduo.untitled_world.UntitledWorld
+import com.github.heiwenziduo.untitled_world.machinery.cypher.AbstractCypher.TranslationKey
 import com.github.heiwenziduo.untitled_world.utility.i.IRegisterable
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.ResourceLocation
 
 /**
@@ -31,4 +34,7 @@ open class CypherAttribute(
         return "attribute_${resource.path}"
     }
 
+    /** lang-JSON key: cypher.attribute.{MOD_ID}.{attribute_name} */
+    open fun translation(): MutableComponent =
+        Component.translatable("cypher.attribute.${resource.namespace}.${resource.path}")
 }

@@ -6,6 +6,16 @@
 
   "block.untitled_world.cypher_index": "Cypher Index",
 
+  "cypher.attribute.untitled_world.cast_delay": "Cast Delay",
+  "cypher.attribute.untitled_world.recharge_time": "Recharge",
+  "cypher.attribute.untitled_world.damage": "Damage",
+  "cypher.attribute.untitled_world.speed": "Speed",
+  "cypher.attribute.untitled_world.spread": "Spread",
+  "cypher.attribute.untitled_world.recoil": "Recoil",
+  "cypher.attribute.untitled_world.redius": "Redius",
+  "cypher.attribute.untitled_world.bounce": "Bounce",
+  "cypher.attribute.untitled_world.crit_chance": "Crit",
+
   "cypher.untitled_world.modifier.tmp": "tmp",
   "cypher.untitled_world.projectile.snowball": "Snowball",
 

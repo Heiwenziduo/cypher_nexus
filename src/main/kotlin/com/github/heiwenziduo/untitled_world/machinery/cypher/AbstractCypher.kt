@@ -76,18 +76,32 @@ abstract class AbstractCypher(
     }
 
     /** custom logic up to subclasses */
-    // TODO try change this to "hook"
+    // TODO maybe change this to "hook"
     open fun onCastServer(level: Level, living: LivingEntity, stack: ItemStack, helper: CypherModifierHelper) {}
 
     // ============================================================================================================
     override fun toString(): String = resource.path
 
-    /** lang-JSON key: cypher.{MOD_ID}.{cypher_category}.{cypher_name} */
-    open fun translation(): MutableComponent =
-        Component.translatable("cypher.${resource.namespace}.${category.value().registryName()}.${resource.path}")
+    private fun translationKey(): String = "cypher.${resource.namespace}.${category.value().registryName()}.${resource.path}"
+
+    /** lang-JSON key: cypher.{MOD_ID}.{cypher_category}.{cypher_name}?.{key} */
+    open fun translation(key: TranslationKey? = null): MutableComponent =
+        Component.translatable("${translationKey()}${if (key==null) "" else ".$key"}")
 
     /** icons: {MOD_ID}/textures/cypher/{cypher_category}/{cypher_name}.png */
     open fun texture(): ResourceLocation =
         ResourceLocation.fromNamespaceAndPath("${resource.namespace}",
             "textures/cypher/${category.value().registryName()}/${resource.path}.png")
+
+
+
+
+    enum class TranslationKey() {
+        DESCRIPTION,
+        ;
+
+        override fun toString(): String {
+            return this.name.lowercase()
+        }
+    }
 }

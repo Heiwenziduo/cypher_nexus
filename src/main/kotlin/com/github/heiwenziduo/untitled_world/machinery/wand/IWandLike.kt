@@ -70,6 +70,7 @@ interface IWandLike {
 
         UntitledWorld.LOGGER.debug("Casting finish...")
     }
+    // TODO maybe put loop into helper
     fun castLoop(level: Level, living: LivingEntity, stack: ItemStack, helper: CypherModifierHelper, list: List<ResourceLocation>) {
         if (helper.draw <=0 || helper.index >= list.size) return
 
