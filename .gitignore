@@ -122,6 +122,7 @@ runs/
 **/_test/
 **/__test/
 **/test_data/
+*.test
 
 # datagen cache
 **/resources/.cache/

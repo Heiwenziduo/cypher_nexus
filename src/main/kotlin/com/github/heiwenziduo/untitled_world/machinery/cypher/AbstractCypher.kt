@@ -84,7 +84,10 @@ abstract class AbstractCypher(
 
     private fun translationKey(): String = "cypher.${resource.namespace}.${category.value().registryName()}.${resource.path}"
 
-    /** lang-JSON key: cypher.{MOD_ID}.{cypher_category}.{cypher_name}?.{key} */
+    /**
+     * lang-JSON key: cypher.{MOD_ID}.{cypher_category}.{cypher_name}?.{key}
+     * @param key represents name if empty
+     * */
     open fun translation(key: TranslationKey? = null): MutableComponent =
         Component.translatable("${translationKey()}${if (key==null) "" else ".$key"}")
 
