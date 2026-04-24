@@ -3,52 +3,69 @@ package com.github.heiwenziduo.untitled_world.machinery.cypher
 import com.github.heiwenziduo.untitled_world.UntitledWorld
 import com.github.heiwenziduo.untitled_world.machinery.cypher.attribute.CypherAttribute
 import com.github.heiwenziduo.untitled_world.machinery.cypher.attribute.CypherAttributeInstance
-import net.minecraft.world.entity.player.Player
+import com.github.heiwenziduo.untitled_world.machinery.cypher.attribute.CypherAttributeOperation
+import net.minecraft.core.Holder
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 
 /** a modifier carrier created when user manually cast, or a trigger-cypher is fired */
 data class CypherModifierHelper(
-    var MANA_CURRENT: Float,
-    var INDEX_CURRENT: Int = 0,
-    var DRAW: Int = 1,
-    val CYPHER_LIST: List<AbstractCypher>
+    var manaCurrent: Float,
+    var index: Int = 0,
+    var draw: Int = 1,
+    val cypherList: List<ResourceLocation>
 ) {
-    private val ATTRIBUTE_MAP = HashMap<CypherAttribute<*>, CypherAttributeInstance<*>>()
+    private val ATTRIBUTE_MAP = HashMap<Holder<CypherAttribute>, CypherAttributeInstance>()
 
     // the operation-system
-    fun addCypherAttribute(map: HashMap<CypherAttribute<*>, CypherAttributeInstance<*>?>) {
-        // instance on helper should be a NEW one, I don't want attributes interfere with each other
+    // instance on helper should be a NEW one, I don't want attributes interfering with each other
+    fun addAttribute(map: HashMap<Holder<CypherAttribute>, CypherAttributeInstance>) {
         map.forEach{ attribute, instance ->
-            if (instance != null) {
-                if (attribute !in ATTRIBUTE_MAP) {
-                    ATTRIBUTE_MAP[attribute] = attribute.instance()
-                }
-                ATTRIBUTE_MAP[attribute]!!.combineWith(instance)
+            addAttribute(attribute, instance)
+        }
+    }
+    fun addAttribute(attribute: Holder<CypherAttribute>, instance: CypherAttributeInstance) {
+        if (attribute !in ATTRIBUTE_MAP) {
+            ATTRIBUTE_MAP[attribute] = CypherAttributeInstance(attribute)
+        }
+        ATTRIBUTE_MAP[attribute]!!.combineWith(instance)
+    }
+
+
+    /**  */
+    fun getComputedMap(): HashMap<Holder<CypherAttribute>, HashMap<CypherAttributeOperation, Double>> {
+        // TODO cache
+        val map = HashMap<Holder<CypherAttribute>,  HashMap<CypherAttributeOperation, Double>>()
+        ATTRIBUTE_MAP.forEach { (key, value) -> map[key] = value.getComputedMap() }
+        return map
+    }
+    /** print map infos */
+    fun peekComputedMap() {
+        val map = getComputedMap()
+        UntitledWorld.LOGGER.debug("ComputedMapPeek-Helper")
+        map.forEach { h, m ->
+            println("attribute-${h.registeredName}")
+            m.forEach { o, v ->
+                println("${o.name}: $v")
             }
         }
     }
 
-    fun calculateAttr() {
-
-    }
-
-//    fun modifierProjectileProperty(property: ProjectileProperties, operation: Operations, value: Number) {
-//        UntitledWorld.LOGGER.debug("helper add modifier: {}", CYPHER_LIST[INDEX_CURRENT].toString())
-//        if (value is Float)
-//            DAMAGE += value
-//    }
-
-    /**  */
-    fun applyPropertyTo() {
-        UntitledWorld.LOGGER.debug(
-            "\nhelper apply to a projectile: {}\nCurrent property: ",
-            CYPHER_LIST[INDEX_CURRENT].toString(),
-        )
-    }
-
     /***/
-    fun call(cypher: AbstractCypher, level: Level, player: Player, stack: ItemStack) {
-        cypher.onCast(level, player, stack, this)
+    fun call(cypher: AbstractCypher, level: Level, living: LivingEntity, stack: ItemStack) {
+        // check mana
+        draw += cypher.DRAW
+
+        cypher.cast(level, living, stack, this)
+        if (cypher is IProviderCypher) {
+
+        }
+        if (cypher is IConsumerCypher) {
+
+        }
+
+        if (!level.isClientSide) cypher.onCastServer(level, living, stack, this)
     }
 }

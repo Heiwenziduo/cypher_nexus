@@ -1,25 +1,23 @@
 package com.github.heiwenziduo.untitled_world
 
-import com.github.heiwenziduo.untitled_world.init.mod.CypherAttributeRegistry
 import com.github.heiwenziduo.untitled_world.init.ModBlocks
-import com.github.heiwenziduo.untitled_world.init.ModItems
-import com.github.heiwenziduo.untitled_world.init.mod.CypherRegistry
 import com.github.heiwenziduo.untitled_world.init.ModDataComponents
+import com.github.heiwenziduo.untitled_world.init.ModItems
 import com.github.heiwenziduo.untitled_world.init.ModTabs
+import com.github.heiwenziduo.untitled_world.init.mod.CypherAttributeRegistry
+import com.github.heiwenziduo.untitled_world.init.mod.CypherBehaviorHookRegistry
 import com.github.heiwenziduo.untitled_world.init.mod.CypherCategoryRegistry
+import com.github.heiwenziduo.untitled_world.init.mod.CypherRegistry
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.ResourceLocation
-import net.minecraft.world.level.block.Blocks
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.fml.common.Mod
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent
 import net.neoforged.neoforge.event.server.ServerStartingEvent
 import net.neoforged.neoforge.registries.NewRegistryEvent
 import org.apache.logging.log4j.Level
@@ -31,7 +29,7 @@ import kotlin.time.Duration.Companion.seconds
 /* @doc
  * An entry in neoforge.mods.toml does not need a corresponding @Mod annotation.
  * Likewise, an entry in the neoforge.mods.toml can have multiple @Mod annotations,
- * for example if you want to separate common logic and client only logic.
+ * for example, if you want to separate common logic and client-only logic.
  * */
 @Mod(UntitledWorld.MOD_ID)
 @EventBusSubscriber(modid = UntitledWorld.MOD_ID)
@@ -57,6 +55,7 @@ object UntitledWorld {
         CypherRegistry.register()
         CypherAttributeRegistry.register()
         CypherCategoryRegistry.register()
+        CypherBehaviorHookRegistry.register()
 
 //        // Kotlin style events register
 //        val obj = runForDist(
@@ -103,20 +102,7 @@ object UntitledWorld {
         event.register(CypherRegistry.REGISTRY)
         event.register(CypherAttributeRegistry.REGISTRY)
         event.register(CypherCategoryRegistry.REGISTRY)
-    }
-
-    @SubscribeEvent
-    private fun commonSetup(event: FMLCommonSetupEvent) {
-        /**
-         * Most non-specific mod setup will be performed here.
-         * Note that this is a parallel dispatched event - you cannot interact with game state in this event.
-         * */
-        LOGGER.info("HELLO FROM COMMON SETUP")
-
-        if (Config.logDirtBlock) LOGGER.info("DIRT BLOCK >> {}", BuiltInRegistries.BLOCK.getKey(Blocks.DIRT))
-        LOGGER.info(Config.magicNumberIntroduction + Config.magicNumber)
-
-        // Config.items.forEach(Consumer { item: Item? -> LOGGER.info("ITEM >> {}", item.toString()) })
+        event.register(CypherBehaviorHookRegistry.REGISTRY)
     }
 
     @SubscribeEvent

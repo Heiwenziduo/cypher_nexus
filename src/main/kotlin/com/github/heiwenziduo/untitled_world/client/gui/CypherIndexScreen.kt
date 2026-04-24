@@ -1,45 +1,157 @@
 package com.github.heiwenziduo.untitled_world.client.gui
 
-import com.github.heiwenziduo.untitled_world.UntitledWorld
+import com.github.heiwenziduo.untitled_world.machinery.cypher.AbstractCypher
+import com.github.heiwenziduo.untitled_world.machinery.cypher.category.CypherCategory
 import net.minecraft.client.gui.GuiGraphics
-import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
+import net.minecraft.util.Mth
 import net.neoforged.api.distmarker.Dist
 import net.neoforged.api.distmarker.OnlyIn
+import kotlin.math.ceil
+import kotlin.math.max
 
 @OnlyIn(Dist.CLIENT)
-class CypherIndexScreen(title: Component, val value: Int = 1): Screen(title) {
-    init {
-        /**
-         * Initializer blocks run when the primary constructor executes.
-         * A common use case for init blocks is data validation. For example, by calling the require function.
-         * @see require
-         * */
-        require(value > 0)
-        // run first
+class CypherIndexScreen(
+    title: Component,
+    val cypherMap: Map<CypherCategory, List<AbstractCypher>> = mapOf()
+): Screen(title) {
+    companion object {
+        // fired when player calls the screen
+        const val ICON_SIZE = 24
+        const val MARGIN = 8 // space between content and border
+        const val PADDING = 4 // space between icons
+        const val ITEM_SIZE = ICON_SIZE + PADDING
+        const val CATEGORY_TITLE_PADDING = 12
     }
+    val indexWidth: Int
+        get() = (width * 0.5).toInt()
 
-    constructor(title: Component, value: String): this(title, value.toIntOrNull() ?: 2) {
-        /**
-         * Secondary constructors are useful when you need multiple ways to initialize a class or for Java interoperability.
-         * Note all initializer blocks and property initializers run before the body of the secondary constructor
-         * */
-        // run then, only if secondary constructor is called
-    }
+    private var scrollOffset = 0.0
+
+    private val columns: Int
+        get() = max(1, (indexWidth - MARGIN) / ITEM_SIZE)
+
+
+//    private val totalRows: Int
+//        get() = ceil(cypherMap.size.toDouble() / columns).toInt()
+    private val maxScroll: Double // the maximum amount the screen can scroll down
+        get() = max(0.0, totalHeight.toDouble() - height)
+    private val blocks = mutableListOf<CategoryBlock>()
+    private var totalHeight = 100
 
     override fun init() {
         super.init()
-        this.addRenderableWidget(Button.builder(
-            UntitledWorld.modTranslation("gui", "cypher_index.button1"),
-            { p -> UntitledWorld.LOGGER.debug("button1 clicked  {}", p) }
-            ).bounds(this.width / 2 + 5, this.height - 52, 150, 20).build())
+//        this.addRenderableWidget(Button.builder(
+//            UntitledWorld.modTranslation("gui", "cypher_index.button1"),
+//            { p -> UntitledWorld.LOGGER.debug("button1 clicked  {}", p) }
+//            ).bounds(this.width / 2 + 5, this.height - 52, 150, 20).build())
+        cypherMap.keys.withIndex().forEach { (i, category) ->
+            blocks.add(CategoryBlock(category, cypherMap.getOrDefault(category, listOf()), i)) }
+        // FIXME window resize
+        totalHeight = blocks.sumOf { block -> block.blockHeight }
     }
 
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTick: Float) {
+//        super.renderBackground(guiGraphics, mouseX, mouseY, partialTick)
+        guiGraphics.fill(0, 0, this.width, this.height, 0x33333333.toInt())
+        guiGraphics.fill(0, 0, indexWidth, this.height, 0x99333333.toInt()) //
+        //
+        // scissor test prevents rendering outside these bounds
+        guiGraphics.enableScissor(0, 0, indexWidth, this.height)
+        for (block in blocks) {
+            renderCypherGrid(guiGraphics, mouseX, mouseY, block)
+        }
+        guiGraphics.disableScissor()
+        //
+        renderScrollbar(guiGraphics)
+
         super.render(guiGraphics, mouseX, mouseY, partialTick)
-        guiGraphics.fill(0, 0, this.width, this.height, 1)
     }
 
     override fun isPauseScreen() = false
+
+    override fun mouseScrolled(mouseX: Double, mouseY: Double, scrollX: Double, scrollY: Double): Boolean {
+        // Only scroll if the mouse is hovering over the left panel
+        if (mouseX <= indexWidth) {
+            val scrollSpeed = ITEM_SIZE.toDouble() // this will scroll one full row at a time
+
+            // scrollY is typically 1.0 (up) or -1.0 (down)
+            scrollOffset = Mth.clamp(scrollOffset - scrollY * scrollSpeed, 0.0, maxScroll)
+            return true
+        }
+        return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY)
+    }
+
+    // ===========================================================================================================
+    private fun renderCypherGrid(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, block: CategoryBlock) {
+        if (!block.show) return
+        val reY = blocks.filter { it.index < block.index }.sumOf { it.blockHeight }
+
+        if (reY > this.height) return // out of border
+
+        // render category title
+        ////////////////////////
+
+        val cols = columns
+        for ((index, cypher) in block.list.withIndex()) {
+            val col = index % cols
+            val row = index / cols
+
+            val x = PADDING + col * ITEM_SIZE
+            val y = reY + PADDING + (row * ITEM_SIZE) - scrollOffset.toInt()
+
+            // Optimization: Only render if the icon is actually visible on screen
+            if (y + ICON_SIZE > 0 && y < this.height) {
+
+                // Hover detection
+                val isHovered = mouseX in x..(x + ICON_SIZE) && mouseY in y..(y + ICON_SIZE) // kooooootlin
+                val bgColor = if (isHovered) 0xFF555555.toInt() else 0xFF444444.toInt()
+
+                // Draw a background slot for the Cypher
+                guiGraphics.fill(x, y, x + ICON_SIZE, y + ICON_SIZE, bgColor)
+
+                // Draw the actual icon, should fit ICON_SIZE
+                guiGraphics.blit(cypher.texture(), x, y, 0f, 0f, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE)
+
+                // Render tooltip if hovered
+                if (isHovered) {
+                    guiGraphics.renderTooltip(this.font, cypher.translation(), mouseX, mouseY)
+                }
+            }
+        }
+    }
+
+    private fun renderScrollbar(guiGraphics: GuiGraphics) {
+        if (maxScroll <= 0) return
+
+        val scrollbarWidth = 4
+        val scrollbarX = indexWidth - scrollbarWidth - 2
+
+        // Calculate the height of the scroll thumb dynamically based on content size
+        val scrollbarHeight = max(20, (this.height.toFloat() / totalHeight.toFloat() * this.height).toInt())
+
+        // Calculate the Y position of the scroll thumb
+        val scrollY = (scrollOffset / maxScroll * (this.height - scrollbarHeight)).toInt()
+
+        // Draw scrollbar track and thumb
+        guiGraphics.fill(scrollbarX, 0, scrollbarX + scrollbarWidth, this.height, 0xFF111111.toInt())
+        guiGraphics.fill(scrollbarX, scrollY, scrollbarX + scrollbarWidth, scrollY + scrollbarHeight, 0xFFAAAAAA.toInt())
+    }
+
+
+    private inner class CategoryBlock(
+        val category: CypherCategory,
+        val list: List<AbstractCypher>,
+        val index: Int
+    ) {
+        val show
+            get() = list.isNotEmpty()
+
+        val blockRows: Int
+            get() = ceil(list.size.toDouble() / columns).toInt()
+
+        val blockHeight: Int
+            get() = blockRows * ITEM_SIZE + CATEGORY_TITLE_PADDING
+    }
 }

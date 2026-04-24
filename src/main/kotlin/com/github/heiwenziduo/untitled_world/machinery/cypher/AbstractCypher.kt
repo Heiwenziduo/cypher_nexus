@@ -1,10 +1,17 @@
 package com.github.heiwenziduo.untitled_world.machinery.cypher
 
 import com.github.heiwenziduo.untitled_world.UntitledWorld
+import com.github.heiwenziduo.untitled_world.init.mod.CypherAttributeRegistry
 import com.github.heiwenziduo.untitled_world.machinery.cypher.attribute.CypherAttribute
 import com.github.heiwenziduo.untitled_world.machinery.cypher.attribute.CypherAttributeInstance
-import com.github.heiwenziduo.untitled_world.machinery.cypher.CypherModifierHelper
-import net.minecraft.world.entity.player.Player
+import com.github.heiwenziduo.untitled_world.machinery.cypher.attribute.CypherAttributeOperation
+import com.github.heiwenziduo.untitled_world.machinery.cypher.category.CypherCategory
+import com.github.heiwenziduo.untitled_world.utility.i.IRegisterable
+import net.minecraft.core.Holder
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 
@@ -12,83 +19,92 @@ import net.minecraft.world.level.Level
  *
  * */
 abstract class AbstractCypher(
-//     val MANA_DRAIN: Float,
-//     val CAST_DELAY: Int,
-//     val RECHARGE_TIME: Int,
-//     val DRAW: Int,
-) {
-//    abstract val MANA_DRAIN: Float
-//    abstract val CAST_DELAY: Int
-//    abstract val RECHARGE_TIME: Int
-//    abstract val DRAW: Int
 
-
-    /**
-     * property-map marks every property this specific cypher (-type) may have.
-     * base value not contained, which may be injected using json, or determine whether it calculates
-     * */
-    protected val ATTRIBUTE_MAP = HashMap<CypherAttribute<*>, CypherAttributeInstance<*>?>()
+): IRegisterable {
+    open val MANA_DRAIN: Float = 0f
+    open val DRAW: Int = 0
+    protected val ATTRIBUTE_MAP = HashMap<Holder<CypherAttribute>, CypherAttributeInstance>()
     private var MAP_IS_LOCKED = false
-    // TODO
-    val CATEGORY = 0
+
+    abstract val category: Holder<CypherCategory>
+    abstract override val resource: ResourceLocation
 
     init {
-        // crash, should I use DeferredHolder?
-//        addAttribute(Attrs.MANA_DRAIN)
-//        addAttribute(Attrs.CAST_DELAY)
-//        addAttribute(Attrs.RECHARGE_TIME)
-//        addAttribute(Attrs.DRAW)
+        initializeData()
+        registerHooks()
+        addAttribute(CypherAttributeRegistry.CAST_DELAY, CypherAttributeOperation.ADD, 0.0)
+        addAttribute(CypherAttributeRegistry.RECHARGE_TIME, CypherAttributeOperation.ADD, 0.0)
     }
 
     /**
-     * Add a "key" to the map, its value needs to be filled via {#genAttributeInstance} manually.
-     * This defines what attribute is available on the specific cypher
+     * add attribute without default value
      * */
-    protected fun addAttribute(property: CypherAttribute<*>) {
-        if (!MAP_IS_LOCKED)
-            ATTRIBUTE_MAP.put(property, null)
-        else UntitledWorld.LOGGER.fatal("try add property $property while map is locked!")
+    protected fun addAttribute(attribute: Holder<CypherAttribute>) {
+        addAttribute(attribute, CypherAttributeOperation.ADD, 0.0)
     }
-
     /**
      * add attribute with default value
-     * TODO
      * */
-    protected fun <T : Number> addAttribute(property: CypherAttribute<T>, value: T) {
-        if (!MAP_IS_LOCKED)
-            ATTRIBUTE_MAP.put(property, null)
-        else UntitledWorld.LOGGER.fatal("try add property $property while map is locked!")
+    protected fun addAttribute(attribute: Holder<CypherAttribute>, default: Double) {
+        addAttribute(attribute, CypherAttributeOperation.BASE, default)
     }
-
     /**
-     * should be called after any subclass initialization
-     * TODO: Can it be managed here centrally?
      * */
-    fun genAttributeInstance(): AbstractCypher {
-        if (!MAP_IS_LOCKED) {
-            ATTRIBUTE_MAP.forEach{(attr, instanceMaybeNull) ->
-                ATTRIBUTE_MAP[attr] = attr.instance()
-            }
-
-            MAP_IS_LOCKED = true
-        } else {
-//            UntitledWorld.LOGGER.fatal("try genAttributeInstance while map is locked!")
-            throw IllegalArgumentException("try genAttributeInstance while map is locked!")
-        }
-        return this
+    protected fun addAttribute(attribute: Holder<CypherAttribute>, operation: CypherAttributeOperation, value: Double) {
+        if (!MAP_IS_LOCKED)
+            ATTRIBUTE_MAP.put(attribute, CypherAttributeInstance(attribute).addModifier(operation, value))
+        else UntitledWorld.LOGGER.fatal("try add attribute ${attribute.registeredName} while map is locked!")
     }
 
-    fun initializeData() {
+
+    protected open fun initializeData() {
         // TODO: read from CODEC
     }
 
     /**
-     * basic cast logic, overrides should always call super.cast()
+     * register a hook to modifier projectile-AI at specific moments
      * */
-    open fun cast(level: Level, player: Player, stack: ItemStack, helper: CypherModifierHelper) {
-        helper.addCypherAttribute(ATTRIBUTE_MAP)
+    protected open fun registerHooks() {}
+
+
+    /**
+     * basic cast logic
+     * */
+    fun cast(level: Level, living: LivingEntity, stack: ItemStack, helper: CypherModifierHelper) {
+        helper.addAttribute(ATTRIBUTE_MAP)
+        // handle draw, mana_drain
     }
 
-    /***/
-    open fun onCast(level: Level, player: Player, stack: ItemStack, helper: CypherModifierHelper) {}
+    /** custom logic up to subclasses */
+    // TODO maybe change this to "hook"
+    open fun onCastServer(level: Level, living: LivingEntity, stack: ItemStack, helper: CypherModifierHelper) {}
+
+    // ============================================================================================================
+    override fun toString(): String = resource.path
+
+    private fun translationKey(): String = "cypher.${resource.namespace}.${category.value().registryName()}.${resource.path}"
+
+    /**
+     * lang-JSON key: cypher.{MOD_ID}.{cypher_category}.{cypher_name}?.{key}
+     * @param key represents name if empty
+     * */
+    open fun translation(key: TranslationKey? = null): MutableComponent =
+        Component.translatable("${translationKey()}${if (key==null) "" else ".$key"}")
+
+    /** icons: {MOD_ID}/textures/cypher/{cypher_category}/{cypher_name}.png */
+    open fun texture(): ResourceLocation =
+        ResourceLocation.fromNamespaceAndPath("${resource.namespace}",
+            "textures/cypher/${category.value().registryName()}/${resource.path}.png")
+
+
+
+
+    enum class TranslationKey() {
+        DESCRIPTION,
+        ;
+
+        override fun toString(): String {
+            return this.name.lowercase()
+        }
+    }
 }
