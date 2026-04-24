@@ -1,6 +1,7 @@
 package com.github.heiwenziduo.untitled_world.content.block
 
 import com.github.heiwenziduo.untitled_world.client.gui.CypherIndexScreen
+import com.github.heiwenziduo.untitled_world.utility.data.CypherData
 import net.minecraft.client.Minecraft
 import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.Component
@@ -35,7 +36,7 @@ class CypherIndexBlock(): Block(
         // triggered on both logical sides
         // UntitledWorld.LOGGER.info("SpellIndexBlock clicking, side: ${ if(level.isClientSide) "client" else "server" }")
         if (level.isClientSide) {
-            Minecraft.getInstance().setScreen(CypherIndexScreen(Component.empty()))
+            Minecraft.getInstance().setScreen(CypherIndexScreen(CypherData.cypherMap))
         }
         return InteractionResult.SUCCESS
     }

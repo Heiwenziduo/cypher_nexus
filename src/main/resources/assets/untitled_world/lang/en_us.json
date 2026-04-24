@@ -16,10 +16,11 @@
   "cypher.attribute.untitled_world.bounce": "Bounce",
   "cypher.attribute.untitled_world.crit_chance": "Crit",
 
-  "cypher.untitled_world.modifier.tmp": "tmp",
+  "cypher.untitled_world.modifier.damage_boost": "Damage Boost",
+  "cypher.untitled_world.modifier.homing": "Homing",
   "cypher.untitled_world.projectile.snowball": "Snowball",
 
-  "gui.untitled_world.cypher_index.button1": "click me!!",
+  "gui.untitled_world.cypher_index.": "--tmp",
 
   "item_group.untitled_world": "Untitled World All",
 

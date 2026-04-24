@@ -2,7 +2,7 @@ package com.github.heiwenziduo.untitled_world.event
 
 import com.github.heiwenziduo.untitled_world.Config
 import com.github.heiwenziduo.untitled_world.UntitledWorld
-import com.github.heiwenziduo.untitled_world.utility.mod.CypherData
+import com.github.heiwenziduo.untitled_world.utility.data.CypherData
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.world.level.block.Blocks
 import net.neoforged.bus.api.SubscribeEvent
