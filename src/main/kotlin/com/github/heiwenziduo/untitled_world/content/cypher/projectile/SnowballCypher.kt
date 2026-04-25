@@ -24,8 +24,8 @@ object SnowballCypher : BasicProjectileCypher(
 //        readAttributeFromDataList()
     }
 
-    override fun onCastServer(level: Level, living: LivingEntity, stack: ItemStack, helper: CypherModifierHelper) {
-        super.onCastServer(level, living, stack, helper)
+    override fun onCastServer(level: Level, living: LivingEntity, stack: ItemStack, helper: CypherModifierHelper, wandLength: Float) {
+        super.onCastServer(level, living, stack, helper, wandLength)
 
         val snowball = Snowball(level, living)
         snowball.setPos(living.position())

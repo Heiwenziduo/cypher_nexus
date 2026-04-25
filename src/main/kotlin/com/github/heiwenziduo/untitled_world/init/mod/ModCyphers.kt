@@ -39,18 +39,18 @@ object ModCyphers {
     // TODO should these be sorted by functionality? or just by alphabet?
 
     // projectile
-    val SNOWBALL_PROJECTILE = registerCypher(SnowballCypher)
+    val SNOWBALL_CYPHER = registerCypher(SnowballCypher)
 
     // static projectile
 
     // modifier
-    val ACCELERATION_MODIFIER = registerCypher(SimpleModifier(10f, "acceleration").attribute(CypherAttributeRegistry.SPEED, CypherAttributeOperation.MULTIPLY_BASE, 0.5))
-    val DAMAGE_BOOST_MODIFIER = registerCypher(SimpleModifier(20f, "damage_boost").attribute(CypherAttributeRegistry.DAMAGE, CypherAttributeOperation.ADD, 1.0))
-    val FOCUS_MODIFIER = registerCypher(SimpleModifier(1f, "focus").attribute(CypherAttributeRegistry.SPREAD, CypherAttributeOperation.ADD, -30.0))
-    val RECOIL_LESS_MODIFIER = registerCypher(SimpleModifier(1f, "recoil_less").attribute(CypherAttributeRegistry.RECOIL, CypherAttributeOperation.ADD, -5.0))
-    val RECOIL_MORE_MODIFIER = registerCypher(SimpleModifier(1f, "recoil_more").attribute(CypherAttributeRegistry.RECOIL, CypherAttributeOperation.ADD, 5.0))
+    val ACCELERATION_CYPHER = registerCypher(SimpleModifier(10f, "acceleration").attribute(CypherAttributeRegistry.SPEED, CypherAttributeOperation.MULTIPLY_BASE, 0.5))
+    val DAMAGE_BOOST_CYPHER = registerCypher(SimpleModifier(20f, "damage_boost").attribute(CypherAttributeRegistry.DAMAGE, CypherAttributeOperation.ADD, 1.0))
+    val FOCUS_CYPHER = registerCypher(SimpleModifier(1f, "focus").attribute(CypherAttributeRegistry.SPREAD, CypherAttributeOperation.ADD, -30.0))
+    val RECOIL_LESS_CYPHER = registerCypher(SimpleModifier(1f, "recoil_less").attribute(CypherAttributeRegistry.RECOIL, CypherAttributeOperation.ADD, -5.0))
+    val RECOIL_MORE_CYPHER = registerCypher(SimpleModifier(1f, "recoil_more").attribute(CypherAttributeRegistry.RECOIL, CypherAttributeOperation.ADD, 5.0))
 
-    val HOMING_MODIFIER = registerCypher(HomingCypher)
+    val HOMING_CYPHER = registerCypher(HomingCypher)
 
     // passive
 

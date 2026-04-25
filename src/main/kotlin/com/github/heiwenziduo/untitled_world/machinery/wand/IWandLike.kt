@@ -3,8 +3,8 @@ package com.github.heiwenziduo.untitled_world.machinery.wand
 import com.github.heiwenziduo.untitled_world.UntitledWorld
 import com.github.heiwenziduo.untitled_world.init.ModDataComponents
 import com.github.heiwenziduo.untitled_world.init.mod.ModCyphers
-import com.github.heiwenziduo.untitled_world.init.mod.ModCyphers.DAMAGE_BOOST_MODIFIER
-import com.github.heiwenziduo.untitled_world.init.mod.ModCyphers.SNOWBALL_PROJECTILE
+import com.github.heiwenziduo.untitled_world.init.mod.ModCyphers.DAMAGE_BOOST_CYPHER
+import com.github.heiwenziduo.untitled_world.init.mod.ModCyphers.SNOWBALL_CYPHER
 import com.github.heiwenziduo.untitled_world.machinery.CypherNotFoundException
 import com.github.heiwenziduo.untitled_world.machinery.cypher.CypherModifierHelper
 import net.minecraft.resources.ResourceLocation
@@ -19,6 +19,14 @@ import kotlin.math.min
  * Any Item implemented the interface here should be able to conduct the power of cyphers
  * */
 interface IWandLike {
+    fun validateData(stack: ItemStack): Boolean {
+        val wandData = stack.get(ModDataComponents.WAND_DATA)
+        val castData = stack.get(ModDataComponents.CAST_DATA)
+        if (wandData == null || castData == null) {
+            UntitledWorld.LOGGER.warn("wand not valid, missing ${if (wandData == null) "wand" else "cast"}-data! $stack")
+        }
+        return wandData != null && castData != null
+    }
 
     /**
      * on manual cast
@@ -26,9 +34,9 @@ interface IWandLike {
     fun cast(level: Level, living: LivingEntity, stack: ItemStack) {
         // read cypher-list from stack
         val cypherList: List<ResourceLocation> = listOf(
-            DAMAGE_BOOST_MODIFIER.value().resource,
-            DAMAGE_BOOST_MODIFIER.value().resource,
-            SNOWBALL_PROJECTILE.value().resource
+            DAMAGE_BOOST_CYPHER.value().resource,
+            DAMAGE_BOOST_CYPHER.value().resource,
+            SNOWBALL_CYPHER.value().resource
         )
         UntitledWorld.LOGGER.debug("Casting start, is client side? {}\nCypherList: {}", level.isClientSide, cypherList)
         UntitledWorld.LOGGER.debug("read from data component: {}", stack.get(ModDataComponents.WAND_DATA))
@@ -39,18 +47,21 @@ interface IWandLike {
 
         // read things from stack
         val wandData = stack.get(ModDataComponents.WAND_DATA)
-        if (wandData == null) {
-            UntitledWorld.LOGGER.warn("${living.name} try cast cyphers but missing wand-data! $stack")
+        val castData = stack.get(ModDataComponents.CAST_DATA)
+        if (wandData == null || castData == null) {
+            UntitledWorld.LOGGER.warn("${living.name} try cast cyphers but missing ${if (wandData == null) "wand" else "cast"} data! $stack")
             return
         }
 
-        val (index, manaCurrent, manaMax, manaRegn, capacity, draw) = wandData
+        val (index, manaCurrent) = castData
+        val (manaMax, _, _, draw, wandLength, cyphers) = wandData
 
         // ... handle "always cast" things
         val helper = CypherModifierHelper(
             manaCurrent = manaCurrent,
             index = index,
             draw = draw,
+            wandLength = wandLength,
             cypherList = cypherList
         )
         castLoop(level, living, stack, helper, cypherList)
@@ -62,7 +73,7 @@ interface IWandLike {
          * Any component values within the map should be treated as immutable.
          * Always call #set or one of its referring methods discussed below after modifying the value of a data component.
          * */
-        stack.set(ModDataComponents.WAND_DATA, wandData.update(newIndex, newMana))
+        stack.set(ModDataComponents.CAST_DATA, castData.update(newIndex, newMana))
 
         castEnd()
         // auto-sync
@@ -70,7 +81,7 @@ interface IWandLike {
 
         UntitledWorld.LOGGER.debug("Casting finish...")
     }
-    // TODO maybe put loop into helper
+    // TODO maybe move loop to helper
     fun castLoop(level: Level, living: LivingEntity, stack: ItemStack, helper: CypherModifierHelper, list: List<ResourceLocation>) {
         if (helper.draw <=0 || helper.index >= list.size) return
 

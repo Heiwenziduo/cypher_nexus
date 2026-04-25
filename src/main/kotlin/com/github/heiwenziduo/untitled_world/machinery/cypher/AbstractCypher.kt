@@ -74,16 +74,17 @@ abstract class AbstractCypher(
      * */
     fun cast(level: Level, living: LivingEntity, stack: ItemStack, helper: CypherModifierHelper) {
         helper.addAttribute(attributeMap)
-        // handle draw, mana_drain
     }
 
     /** custom logic up to subclasses */
     // TODO maybe change this to "hook"
-    open fun onCastServer(level: Level, living: LivingEntity, stack: ItemStack, helper: CypherModifierHelper) {}
+    open fun onCastServer(level: Level, living: LivingEntity, stack: ItemStack, helper: CypherModifierHelper, wandLength: Float) {}
 
     // ============================================================================================================
     override fun toString(): String = resource.path
 
+    // since cyphers are in the same registry, their names are unlikely to repeat,
+    // but using category prefix can make it tidy
     private fun translationKey(): String = "cypher.${resource.namespace}.${category.value().registryName()}.${resource.path}"
 
     /**

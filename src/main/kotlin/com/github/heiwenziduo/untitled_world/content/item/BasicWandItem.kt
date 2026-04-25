@@ -1,6 +1,7 @@
 package com.github.heiwenziduo.untitled_world.content.item
 
 import com.github.heiwenziduo.untitled_world.init.ModDataComponents
+import com.github.heiwenziduo.untitled_world.machinery.wand.CastDataComponent
 import com.github.heiwenziduo.untitled_world.machinery.wand.IWandLike
 import com.github.heiwenziduo.untitled_world.machinery.wand.WandDataComponent
 import net.minecraft.world.InteractionHand
@@ -19,15 +20,8 @@ open class BasicWandItem(
 ) : Item(
     Properties()
         .stacksTo(1)
-        .component(ModDataComponents.WAND_DATA, WandDataComponent.WandData(
-            // FIXME values reset when starting game
-            0,
-            500f,
-            500f,
-            1.6f,
-            6,
-            1
-        ))
+        .component(ModDataComponents.WAND_DATA, WandDataComponent.WandData.DEFAULT)
+        .component(ModDataComponents.CAST_DATA, CastDataComponent.CastData.DEFAULT)
 ), IWandLike {
     init {
 
