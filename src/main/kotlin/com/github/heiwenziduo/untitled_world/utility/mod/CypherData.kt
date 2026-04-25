@@ -20,7 +20,7 @@ class CypherData private constructor (){
                 list.add(cypher)
 
                 // ====== test ========
-//                for (i in 0..100) {
+//                for (i in 0..40) {
 //                    list.add(cypher)
 //                }
                 // ======      ========

@@ -16,6 +16,12 @@
   "cypher.attribute.untitled_world.bounce": "Bounce",
   "cypher.attribute.untitled_world.crit_chance": "Crit",
 
+  "cypher.category.untitled_world.projectile": "Projectile",
+  "cypher.category.untitled_world.static_projectile": "Static",
+  "cypher.category.untitled_world.modifier": "Modifier",
+  "cypher.category.untitled_world.passive": "Passive",
+  "cypher.category.untitled_world.other": "Other",
+
   "cypher.untitled_world.modifier.damage_boost": "Damage Boost",
   "cypher.untitled_world.modifier.homing": "Homing",
   "cypher.untitled_world.projectile.snowball": "Snowball",

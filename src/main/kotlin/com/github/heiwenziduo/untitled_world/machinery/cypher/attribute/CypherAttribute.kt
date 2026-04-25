@@ -35,6 +35,6 @@ open class CypherAttribute(
     }
 
     /** lang-JSON key: cypher.attribute.{MOD_ID}.{attribute_name} */
-    open fun translation(): MutableComponent =
+    override fun translation(): MutableComponent =
         Component.translatable("cypher.attribute.${resource.namespace}.${resource.path}")
 }

@@ -91,8 +91,9 @@ abstract class AbstractCypher(
      * lang-JSON key: cypher.{MOD_ID}.{cypher_category}.{cypher_name}?.{key}
      * @param key represents name if empty
      * */
-    open fun translation(key: TranslationKey? = null): MutableComponent =
+    open fun translation(key: TranslationKey?): MutableComponent =
         Component.translatable("${translationKey()}${if (key==null) "" else ".$key"}")
+    override fun translation(): MutableComponent = translation(null)
 
     /** icons: {MOD_ID}/textures/cypher/{cypher_category}/{cypher_name}.png */
     open fun texture(): ResourceLocation =
