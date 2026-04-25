@@ -56,7 +56,7 @@ data class CypherModifierHelper(
     /***/
     fun call(cypher: AbstractCypher, level: Level, living: LivingEntity, stack: ItemStack) {
         // check mana
-        draw += cypher.DRAW
+        draw += cypher.draw
 
         cypher.cast(level, living, stack, this)
         if (cypher is IProviderCypher) {

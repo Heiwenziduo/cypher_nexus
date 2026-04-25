@@ -11,11 +11,11 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 
 abstract class BasicModifierCypher (
-    override val MANA_DRAIN: Float
+    override val manaDrain: Float
 ) : AbstractCypher(), IProviderCypher {
     init {
 
     }
-    override val DRAW: Int = 1
+    override val draw: Int = 1
     override val category: Holder<CypherCategory> = CypherCategoryRegistry.MODIFIER
 }

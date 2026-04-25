@@ -7,7 +7,7 @@ import com.github.heiwenziduo.untitled_world.init.ModTabs
 import com.github.heiwenziduo.untitled_world.init.mod.CypherAttributeRegistry
 import com.github.heiwenziduo.untitled_world.init.mod.CypherBehaviorHookRegistry
 import com.github.heiwenziduo.untitled_world.init.mod.CypherCategoryRegistry
-import com.github.heiwenziduo.untitled_world.init.mod.CypherRegistry
+import com.github.heiwenziduo.untitled_world.init.mod.ModCyphers
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -52,7 +52,7 @@ object UntitledWorld {
 
         ModTabs.register()
 
-        CypherRegistry.register()
+        ModCyphers.register()
         CypherAttributeRegistry.register()
         CypherCategoryRegistry.register()
         CypherBehaviorHookRegistry.register()
@@ -99,7 +99,7 @@ object UntitledWorld {
 
     @SubscribeEvent
     fun registerRegistries(event: NewRegistryEvent) {
-        event.register(CypherRegistry.REGISTRY)
+        event.register(ModCyphers.REGISTRY)
         event.register(CypherAttributeRegistry.REGISTRY)
         event.register(CypherCategoryRegistry.REGISTRY)
         event.register(CypherBehaviorHookRegistry.REGISTRY)

@@ -1,22 +1,22 @@
 package com.github.heiwenziduo.untitled_world.machinery.wand
 
 import com.github.heiwenziduo.untitled_world.UntitledWorld
-import com.github.heiwenziduo.untitled_world.content.cypher.modifier.DamageBoostCypher
-import com.github.heiwenziduo.untitled_world.content.cypher.projectile.SnowballCypher
 import com.github.heiwenziduo.untitled_world.init.ModDataComponents
-import com.github.heiwenziduo.untitled_world.init.mod.CypherRegistry
+import com.github.heiwenziduo.untitled_world.init.mod.ModCyphers
+import com.github.heiwenziduo.untitled_world.init.mod.ModCyphers.DAMAGE_BOOST_MODIFIER
+import com.github.heiwenziduo.untitled_world.init.mod.ModCyphers.SNOWBALL_PROJECTILE
 import com.github.heiwenziduo.untitled_world.machinery.CypherNotFoundException
 import com.github.heiwenziduo.untitled_world.machinery.cypher.CypherModifierHelper
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import kotlin.math.max
 import kotlin.math.min
 
 /**
- * Any Item implemented the interface here should be able to conduct cyphers
+ * ---casting logics here---
+ * Any Item implemented the interface here should be able to conduct the power of cyphers
  * */
 interface IWandLike {
 
@@ -26,9 +26,9 @@ interface IWandLike {
     fun cast(level: Level, living: LivingEntity, stack: ItemStack) {
         // read cypher-list from stack
         val cypherList: List<ResourceLocation> = listOf(
-            DamageBoostCypher.resource,
-            DamageBoostCypher.resource,
-            SnowballCypher.resource
+            DAMAGE_BOOST_MODIFIER.value().resource,
+            DAMAGE_BOOST_MODIFIER.value().resource,
+            SNOWBALL_PROJECTILE.value().resource
         )
         UntitledWorld.LOGGER.debug("Casting start, is client side? {}\nCypherList: {}", level.isClientSide, cypherList)
         UntitledWorld.LOGGER.debug("read from data component: {}", stack.get(ModDataComponents.WAND_DATA))
@@ -77,11 +77,11 @@ interface IWandLike {
 //        UntitledWorld.LOGGER.info("\nindex: ${helper.INDEX_CURRENT}\nmana: ${helper.MANA_CURRENT}")
 
         val resource = list[helper.index]
-        val cypher = CypherRegistry.getCypher(resource)
+        val cypher = ModCyphers.getCypher(resource)
         if (cypher == null)
             throw CypherNotFoundException("missing cypher: ${resource.namespace}-${resource.path}")
 
-        helper.manaCurrent -= cypher.MANA_DRAIN
+        helper.manaCurrent -= cypher.manaDrain
         println("casting $cypher \ncurrent mana: ${helper.manaCurrent}")
         if (helper.manaCurrent <= 0) {
             println("mana not enough!!")

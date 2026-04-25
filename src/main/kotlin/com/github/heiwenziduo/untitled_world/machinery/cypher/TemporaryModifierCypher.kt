@@ -1,11 +1,10 @@
 package com.github.heiwenziduo.untitled_world.machinery.cypher
 
 import com.github.heiwenziduo.untitled_world.UntitledWorld
-import net.minecraft.resources.ResourceLocation
 
 /** dynamically define a modifier, use to handle wand specialty */
 class TemporaryModifierCypher : BasicModifierCypher(
-    MANA_DRAIN = 0f
+    manaDrain = 0f
 ) {
     override val resource = UntitledWorld.modResource("temporary_modifier")
 }

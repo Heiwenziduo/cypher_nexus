@@ -1,15 +1,13 @@
 package com.github.heiwenziduo.untitled_world.content.block
 
 import com.github.heiwenziduo.untitled_world.client.gui.CypherIndexScreen
-import com.github.heiwenziduo.untitled_world.utility.data.CypherData
+import com.github.heiwenziduo.untitled_world.utility.mod.CypherData
 import net.minecraft.client.Minecraft
 import net.minecraft.core.BlockPos
-import net.minecraft.network.chat.Component
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
-import net.minecraft.world.level.block.state.BlockBehaviour
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.BlockHitResult
 

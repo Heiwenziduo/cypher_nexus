@@ -1,9 +1,8 @@
-package com.github.heiwenziduo.untitled_world.utility.data
+package com.github.heiwenziduo.untitled_world.utility.mod
 
-import com.github.heiwenziduo.untitled_world.init.mod.CypherRegistry
+import com.github.heiwenziduo.untitled_world.init.mod.ModCyphers
 import com.github.heiwenziduo.untitled_world.machinery.cypher.AbstractCypher
 import com.github.heiwenziduo.untitled_world.machinery.cypher.category.CypherCategory
-import net.minecraft.core.Holder
 
 // prevent from instantiating
 class CypherData private constructor (){
@@ -16,14 +15,14 @@ class CypherData private constructor (){
         // Q: what about other mods modified the registry?
         fun init() {
             val map = mutableMapOf<CypherCategory, MutableList<AbstractCypher>>()
-            CypherRegistry.REGISTRY.toList().forEach { cypher ->
+            ModCyphers.REGISTRY.toList().forEach { cypher ->
                 val list = map.getOrPut(cypher.category.value(), { mutableListOf() })
                 list.add(cypher)
 
                 // ====== test ========
-                for (i in 0..100) {
-                    list.add(cypher)
-                }
+//                for (i in 0..100) {
+//                    list.add(cypher)
+//                }
                 // ======      ========
             }
             _cypherMap = map

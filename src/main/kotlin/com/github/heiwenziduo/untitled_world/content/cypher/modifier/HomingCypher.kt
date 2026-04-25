@@ -6,7 +6,7 @@ import com.github.heiwenziduo.untitled_world.machinery.cypher.BasicModifierCyphe
 import net.minecraft.resources.ResourceLocation
 
 object HomingCypher: BasicModifierCypher(
-    MANA_DRAIN = 50f
+    manaDrain = 50f
 ), IProjectileTickHook {
     override val resource: ResourceLocation = UntitledWorld.modResource("homing")
 

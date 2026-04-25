@@ -21,10 +21,11 @@ import net.minecraft.world.level.Level
 abstract class AbstractCypher(
 
 ): IRegisterable {
-    open val MANA_DRAIN: Float = 0f
-    open val DRAW: Int = 0
-    protected val ATTRIBUTE_MAP = HashMap<Holder<CypherAttribute>, CypherAttributeInstance>()
-    private var MAP_IS_LOCKED = false
+    open val manaDrain: Float = 0f
+    open val draw: Int = 0
+    protected val attributeMap = HashMap<Holder<CypherAttribute>, CypherAttributeInstance>()
+
+    private var MAP_IS_LOCKED = false // this seems unnecessary
 
     abstract val category: Holder<CypherCategory>
     abstract override val resource: ResourceLocation
@@ -39,21 +40,22 @@ abstract class AbstractCypher(
     /**
      * add attribute without default value
      * */
-    protected fun addAttribute(attribute: Holder<CypherAttribute>) {
-        addAttribute(attribute, CypherAttributeOperation.ADD, 0.0)
+    protected fun addAttribute(attribute: Holder<CypherAttribute>): AbstractCypher {
+        return addAttribute(attribute, CypherAttributeOperation.ADD, 0.0)
     }
     /**
      * add attribute with default value
      * */
-    protected fun addAttribute(attribute: Holder<CypherAttribute>, default: Double) {
-        addAttribute(attribute, CypherAttributeOperation.BASE, default)
+    protected fun addAttribute(attribute: Holder<CypherAttribute>, base: Double): AbstractCypher {
+        return addAttribute(attribute, CypherAttributeOperation.BASE, base)
     }
     /**
      * */
-    protected fun addAttribute(attribute: Holder<CypherAttribute>, operation: CypherAttributeOperation, value: Double) {
+    protected fun addAttribute(attribute: Holder<CypherAttribute>, operation: CypherAttributeOperation, value: Double): AbstractCypher {
         if (!MAP_IS_LOCKED)
-            ATTRIBUTE_MAP.put(attribute, CypherAttributeInstance(attribute).addModifier(operation, value))
+            attributeMap.put(attribute, CypherAttributeInstance(attribute).addModifier(operation, value))
         else UntitledWorld.LOGGER.fatal("try add attribute ${attribute.registeredName} while map is locked!")
+        return this
     }
 
 
@@ -71,7 +73,7 @@ abstract class AbstractCypher(
      * basic cast logic
      * */
     fun cast(level: Level, living: LivingEntity, stack: ItemStack, helper: CypherModifierHelper) {
-        helper.addAttribute(ATTRIBUTE_MAP)
+        helper.addAttribute(attributeMap)
         // handle draw, mana_drain
     }
 

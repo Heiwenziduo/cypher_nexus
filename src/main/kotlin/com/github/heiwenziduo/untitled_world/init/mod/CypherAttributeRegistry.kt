@@ -32,14 +32,20 @@ object CypherAttributeRegistry {
 
 //    val MANA_DRAIN = registerAttribute("mana_drain")
 //    val DRAW = registerAttribute("draw")
+    /** unit is "tick", cast to int at last */
     val CAST_DELAY = registerAttribute("cast_delay")
+    /** unit is "tick", cast to int at last */
     val RECHARGE_TIME = registerAttribute("recharge_time")
 
     val DAMAGE = registerAttribute("damage")
+    /** block per tick, but will show block/sec */
     val SPEED = registerAttribute("speed")
+    /** degree */
     val SPREAD = registerAttribute("spread")
     val RECOIL = registerAttribute("recoil")
     val RADIUS = registerAttribute("redius")
+    /** int, bounce times */
     val BOUNCE = registerAttribute("bounce")
+    /** 1 -> 100% */
     val CRIT_CHANCE = registerAttribute("crit_chance")
 }
