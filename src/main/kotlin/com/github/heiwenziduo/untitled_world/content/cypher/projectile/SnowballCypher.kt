@@ -16,8 +16,6 @@ object SnowballCypher : BasicProjectileCypher(
 
     init {
         addAttribute(CypherAttributeRegistry.DAMAGE, 0.0)
-        addAttribute(CypherAttributeRegistry.SPEED, 1.0)
-        addAttribute(CypherAttributeRegistry.SPREAD, 1.0)
 
 //
 //        genAttributeInstance()

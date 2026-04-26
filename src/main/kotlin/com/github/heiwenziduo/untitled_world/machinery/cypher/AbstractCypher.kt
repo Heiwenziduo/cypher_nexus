@@ -33,8 +33,11 @@ abstract class AbstractCypher(
     init {
         initializeData()
         registerHooks()
+        // TODO: these attrs only affect the process of casting, while others affect the projectile behaviors, should we separate them?
         addAttribute(CypherAttributeRegistry.CAST_DELAY, CypherAttributeOperation.ADD, 0.0)
         addAttribute(CypherAttributeRegistry.RECHARGE_TIME, CypherAttributeOperation.ADD, 0.0)
+        addAttribute(CypherAttributeRegistry.RECOIL, CypherAttributeOperation.ADD, 0.0)
+        addAttribute(CypherAttributeRegistry.SPREAD, CypherAttributeOperation.ADD, 0.0)
     }
 
     /**
