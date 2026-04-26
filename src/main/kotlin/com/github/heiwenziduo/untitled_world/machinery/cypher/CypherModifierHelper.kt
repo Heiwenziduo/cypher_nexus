@@ -43,7 +43,7 @@ data class CypherModifierHelper(
         return map
     }
     /** print map infos */
-    fun peekComputedMap() {
+    fun printComputedMap() {
         val map = getComputedMap()
         UntitledWorld.LOGGER.debug("ComputedMapPeek-Helper")
         map.forEach { h, m ->

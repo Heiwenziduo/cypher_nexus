@@ -2,11 +2,15 @@ package com.github.heiwenziduo.untitled_world.client
 
 import com.github.heiwenziduo.untitled_world.UntitledWorld
 import com.github.heiwenziduo.untitled_world.UntitledWorld.LOGGER
+import com.github.heiwenziduo.untitled_world.client.renderer.CypherProjectileRenderer
+import com.github.heiwenziduo.untitled_world.init.ModEntities.CYPHER_PROJECTILE
 import net.minecraft.client.Minecraft
 import net.neoforged.api.distmarker.Dist
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent
+import net.neoforged.neoforge.client.event.EntityRenderersEvent
+import net.neoforged.neoforge.client.event.EntityRenderersEvent.RegisterRenderers
 
 @EventBusSubscriber(modid = UntitledWorld.MOD_ID, value = [Dist.CLIENT])
 object ClientSetup {
@@ -23,5 +27,20 @@ object ClientSetup {
     private fun onClientStarting(event: FMLClientSetupEvent) {
         LOGGER.info("HELLO FROM CLIENT SETUP")
         LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().user.name)
+    }
+
+    // ===================== entity renderer ================================
+    @SubscribeEvent
+    fun registerEntityRenderers(event: RegisterRenderers) {
+        event.registerEntityRenderer(CYPHER_PROJECTILE.get()) { context -> CypherProjectileRenderer(context) }
+    }
+
+//    @SubscribeEvent
+//    fun registerRenderStateModifiers(event: RegisterRenderStateModifiersEvent) {
+//    }
+
+    @SubscribeEvent
+    private fun registerLayerDefinitions(event: EntityRenderersEvent.RegisterLayerDefinitions) {
+
     }
 }

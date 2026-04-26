@@ -1,11 +1,11 @@
 package com.github.heiwenziduo.untitled_world.content.cypher.projectile
 
 import com.github.heiwenziduo.untitled_world.UntitledWorld
+import com.github.heiwenziduo.untitled_world.content.entity.BasicCypherProjectileEntity
 import com.github.heiwenziduo.untitled_world.init.mod.CypherAttributeRegistry
 import com.github.heiwenziduo.untitled_world.machinery.cypher.BasicProjectileCypher
 import com.github.heiwenziduo.untitled_world.machinery.cypher.CypherModifierHelper
 import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.entity.projectile.Snowball
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 
@@ -25,13 +25,16 @@ object SnowballCypher : BasicProjectileCypher(
     override fun onCastServer(level: Level, living: LivingEntity, stack: ItemStack, helper: CypherModifierHelper, wandLength: Float) {
         super.onCastServer(level, living, stack, helper, wandLength)
 
-        val snowball = Snowball(level, living)
-        snowball.setPos(living.position())
-        snowball.shoot(living.lookAngle.x, living.lookAngle.y, living.lookAngle.z, 1f, 0f)
+        val snowball = BasicCypherProjectileEntity(level, living, helper)
+        val castDire = living.lookAngle.normalize()
+        val projPos = living.eyePosition.add(castDire.scale(wandLength.toDouble()))
+
+        snowball.setPos(projPos)
+        snowball.shoot(castDire.x, castDire.y, castDire.z, 1f, 0f)
         level.addFreshEntity(snowball)
 
         // debug
-        helper.peekComputedMap()
+        // helper.printComputedMap()
     }
 
 }

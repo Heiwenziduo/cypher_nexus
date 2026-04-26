@@ -19,6 +19,9 @@ import kotlin.math.min
  * Any Item implemented the interface here should be able to conduct the power of cyphers
  * */
 interface IWandLike {
+    val infiniteMana: Boolean
+        get() = true
+
     fun validateData(stack: ItemStack): Boolean {
         val wandData = stack.get(ModDataComponents.WAND_DATA)
         val castData = stack.get(ModDataComponents.CAST_DATA)
@@ -58,7 +61,7 @@ interface IWandLike {
 
         // ... handle "always cast" things
         val helper = CypherModifierHelper(
-            manaCurrent = manaCurrent,
+            manaCurrent = if (infiniteMana) 3.0E9f else manaCurrent,
             index = index,
             draw = draw,
             wandLength = wandLength,

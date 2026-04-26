@@ -2,6 +2,7 @@ package com.github.heiwenziduo.untitled_world
 
 import com.github.heiwenziduo.untitled_world.init.ModBlocks
 import com.github.heiwenziduo.untitled_world.init.ModDataComponents
+import com.github.heiwenziduo.untitled_world.init.ModEntities
 import com.github.heiwenziduo.untitled_world.init.ModItems
 import com.github.heiwenziduo.untitled_world.init.ModTabs
 import com.github.heiwenziduo.untitled_world.init.mod.CypherAttributeRegistry
@@ -49,6 +50,7 @@ object UntitledWorld {
         ModBlocks.register()
         ModItems.register()
         ModDataComponents.register()
+        ModEntities.register()
 
         ModTabs.register()
 
