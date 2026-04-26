@@ -1,10 +1,10 @@
 package com.github.heiwenziduo.untitled_world.init
 
 import com.github.heiwenziduo.untitled_world.UntitledWorld
-import com.github.heiwenziduo.untitled_world.machinery.wand.CastDataComponent.CAST_DATA_CODEC
-import com.github.heiwenziduo.untitled_world.machinery.wand.CastDataComponent.CAST_DATA_STREAM_CODEC
-import com.github.heiwenziduo.untitled_world.machinery.wand.WandDataComponent.WAND_DATA_CODEC
-import com.github.heiwenziduo.untitled_world.machinery.wand.WandDataComponent.WAND_DATA_STREAM_CODEC
+import com.github.heiwenziduo.untitled_world.machinery.wand.data.CastDataComponent.CAST_DATA_CODEC
+import com.github.heiwenziduo.untitled_world.machinery.wand.data.CastDataComponent.CAST_DATA_STREAM_CODEC
+import com.github.heiwenziduo.untitled_world.machinery.wand.data.WandDataComponent.WAND_DATA_CODEC
+import com.github.heiwenziduo.untitled_world.machinery.wand.data.WandDataComponent.WAND_DATA_STREAM_CODEC
 import net.minecraft.core.registries.Registries
 import net.neoforged.neoforge.registries.DeferredRegister
 import thedarkcolour.kotlinforforge.neoforge.forge.MOD_BUS

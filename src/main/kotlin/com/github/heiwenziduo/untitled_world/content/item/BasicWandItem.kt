@@ -1,9 +1,9 @@
 package com.github.heiwenziduo.untitled_world.content.item
 
 import com.github.heiwenziduo.untitled_world.init.ModDataComponents
-import com.github.heiwenziduo.untitled_world.machinery.wand.CastDataComponent
+import com.github.heiwenziduo.untitled_world.machinery.wand.data.CastDataComponent
 import com.github.heiwenziduo.untitled_world.machinery.wand.IWandLike
-import com.github.heiwenziduo.untitled_world.machinery.wand.WandDataComponent
+import com.github.heiwenziduo.untitled_world.machinery.wand.data.WandDataComponent
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResultHolder
 import net.minecraft.world.entity.player.Player

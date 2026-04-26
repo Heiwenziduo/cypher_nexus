@@ -14,7 +14,7 @@ object ModTabs {
         DEFERRED_REGISTER.register(MOD_BUS)
     }
 
-    val CREATIVE_MODE_TAB = DEFERRED_REGISTER.register(UntitledWorld.MOD_ID, { ->
+    val BASE_MODE_TAB = DEFERRED_REGISTER.register(UntitledWorld.MOD_ID, { ->
         CreativeModeTab.builder()
             .title(UntitledWorld.modTranslation("item_group"))
             .icon { -> ModItems.BASIC_WAND.defaultInstance }

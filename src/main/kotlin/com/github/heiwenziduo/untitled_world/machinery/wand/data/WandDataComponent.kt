@@ -1,4 +1,4 @@
-package com.github.heiwenziduo.untitled_world.machinery.wand
+package com.github.heiwenziduo.untitled_world.machinery.wand.data
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
