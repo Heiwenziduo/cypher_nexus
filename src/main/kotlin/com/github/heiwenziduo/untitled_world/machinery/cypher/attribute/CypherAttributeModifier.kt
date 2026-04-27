@@ -5,6 +5,7 @@ import com.github.heiwenziduo.untitled_world.machinery.cypher.AbstractCypher
 import net.minecraft.core.Holder
 import net.minecraft.resources.ResourceLocation
 
+@Deprecated("")
 data class CypherAttributeModifier (
     val attribute: Holder<CypherAttribute>,
     val operator: CypherAttributeOperation,

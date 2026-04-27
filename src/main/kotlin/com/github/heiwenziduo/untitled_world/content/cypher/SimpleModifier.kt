@@ -9,7 +9,7 @@ import net.minecraft.core.Holder
 /** easy way to create lots of simple modifiers */
 class SimpleModifier(manaDrain: Float, path: String) : BasicModifierCypher(manaDrain) {
     override val resource = UntitledWorld.modResource(path)
-    fun attribute(attribute: Holder<CypherAttribute>, operation: CypherAttributeOperation, value: Double): SimpleModifier {
-        return addAttribute(attribute, operation, value) as SimpleModifier
+    fun attribute(attribute: Holder<CypherAttribute>, operator: CypherAttributeOperation, value: Double): SimpleModifier {
+        return addAttribute(attribute, operator, value) as SimpleModifier
     }
 }

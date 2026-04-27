@@ -13,15 +13,14 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 
 open class BasicCypherProjectileEntity(entityType: EntityType<out Projectile>, level: Level) : Projectile(entityType, level) {
-    lateinit var helper: CypherModifierHelper
+    // lateinit var helper: CypherModifierHelper
     init {
 
     }
     constructor(level: Level, caster: LivingEntity?, helper: CypherModifierHelper) : this(CYPHER_PROJECTILE.get(), level) {
         // secondary constructor specific initialization
         owner = caster // kotaaaaalin?
-        // FIXME should I duplicate the helper?
-        this.helper = helper
+
     }
 
     override fun tick() {

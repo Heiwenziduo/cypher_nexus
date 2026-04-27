@@ -1,10 +1,7 @@
 package com.github.heiwenziduo.untitled_world.utility
 
-import com.github.heiwenziduo.untitled_world.machinery.cypher.attribute.CypherAttribute
-import com.github.heiwenziduo.untitled_world.machinery.cypher.attribute.CypherAttributeInstance
-
 // same types should have the same name, can kotlin do things like typescript?
-typealias AttributeMap<T> = HashMap<CypherAttribute, CypherAttributeInstance>
+//typealias AttributeMap<T> = HashMap<CypherAttribute, CypherAttributeInstance>
 
 /**
  * provide several functions to manage CypherAttributes

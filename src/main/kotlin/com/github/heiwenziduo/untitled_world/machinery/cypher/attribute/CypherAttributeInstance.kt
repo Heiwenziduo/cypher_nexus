@@ -5,6 +5,7 @@ import net.minecraft.resources.ResourceLocation
 import kotlin.collections.set
 
 /** immutable? */
+@Deprecated("")
 open class CypherAttributeInstance (
     val attribute: Holder<CypherAttribute>,
 ) {

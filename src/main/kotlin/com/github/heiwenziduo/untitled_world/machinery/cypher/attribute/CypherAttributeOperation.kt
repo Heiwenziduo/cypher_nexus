@@ -8,7 +8,8 @@ enum class CypherAttributeOperation {
      * */
     BASE {
         override fun cumulate(last: Double, new: Double): Double {
-            TODO("Not yet implemented")
+            // TODO
+            return last + new
         }
     },
     /** 1.0 -> add 1.0 */

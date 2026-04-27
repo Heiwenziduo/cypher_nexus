@@ -3,7 +3,6 @@ package com.github.heiwenziduo.untitled_world.machinery.cypher
 import com.github.heiwenziduo.untitled_world.UntitledWorld
 import com.github.heiwenziduo.untitled_world.init.mod.ModCyphers
 import com.github.heiwenziduo.untitled_world.machinery.cypher.attribute.CypherAttribute
-import com.github.heiwenziduo.untitled_world.machinery.cypher.attribute.CypherAttributeInstance
 import com.github.heiwenziduo.untitled_world.machinery.cypher.attribute.CypherAttributeOperation
 import net.minecraft.core.Holder
 import net.minecraft.resources.ResourceLocation
@@ -29,37 +28,25 @@ class CypherModifierHelper(
     operator fun component1() = manaCurrent // for destructuring
     operator fun component2() = index
 
-    private val _attributeMap = HashMap<Holder<CypherAttribute>, CypherAttributeInstance>()
+    private val _attributeComputedMap = HashMap<CypherAttribute, HashMap<CypherAttributeOperation, Double>>()
 
     // the operation-system
-    // instance on helper should be a NEW one, I don't want attributes interfering with each other
-    fun addAttribute(map: HashMap<Holder<CypherAttribute>, CypherAttributeInstance>) {
-        // TODO: optimize memory usage
-        map.forEach{ attribute, instance ->
-            addAttribute(attribute, instance)
+    fun addAttribute(map: HashMap<Holder<CypherAttribute>, HashMap<CypherAttributeOperation, Double>>) {
+        map.forEach{ holder, opMap ->
+            opMap.forEach { o, d -> addAttribute(holder.value(), o, d) }
         }
     }
-    fun addAttribute(attribute: Holder<CypherAttribute>, instance: CypherAttributeInstance) {
-        if (attribute !in _attributeMap) {
-            _attributeMap[attribute] = CypherAttributeInstance(attribute)
-        }
-        _attributeMap[attribute]!!.combineWith(instance)
+    fun addAttribute(attribute: CypherAttribute, operator: CypherAttributeOperation, value: Double) {
+        val map = _attributeComputedMap.getOrPut(attribute) { HashMap() }
+        map.compute(operator) { k,v -> operator.cumulate(v?: 0.0, value) }
     }
 
-
-    /**  */
-    fun getComputedMap(): HashMap<Holder<CypherAttribute>, HashMap<CypherAttributeOperation, Double>> {
-        // TODO cache
-        val map = HashMap<Holder<CypherAttribute>,  HashMap<CypherAttributeOperation, Double>>()
-        _attributeMap.forEach { (key, value) -> map[key] = value.getComputedMap() }
-        return map
-    }
-    /** print map infos */
+    /** test. print map infos */
     fun printComputedMap() {
-        val map = getComputedMap()
+        val map = _attributeComputedMap
         UntitledWorld.LOGGER.debug("ComputedMapPeek-Helper")
-        map.forEach { h, m ->
-            println("attribute-${h.registeredName}")
+        map.forEach { a, m ->
+            println("attribute-${a.registryName()}")
             m.forEach { o, v ->
                 println("${o.name}: $v")
             }
@@ -68,6 +55,7 @@ class CypherModifierHelper(
 
 
     // =========================================================================================================
+    /***/
     fun start(): CypherModifierHelper {
         // TODO onCastStartEvent
         castLoop()
@@ -75,17 +63,6 @@ class CypherModifierHelper(
         manaCurrent = max(min(manaCurrent, manaMax), 0f)
         index = index % cypherList.size
         return this
-    }
-
-    /***/
-    private fun call(cypher: AbstractCypher) {
-        draw += cypher.draw
-
-        cypher.addAttribute(this)
-        if (cypher is IProviderCypher) { }
-        if (cypher is IConsumerCypher) { }
-
-        if (!level.isClientSide) cypher.onCastServer(level, caster, stack, this, wandLength)
     }
 
     /***/
@@ -109,5 +86,16 @@ class CypherModifierHelper(
         castLoop()
 
         return
+    }
+
+    /***/
+    private fun call(cypher: AbstractCypher) {
+        draw += cypher.draw
+
+        cypher.addAttribute(this)
+        if (cypher is IProviderCypher) { }
+        if (cypher is IConsumerCypher) { }
+
+        if (!level.isClientSide) cypher.onCastServer(level, caster, stack, this, wandLength)
     }
 }
