@@ -2,8 +2,10 @@ package com.github.heiwenziduo.untitled_world.machinery.wand
 
 import com.github.heiwenziduo.untitled_world.UntitledWorld
 import com.github.heiwenziduo.untitled_world.init.ModDataComponents
+import com.github.heiwenziduo.untitled_world.init.mod.ModCyphers
 import com.github.heiwenziduo.untitled_world.init.mod.ModCyphers.DAMAGE_BOOST_CYPHER
 import com.github.heiwenziduo.untitled_world.init.mod.ModCyphers.SNOWBALL_CYPHER
+import com.github.heiwenziduo.untitled_world.machinery.cypher.AbstractCypher
 import com.github.heiwenziduo.untitled_world.machinery.cypher.CypherModifierHelper
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.entity.LivingEntity
@@ -26,6 +28,14 @@ interface IWandLike {
         }
         return wandData != null && castData != null
     }
+
+    fun parseCypherList(cyphers: String): List<AbstractCypher> =
+        cyphers.split(",").map {
+            val str = it.split(".")
+            val resource = ResourceLocation.fromNamespaceAndPath(str[0], str[1])
+            ModCyphers.getCypherOrThrow(resource)
+        }
+
 
     /**
      * on manual cast
@@ -71,8 +81,6 @@ interface IWandLike {
 
         // retrieve data from helper and write to components
 
-//        val newMana = max(min(helper.manaCurrent, manaMax), 0f)
-//        val newIndex = helper.index % cypherList.size
         // update stack
         /* @doc
          * Any component values within the map should be treated as immutable.
@@ -80,37 +88,9 @@ interface IWandLike {
          * */
         stack.set(ModDataComponents.CAST_DATA, castData.update(newIndex, newMana))
 
-        castEnd()
         // auto-sync
         UntitledWorld.LOGGER.debug("server write to data component: {}", stack.get(ModDataComponents.WAND_DATA))
 
         UntitledWorld.LOGGER.debug("Casting finish...")
     }
-
-//    fun castLoop(level: Level, living: LivingEntity, stack: ItemStack,
-//                 helper: CypherModifierHelper, list: List<ResourceLocation>) {
-//        if (helper.draw <=0 || helper.index >= list.size) return
-//
-//        val resource = list[helper.index]
-//        val cypher = ModCyphers.getCypher(resource)
-//        if (cypher == null)
-//            throw CypherNotFoundException("missing cypher: ${resource.namespace}-${resource.path}")
-//
-//        helper.manaCurrent -= cypher.manaDrain
-//        println("casting $cypher \ncurrent mana: ${helper.manaCurrent}")
-//        if (helper.manaCurrent <= 0) {
-//            println("mana not enough!!")
-//            helper.manaCurrent = 0f
-//            return
-//        }
-//
-//        helper.call(cypher, level, living, stack)
-//        helper.index++
-//        helper.draw--
-//        castLoop(level, living, stack, helper, list)
-//
-//        return
-//    }
-
-    fun castEnd() {}
 }

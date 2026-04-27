@@ -4,6 +4,7 @@ import com.github.heiwenziduo.untitled_world.UntitledWorld
 import com.github.heiwenziduo.untitled_world.content.cypher.SimpleModifier
 import com.github.heiwenziduo.untitled_world.content.cypher.modifier.HomingCypher
 import com.github.heiwenziduo.untitled_world.content.cypher.projectile.SnowballCypher
+import com.github.heiwenziduo.untitled_world.machinery.CypherNotFoundException
 import com.github.heiwenziduo.untitled_world.machinery.cypher.AbstractCypher
 import com.github.heiwenziduo.untitled_world.machinery.cypher.attribute.CypherAttributeOperation
 import net.minecraft.core.Holder
@@ -34,6 +35,11 @@ object ModCyphers {
     }
 
     fun getCypher(resource: ResourceLocation): AbstractCypher? = REGISTRY.get(resource)
+    fun getCypherOrThrow(resource: ResourceLocation): AbstractCypher {
+        val c = REGISTRY.get(resource)
+        if (c == null) throw CypherNotFoundException("missing cypher: ${resource.namespace}-${resource.path}")
+        return c
+    }
 
 
     // TODO should these be sorted by functionality? or just by alphabet?

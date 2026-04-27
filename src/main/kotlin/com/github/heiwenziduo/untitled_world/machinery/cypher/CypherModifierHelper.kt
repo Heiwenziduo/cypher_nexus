@@ -2,7 +2,6 @@ package com.github.heiwenziduo.untitled_world.machinery.cypher
 
 import com.github.heiwenziduo.untitled_world.UntitledWorld
 import com.github.heiwenziduo.untitled_world.init.mod.ModCyphers
-import com.github.heiwenziduo.untitled_world.machinery.CypherNotFoundException
 import com.github.heiwenziduo.untitled_world.machinery.cypher.attribute.CypherAttribute
 import com.github.heiwenziduo.untitled_world.machinery.cypher.attribute.CypherAttributeInstance
 import com.github.heiwenziduo.untitled_world.machinery.cypher.attribute.CypherAttributeOperation
@@ -94,9 +93,7 @@ class CypherModifierHelper(
         if (draw <=0 || index >= cypherList.size) return
 
         val resource = cypherList[index]
-        val cypher = ModCyphers.getCypher(resource)
-        if (cypher == null)
-            throw CypherNotFoundException("missing cypher: ${resource.namespace}-${resource.path}")
+        val cypher = ModCyphers.getCypherOrThrow(resource)
 
         manaCurrent -= cypher.manaDrain
         println("casting $cypher \ncurrent mana: ${manaCurrent}")

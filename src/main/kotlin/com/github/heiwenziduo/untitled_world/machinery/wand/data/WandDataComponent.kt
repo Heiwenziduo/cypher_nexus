@@ -14,9 +14,11 @@ object WandDataComponent {
         Codec.FLOAT.fieldOf("manaRegn").forGetter(WandData::manaRegn),
         Codec.INT.fieldOf("capacity").forGetter(WandData::capacity),
         Codec.INT.fieldOf("draw").forGetter(WandData::draw),
+//        Codec.INT.fieldOf("castDelay").forGetter(WandData::castDelay),
+//        Codec.INT.fieldOf("recharge").forGetter(WandData::recharge),
         Codec.FLOAT.fieldOf("wandLength").forGetter(WandData::wandLength),
         Codec.STRING.fieldOf("cypherList").forGetter(WandData::cypherList),
-    ).apply(it) { a,b,c,d,e,f -> WandData(a,b,c,d,e,f) } }
+    ).apply(it, WandData::new) }
 
     val WAND_DATA_STREAM_CODEC: StreamCodec<ByteBuf, WandData> =
         StreamCodec.composite(
@@ -24,9 +26,12 @@ object WandDataComponent {
             ByteBufCodecs.FLOAT, WandData::manaRegn,
             ByteBufCodecs.INT, WandData::capacity,
             ByteBufCodecs.INT, WandData::draw,
+            // cap at function6, damn
+//            ByteBufCodecs.INT, WandData::castDelay,
+//            ByteBufCodecs.INT, WandData::recharge,
             ByteBufCodecs.FLOAT, WandData::wandLength,
             ByteBufCodecs.STRING_UTF8, WandData::cypherList,
-            { a,b,c,d,e,f -> WandData(a,b,c,d,e,f) }
+            WandData::new
         )
 
     data class WandData(
@@ -35,9 +40,11 @@ object WandDataComponent {
         val capacity: Int,
         val draw: Int,
         val wandLength: Float,
-        val cypherList: String
+        val cypherList: String,
+        val castDelay: Int,
+        val recharge: Int,
     ) {
-        fun update(list: String) = WandData(manaMax, manaRegn, capacity, draw, wandLength, list)
+        fun update(list: String) = WandData(manaMax, manaRegn, capacity, draw, wandLength, list, castDelay, recharge)
 
         companion object {
             val DEFAULT = WandData(
@@ -46,8 +53,20 @@ object WandDataComponent {
                 4,
                 1,
                 1f,
-                ""
+                "",
+                10,
+                20,
             )
+            fun new(
+                manaMax: Float,
+                manaRegn: Float,
+                capacity: Int,
+                draw: Int,
+//                castDelay: Int,
+//                recharge: Int,
+                wandLength: Float,
+                cypherList: String
+            ) = WandData(manaMax, manaRegn, capacity, draw, wandLength, cypherList, 10, 20, )
         }
     }
 }
