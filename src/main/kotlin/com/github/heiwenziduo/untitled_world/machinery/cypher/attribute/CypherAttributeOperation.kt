@@ -18,10 +18,12 @@ enum class CypherAttributeOperation {
     },
     /** 0.33 -> plus 33% */
     MULTIPLY_BASE {
+        override val defaultValue = 1.0
         override fun cumulate(last: Double, new: Double): Double = last + new
     },
     /** 0.33 -> times 33% */
     MULTIPLY_TOTAL {
+        override val defaultValue = 1.0
         override fun cumulate(last: Double, new: Double): Double = last * new
     },
     /**
@@ -34,5 +36,6 @@ enum class CypherAttributeOperation {
 
     ;
 //    abstract fun <T> apply(v1: T, v2: T) : T
+    open val defaultValue: Double = 0.0
     abstract fun cumulate(last: Double, new: Double) : Double
 }

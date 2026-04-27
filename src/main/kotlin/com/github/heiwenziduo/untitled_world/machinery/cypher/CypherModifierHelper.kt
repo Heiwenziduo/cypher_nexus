@@ -29,6 +29,10 @@ class CypherModifierHelper(
     operator fun component2() = index
 
     private val _attributeComputedMap = HashMap<CypherAttribute, HashMap<CypherAttributeOperation, Double>>()
+    val computedMap
+        get() = _attributeComputedMap
+    // store modifiers before the consumer(projectile)
+    val modifierList = mutableListOf<AbstractCypher>()
 
     // the operation-system
     fun addAttribute(map: HashMap<Holder<CypherAttribute>, HashMap<CypherAttributeOperation, Double>>) {
@@ -38,7 +42,7 @@ class CypherModifierHelper(
     }
     fun addAttribute(attribute: CypherAttribute, operator: CypherAttributeOperation, value: Double) {
         val map = _attributeComputedMap.getOrPut(attribute) { HashMap() }
-        map.compute(operator) { k,v -> operator.cumulate(v?: 0.0, value) }
+        map.compute(operator) { k,v -> operator.cumulate(v?: operator.defaultValue, value) }
     }
 
     /** test. print map infos */
@@ -92,8 +96,9 @@ class CypherModifierHelper(
     private fun call(cypher: AbstractCypher) {
         draw += cypher.draw
 
-        cypher.addAttribute(this)
-        if (cypher is IProviderCypher) { }
+        if (cypher is IProviderCypher) {
+            cypher.addAttribute(this)
+        }
         if (cypher is IConsumerCypher) { }
 
         if (!level.isClientSide) cypher.onCastServer(level, caster, stack, this, wandLength)

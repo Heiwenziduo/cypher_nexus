@@ -25,7 +25,7 @@ object SnowballCypher : BasicProjectileCypher(
     override fun onCastServer(level: Level, living: LivingEntity, stack: ItemStack, helper: CypherModifierHelper, wandLength: Float) {
         super.onCastServer(level, living, stack, helper, wandLength)
 
-        val snowball = BasicCypherProjectileEntity(level, living, helper)
+        val snowball = BasicCypherProjectileEntity(level, living, this, helper)
         val castDire = living.lookAngle.normalize()
         val projPos = living.eyePosition.add(castDire.scale(wandLength.toDouble()))
 

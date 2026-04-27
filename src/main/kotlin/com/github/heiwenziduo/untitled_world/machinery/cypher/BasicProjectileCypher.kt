@@ -13,10 +13,14 @@ abstract class BasicProjectileCypher(
     override val manaDrain: Float
 ) : AbstractCypher(), IConsumerCypher {
     init {
-        addAttribute(CypherAttributeRegistry.SPEED, 1.0)
-        addAttribute(CypherAttributeRegistry.BOUNCE, 0.0)
-        addAttribute(CypherAttributeRegistry.CRIT_CHANCE, 0.0)
-        addAttribute(CypherAttributeRegistry.RADIUS, 1.0)
+        addAttribute(CypherAttributeRegistry.SPEED)
+        addAttribute(CypherAttributeRegistry.EXISTING)
+        addAttribute(CypherAttributeRegistry.BOUNCE)
+        addAttribute(CypherAttributeRegistry.CRIT_CHANCE)
+        addAttribute(CypherAttributeRegistry.RADIUS)
+
+//        println("====BasicProjectileCypher====")
+//        CypherAttributeRegistry.REGISTRY.holders().forEach { h -> println(h.value()) } // empty when cyphers init
     }
     override val category: Holder<CypherCategory> = CypherCategoryRegistry.PROJECTILE
 }

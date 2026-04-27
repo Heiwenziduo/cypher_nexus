@@ -22,8 +22,9 @@ abstract class AbstractCypher(
 ): IRegisterable {
     open val manaDrain: Float = 0f
     open val draw: Int = 0
-//    protected val attributeMap = HashMap<Holder<CypherAttribute>, CypherAttributeInstance>()
     private val _attributeMap = HashMap<Holder<CypherAttribute>, HashMap<CypherAttributeOperation, Double>>()
+    val attributeMap
+        get() = _attributeMap
 
     private var MAP_IS_LOCKED = false // this seems unnecessary
 
@@ -41,23 +42,24 @@ abstract class AbstractCypher(
     }
 
     /**
-     * add attribute without default value
+     * add Attributes use #defaultValue as BASE value
      * */
     protected fun addAttribute(holder: Holder<CypherAttribute>): AbstractCypher {
-        return addAttribute(holder, CypherAttributeOperation.ADD, 0.0)
+        return addAttribute(holder, CypherAttributeOperation.BASE, null)
     }
     /**
-     * add attribute with default value
+     * add Attributes as BASE value
      * */
     protected fun addAttribute(holder: Holder<CypherAttribute>, base: Double): AbstractCypher {
         return addAttribute(holder, CypherAttributeOperation.BASE, base)
     }
     /**
+     * add Attributes with specific operator
      * */
-    protected fun addAttribute(holder: Holder<CypherAttribute>, operator: CypherAttributeOperation, value: Double): AbstractCypher {
+    protected fun addAttribute(holder: Holder<CypherAttribute>, operator: CypherAttributeOperation, value: Double?): AbstractCypher {
         if (!MAP_IS_LOCKED) {
             val map = _attributeMap.getOrPut(holder) { HashMap() }
-            map.compute(operator) { k,v -> operator.cumulate(v?: 0.0, value) }
+            if (value != null) map.compute(operator) { k,v -> operator.cumulate(v?: operator.defaultValue, value) }
         }
         else UntitledWorld.LOGGER.fatal("try add attribute ${holder.registeredName} while map is locked!")
         return this
@@ -85,6 +87,7 @@ abstract class AbstractCypher(
     open fun onCastServer(level: Level, living: LivingEntity, stack: ItemStack, helper: CypherModifierHelper, wandLength: Float) {}
 
     // ============================================================================================================
+
     override fun toString(): String = resource.path
 
     // since cyphers are in the same registry, their names are unlikely to repeat,

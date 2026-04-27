@@ -1,7 +1,5 @@
 package com.github.heiwenziduo.untitled_world.machinery.cypher.attribute
 
-import com.github.heiwenziduo.untitled_world.UntitledWorld
-import com.github.heiwenziduo.untitled_world.machinery.cypher.AbstractCypher.TranslationKey
 import com.github.heiwenziduo.untitled_world.utility.i.IRegisterable
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
@@ -15,6 +13,8 @@ open class CypherAttribute(
     val defaultValue: Double,
     val min: Double,
     val max: Double,
+    val sync: Boolean = true,
+//    val target: AttributeTarget
 ): IRegisterable {
     init {
         // UntitledWorld.LOGGER.debug("CypherAttribute created: {}", resource.toString())
@@ -40,4 +40,10 @@ open class CypherAttribute(
     /** lang-JSON key: cypher.attribute.{MOD_ID}.{attribute_name} */
     override fun translation(): MutableComponent =
         Component.translatable("cypher.attribute.${resource.namespace}.${resource.path}")
+
+
+    enum class AttributeTarget {
+        CASTING,
+        PROJECTILE
+    }
 }
