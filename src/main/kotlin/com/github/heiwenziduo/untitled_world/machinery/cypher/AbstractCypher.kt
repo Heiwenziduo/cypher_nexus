@@ -60,6 +60,12 @@ abstract class AbstractCypher(
         else UntitledWorld.LOGGER.fatal("try add attribute ${attribute.registeredName} while map is locked!")
         return this
     }
+    /**
+     * add Attributes to the helper
+     * */
+    fun addAttribute(helper: CypherModifierHelper) {
+        helper.addAttribute(attributeMap)
+    }
 
 
     protected open fun initializeData() {
@@ -71,13 +77,6 @@ abstract class AbstractCypher(
      * */
     protected open fun registerHooks() {}
 
-
-    /**
-     * basic cast logic
-     * */
-    fun cast(level: Level, living: LivingEntity, stack: ItemStack, helper: CypherModifierHelper) {
-        helper.addAttribute(attributeMap)
-    }
 
     /** custom logic up to subclasses */
     // TODO maybe change this to "hook"

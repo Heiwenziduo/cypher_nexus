@@ -2,17 +2,13 @@ package com.github.heiwenziduo.untitled_world.machinery.wand
 
 import com.github.heiwenziduo.untitled_world.UntitledWorld
 import com.github.heiwenziduo.untitled_world.init.ModDataComponents
-import com.github.heiwenziduo.untitled_world.init.mod.ModCyphers
 import com.github.heiwenziduo.untitled_world.init.mod.ModCyphers.DAMAGE_BOOST_CYPHER
 import com.github.heiwenziduo.untitled_world.init.mod.ModCyphers.SNOWBALL_CYPHER
-import com.github.heiwenziduo.untitled_world.machinery.CypherNotFoundException
 import com.github.heiwenziduo.untitled_world.machinery.cypher.CypherModifierHelper
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
-import kotlin.math.max
-import kotlin.math.min
 
 /**
  * ---casting logics here---
@@ -56,21 +52,27 @@ interface IWandLike {
             return
         }
 
-        val (index, manaCurrent) = castData
+        var (index, manaCurrent) = castData
         val (manaMax, _, _, draw, wandLength, cyphers) = wandData
 
         // ... handle "always cast" things
         val helper = CypherModifierHelper(
             manaCurrent = if (infiniteMana) 3.0E9f else manaCurrent,
+            manaMax = manaMax,
             index = index,
             draw = draw,
             wandLength = wandLength,
-            cypherList = cypherList
+            cypherList = cypherList,
+            level = level,
+            caster = living,
+            stack = stack,
         )
-        castLoop(level, living, stack, helper, cypherList)
-        val newMana = max(min(helper.manaCurrent, manaMax), 0f)
-        val newIndex = helper.index % cypherList.size
+        val (newMana, newIndex) = helper.start()
 
+        // retrieve data from helper and write to components
+
+//        val newMana = max(min(helper.manaCurrent, manaMax), 0f)
+//        val newIndex = helper.index % cypherList.size
         // update stack
         /* @doc
          * Any component values within the map should be treated as immutable.
@@ -84,30 +86,31 @@ interface IWandLike {
 
         UntitledWorld.LOGGER.debug("Casting finish...")
     }
-    // TODO maybe move loop to helper
-    fun castLoop(level: Level, living: LivingEntity, stack: ItemStack, helper: CypherModifierHelper, list: List<ResourceLocation>) {
-        if (helper.draw <=0 || helper.index >= list.size) return
 
-//        UntitledWorld.LOGGER.info("\nindex: ${helper.INDEX_CURRENT}\nmana: ${helper.MANA_CURRENT}")
-
-        val resource = list[helper.index]
-        val cypher = ModCyphers.getCypher(resource)
-        if (cypher == null)
-            throw CypherNotFoundException("missing cypher: ${resource.namespace}-${resource.path}")
-
-        helper.manaCurrent -= cypher.manaDrain
-        println("casting $cypher \ncurrent mana: ${helper.manaCurrent}")
-        if (helper.manaCurrent <= 0) {
-            println("mana not enough!!")
-            helper.manaCurrent = 0f
-            return
-        }
-
-        helper.call(cypher, level, living, stack)
-        helper.index++
-        helper.draw--
-        castLoop(level, living, stack, helper, list)
-    }
+//    fun castLoop(level: Level, living: LivingEntity, stack: ItemStack,
+//                 helper: CypherModifierHelper, list: List<ResourceLocation>) {
+//        if (helper.draw <=0 || helper.index >= list.size) return
+//
+//        val resource = list[helper.index]
+//        val cypher = ModCyphers.getCypher(resource)
+//        if (cypher == null)
+//            throw CypherNotFoundException("missing cypher: ${resource.namespace}-${resource.path}")
+//
+//        helper.manaCurrent -= cypher.manaDrain
+//        println("casting $cypher \ncurrent mana: ${helper.manaCurrent}")
+//        if (helper.manaCurrent <= 0) {
+//            println("mana not enough!!")
+//            helper.manaCurrent = 0f
+//            return
+//        }
+//
+//        helper.call(cypher, level, living, stack)
+//        helper.index++
+//        helper.draw--
+//        castLoop(level, living, stack, helper, list)
+//
+//        return
+//    }
 
     fun castEnd() {}
 }
