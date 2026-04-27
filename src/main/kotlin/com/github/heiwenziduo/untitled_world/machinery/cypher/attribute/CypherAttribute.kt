@@ -11,7 +11,10 @@ import net.minecraft.resources.ResourceLocation
  * a bit like vanilla LivingEntity's Attribute system
  * */
 open class CypherAttribute(
-    override val resource: ResourceLocation
+    override val resource: ResourceLocation,
+    val defaultValue: Double,
+    val min: Double,
+    val max: Double,
 ): IRegisterable {
     init {
         // UntitledWorld.LOGGER.debug("CypherAttribute created: {}", resource.toString())
