@@ -51,7 +51,7 @@ object CypherAttributeRegistry {
     // ================================ projectile
     val DAMAGE = registerAttribute("damage", 0.0)
     /** block per tick, but will show block/sec */
-    val SPEED = registerAttribute("speed", 0.0, 0.0, 32.0)
+    val SPEED = registerAttribute("speed", 0.0, 0.0, 8.0)
     /** tick */
     val EXISTING = registerAttribute("existing", 20.0)
     val RADIUS = registerAttribute("redius", 1.0, 0.125, 16.0)

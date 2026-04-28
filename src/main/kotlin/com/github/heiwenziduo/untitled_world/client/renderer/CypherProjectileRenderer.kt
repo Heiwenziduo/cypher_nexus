@@ -1,7 +1,7 @@
 package com.github.heiwenziduo.untitled_world.client.renderer
 
 import com.github.heiwenziduo.untitled_world.UntitledWorld
-import com.github.heiwenziduo.untitled_world.content.entity.BasicCypherProjectileEntity
+import com.github.heiwenziduo.untitled_world.content.entity.CypherProjectile
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.block.BlockRenderDispatcher
@@ -19,28 +19,30 @@ import net.neoforged.api.distmarker.OnlyIn
 @OnlyIn(Dist.CLIENT)
 class CypherProjectileRenderer(
     context: EntityRendererProvider.Context
-) : EntityRenderer<BasicCypherProjectileEntity>(context) {
+) : EntityRenderer<CypherProjectile>(context) {
     private val itemRenderer: ItemRenderer = context.itemRenderer
     private val blockRenderer: BlockRenderDispatcher = context.blockRenderDispatcher
 
+    val stack = ItemStack(Items.SNOWBALL)
 
     override fun render(
-        p_entity: BasicCypherProjectileEntity,
+        p_entity: CypherProjectile,
         entityYaw: Float,
         partialTick: Float,
         poseStack: PoseStack,
         bufferSource: MultiBufferSource,
-        packedLight: Int
+        packedLight: Int // 0-255
     ) {
 //        super.render(p_entity, entityYaw, partialTick, poseStack, bufferSource, packedLight)
 
         poseStack.pushPose()
-        val stack = ItemStack(Items.SNOWBALL)
+        // poseStack.scale(this.scale, this.scale, this.scale)
+        poseStack.mulPose(entityRenderDispatcher.cameraOrientation())
         itemRenderer
             .renderStatic(
                 stack,
                 ItemDisplayContext.FIXED,
-                240,
+                packedLight,
                 OverlayTexture.NO_OVERLAY,
                 poseStack,
                 bufferSource,
@@ -52,7 +54,7 @@ class CypherProjectileRenderer(
     }
 
 
-    override fun getTextureLocation(entity: BasicCypherProjectileEntity): ResourceLocation {
+    override fun getTextureLocation(entity: CypherProjectile): ResourceLocation {
         return UntitledWorld.modResource("textures/entity/some_texture.png")
     }
 }

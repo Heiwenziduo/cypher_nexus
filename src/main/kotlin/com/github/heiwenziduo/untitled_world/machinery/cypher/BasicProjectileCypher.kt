@@ -22,5 +22,5 @@ abstract class BasicProjectileCypher(
 //        println("====BasicProjectileCypher====")
 //        CypherAttributeRegistry.REGISTRY.holders().forEach { h -> println(h.value()) } // empty when cyphers init
     }
-    override val category: Holder<CypherCategory> = CypherCategoryRegistry.PROJECTILE
+    override val category = CypherCategoryRegistry.PROJECTILE
 }

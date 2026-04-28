@@ -1,7 +1,7 @@
 package com.github.heiwenziduo.untitled_world.content.cypher.projectile
 
 import com.github.heiwenziduo.untitled_world.UntitledWorld
-import com.github.heiwenziduo.untitled_world.content.entity.BasicCypherProjectileEntity
+import com.github.heiwenziduo.untitled_world.content.entity.CypherProjectile
 import com.github.heiwenziduo.untitled_world.init.mod.CypherAttributeRegistry
 import com.github.heiwenziduo.untitled_world.machinery.cypher.BasicProjectileCypher
 import com.github.heiwenziduo.untitled_world.machinery.cypher.CypherModifierHelper
@@ -15,10 +15,13 @@ object SnowballCypher : BasicProjectileCypher(
     override val resource = UntitledWorld.modResource("snowball")
 
     init {
-         addAttribute(CypherAttributeRegistry.SPEED, 0.4)
+//        addAttribute(CypherAttributeRegistry.SPEED, 0.8)
 
-//        genAttributeInstance()
-//        readAttributeFromDataList()
+        // test
+        addAttribute(CypherAttributeRegistry.DAMAGE, 1.0)
+        addAttribute(CypherAttributeRegistry.SPEED, 0.3)
+        addAttribute(CypherAttributeRegistry.EXISTING, 160.0)
+
     }
 
     override fun onCastServer(level: Level, living: LivingEntity, stack: ItemStack, helper: CypherModifierHelper, wandLength: Float) {
@@ -27,9 +30,9 @@ object SnowballCypher : BasicProjectileCypher(
         val castDire = living.lookAngle.normalize()
         val projPos = living.eyePosition.add(castDire.scale(wandLength.toDouble()))
 
-        val snowball = BasicCypherProjectileEntity(level, living, this, helper, castDire)
+        val snowball = CypherProjectile(level, living, this, helper, castDire)
         snowball.setPos(projPos)
-        snowball.shoot(castDire.x, castDire.y, castDire.z, 1f, 0f)
+        // snowball.shoot(castDire.x, castDire.y, castDire.z, 1f, 0f)
         level.addFreshEntity(snowball)
 
         // debug
