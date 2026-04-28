@@ -44,6 +44,7 @@ abstract class AbstractCypher(
     /**
      * add Attributes use #defaultValue as BASE value
      * */
+    @Deprecated("no need to claim redundant #defaultValue")
     protected fun addAttribute(holder: Holder<CypherAttribute>): AbstractCypher {
         return addAttribute(holder, CypherAttributeOperation.BASE, null)
     }

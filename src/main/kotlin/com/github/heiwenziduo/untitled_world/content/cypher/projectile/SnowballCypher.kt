@@ -15,9 +15,8 @@ object SnowballCypher : BasicProjectileCypher(
     override val resource = UntitledWorld.modResource("snowball")
 
     init {
-        addAttribute(CypherAttributeRegistry.DAMAGE, 0.0)
+         addAttribute(CypherAttributeRegistry.SPEED, 0.4)
 
-//
 //        genAttributeInstance()
 //        readAttributeFromDataList()
     }
@@ -25,10 +24,10 @@ object SnowballCypher : BasicProjectileCypher(
     override fun onCastServer(level: Level, living: LivingEntity, stack: ItemStack, helper: CypherModifierHelper, wandLength: Float) {
         super.onCastServer(level, living, stack, helper, wandLength)
 
-        val snowball = BasicCypherProjectileEntity(level, living, this, helper)
         val castDire = living.lookAngle.normalize()
         val projPos = living.eyePosition.add(castDire.scale(wandLength.toDouble()))
 
+        val snowball = BasicCypherProjectileEntity(level, living, this, helper, castDire)
         snowball.setPos(projPos)
         snowball.shoot(castDire.x, castDire.y, castDire.z, 1f, 0f)
         level.addFreshEntity(snowball)

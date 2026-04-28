@@ -2,14 +2,13 @@ package com.github.heiwenziduo.untitled_world.init.mod
 
 import com.github.heiwenziduo.untitled_world.UntitledWorld
 import com.github.heiwenziduo.untitled_world.machinery.cypher.attribute.CypherAttribute
+import com.github.heiwenziduo.untitled_world.machinery.cypher.attribute.CypherAttribute.AttributeTarget
 import net.minecraft.core.Holder
 import net.minecraft.core.Registry
 import net.minecraft.resources.ResourceKey
-import net.neoforged.neoforge.registries.DeferredHolder
 import net.neoforged.neoforge.registries.DeferredRegister
 import net.neoforged.neoforge.registries.RegistryBuilder
 import thedarkcolour.kotlinforforge.neoforge.forge.MOD_BUS
-import thedarkcolour.kotlinforforge.neoforge.forge.getValue
 
 /**
  * registry attribute keys
@@ -26,20 +25,27 @@ object CypherAttributeRegistry {
         DEFERRED_REGISTER.register(MOD_BUS)
     }
 
-    fun registerAttribute(path: String, default: Double, min: Double = -Double.MAX_VALUE, max: Double = Double.MAX_VALUE): Holder<CypherAttribute> =
-        DEFERRED_REGISTER.register(path) { resource -> CypherAttribute(resource, default, min, max) }
+    // TODO, maybe a chain is more well-received
+    fun registerAttribute(path: String, default: Double, min: Double = -Double.MAX_VALUE, max: Double = Double.MAX_VALUE, target: AttributeTarget = AttributeTarget.PROJECTILE): Holder<CypherAttribute> =
+        DEFERRED_REGISTER.register(path) { resource ->
+            CypherAttribute(
+                resource = resource,
+                defaultValue = default,
+                min = min, max = max,
+                sync = true, target =  target)
+        }
 
 
     // ================================ casting process
 //    val MANA_DRAIN = registerAttribute("mana_drain")
 //    val DRAW = registerAttribute("draw")
     /** unit is "tick", cast to int at last */
-    val CAST_DELAY = registerAttribute("cast_delay", 0.0)
+    val CAST_DELAY = registerAttribute("cast_delay", 0.0, target = AttributeTarget.CASTING)
     /** unit is "tick", cast to int at last */
-    val RECHARGE_TIME = registerAttribute("recharge_time", 0.0)
+    val RECHARGE_TIME = registerAttribute("recharge_time", 0.0, target = AttributeTarget.CASTING)
     /** degree */
-    val SPREAD = registerAttribute("spread", 0.0, 0.0, 720.0)
-    val RECOIL = registerAttribute("recoil", 0.0, 0.0, 10.0)
+    val SPREAD = registerAttribute("spread", 0.0, 0.0, 720.0, target = AttributeTarget.CASTING)
+    val RECOIL = registerAttribute("recoil", 0.0, 0.0, 10.0, target = AttributeTarget.CASTING)
 
 
     // ================================ projectile

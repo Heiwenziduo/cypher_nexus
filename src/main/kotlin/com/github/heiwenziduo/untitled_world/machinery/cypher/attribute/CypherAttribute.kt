@@ -14,8 +14,11 @@ open class CypherAttribute(
     val min: Double,
     val max: Double,
     val sync: Boolean = true,
-//    val target: AttributeTarget
+    val target: AttributeTarget
 ): IRegisterable {
+    val isProjectileAttribute: Boolean
+        get() = target == AttributeTarget.PROJECTILE
+
     init {
         // UntitledWorld.LOGGER.debug("CypherAttribute created: {}", resource.toString())
     }

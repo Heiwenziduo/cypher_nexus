@@ -48,7 +48,7 @@ interface IWandLike {
             SNOWBALL_CYPHER.value().resource
         )
         UntitledWorld.LOGGER.debug("Casting start, is client side? {}\nCypherList: {}", level.isClientSide, cypherList)
-        UntitledWorld.LOGGER.debug("read from data component: {}", stack.get(ModDataComponents.WAND_DATA))
+//        UntitledWorld.LOGGER.debug("read from data component: {}", stack.get(ModDataComponents.WAND_DATA))
 
         if (level.isClientSide)
         // send casting info to server

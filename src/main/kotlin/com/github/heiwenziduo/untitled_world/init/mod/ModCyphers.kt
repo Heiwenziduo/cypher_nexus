@@ -6,6 +6,7 @@ import com.github.heiwenziduo.untitled_world.content.cypher.modifier.HomingCyphe
 import com.github.heiwenziduo.untitled_world.content.cypher.projectile.SnowballCypher
 import com.github.heiwenziduo.untitled_world.machinery.CypherNotFoundException
 import com.github.heiwenziduo.untitled_world.machinery.cypher.AbstractCypher
+import com.github.heiwenziduo.untitled_world.machinery.cypher.EmptyCypher
 import com.github.heiwenziduo.untitled_world.machinery.cypher.attribute.CypherAttributeOperation
 import net.minecraft.core.Holder
 import net.minecraft.core.Registry
@@ -61,4 +62,5 @@ object ModCyphers {
     // passive
 
     // other
+    val EMPTY_CYPHER = registerCypher(EmptyCypher) // technical
 }

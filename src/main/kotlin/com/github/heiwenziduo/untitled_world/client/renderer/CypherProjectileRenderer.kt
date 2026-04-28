@@ -32,7 +32,7 @@ class CypherProjectileRenderer(
         bufferSource: MultiBufferSource,
         packedLight: Int
     ) {
-        super.render(p_entity, entityYaw, partialTick, poseStack, bufferSource, packedLight)
+//        super.render(p_entity, entityYaw, partialTick, poseStack, bufferSource, packedLight)
 
         poseStack.pushPose()
         val stack = ItemStack(Items.SNOWBALL)
@@ -40,7 +40,7 @@ class CypherProjectileRenderer(
             .renderStatic(
                 stack,
                 ItemDisplayContext.FIXED,
-                150000,
+                240,
                 OverlayTexture.NO_OVERLAY,
                 poseStack,
                 bufferSource,
