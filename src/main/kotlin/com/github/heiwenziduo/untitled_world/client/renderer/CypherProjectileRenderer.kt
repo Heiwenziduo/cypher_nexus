@@ -36,7 +36,7 @@ class CypherProjectileRenderer(
 //        super.render(p_entity, entityYaw, partialTick, poseStack, bufferSource, packedLight)
 
         poseStack.pushPose()
-        // poseStack.scale(this.scale, this.scale, this.scale)
+        poseStack.scale(.5f, .5f, .5f)
         poseStack.mulPose(entityRenderDispatcher.cameraOrientation())
         itemRenderer
             .renderStatic(

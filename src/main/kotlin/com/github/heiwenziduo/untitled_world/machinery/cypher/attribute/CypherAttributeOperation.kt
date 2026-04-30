@@ -8,8 +8,7 @@ enum class CypherAttributeOperation {
      * */
     BASE {
         override fun cumulate(last: Double, new: Double): Double {
-            // TODO
-            return last + new
+            return new // we can assume if another BASE passed in, this only happens when another ConsumerCypher is called
         }
     },
     /** 1.0 -> add 1.0 */

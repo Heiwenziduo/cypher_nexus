@@ -19,8 +19,9 @@ object SnowballCypher : BasicProjectileCypher(
 
         // test
         addAttribute(CypherAttributeRegistry.DAMAGE, 1.0)
-        addAttribute(CypherAttributeRegistry.SPEED, 0.3)
-        addAttribute(CypherAttributeRegistry.EXISTING, 160.0)
+        addAttribute(CypherAttributeRegistry.SPEED, 0.5)
+        addAttribute(CypherAttributeRegistry.EXISTING, 200.0)
+        addAttribute(CypherAttributeRegistry.BOUNCE, 5.0)
 
     }
 

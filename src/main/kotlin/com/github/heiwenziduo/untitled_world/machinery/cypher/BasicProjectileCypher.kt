@@ -13,11 +13,6 @@ abstract class BasicProjectileCypher(
     override val manaDrain: Float
 ) : AbstractCypher(), IConsumerCypher {
     init {
-//        addAttribute(CypherAttributeRegistry.SPEED)
-//        addAttribute(CypherAttributeRegistry.EXISTING)
-//        addAttribute(CypherAttributeRegistry.BOUNCE)
-//        addAttribute(CypherAttributeRegistry.CRIT_CHANCE)
-//        addAttribute(CypherAttributeRegistry.RADIUS)
 
 //        println("====BasicProjectileCypher====")
 //        CypherAttributeRegistry.REGISTRY.holders().forEach { h -> println(h.value()) } // empty when cyphers init

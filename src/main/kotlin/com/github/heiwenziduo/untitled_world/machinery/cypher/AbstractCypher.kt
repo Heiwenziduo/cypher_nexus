@@ -49,7 +49,7 @@ abstract class AbstractCypher(
         return addAttribute(holder, CypherAttributeOperation.BASE, null)
     }
     /**
-     * add Attributes as BASE value
+     * add Attributes with its BASE value
      * */
     protected fun addAttribute(holder: Holder<CypherAttribute>, base: Double): AbstractCypher {
         return addAttribute(holder, CypherAttributeOperation.BASE, base)
