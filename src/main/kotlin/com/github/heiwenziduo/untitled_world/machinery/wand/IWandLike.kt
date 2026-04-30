@@ -3,8 +3,8 @@ package com.github.heiwenziduo.untitled_world.machinery.wand
 import com.github.heiwenziduo.untitled_world.UntitledWorld
 import com.github.heiwenziduo.untitled_world.init.ModDataComponents
 import com.github.heiwenziduo.untitled_world.init.mod.ModCyphers
-import com.github.heiwenziduo.untitled_world.init.mod.ModCyphers.DAMAGE_BOOST_CYPHER
-import com.github.heiwenziduo.untitled_world.init.mod.ModCyphers.SNOWBALL_CYPHER
+import com.github.heiwenziduo.untitled_world.init.mod.ModCyphers.DAMAGE_BOOST
+import com.github.heiwenziduo.untitled_world.init.mod.ModCyphers.SNOWBALL
 import com.github.heiwenziduo.untitled_world.machinery.cypher.AbstractCypher
 import com.github.heiwenziduo.untitled_world.machinery.cypher.CypherModifierHelper
 import net.minecraft.resources.ResourceLocation
@@ -43,9 +43,9 @@ interface IWandLike {
     fun cast(level: Level, living: LivingEntity, stack: ItemStack) {
         // read cypher-list from stack
         val cypherList: List<ResourceLocation> = listOf(
-            DAMAGE_BOOST_CYPHER.value().resource,
-            DAMAGE_BOOST_CYPHER.value().resource,
-            SNOWBALL_CYPHER.value().resource
+            DAMAGE_BOOST.value().resource,
+            DAMAGE_BOOST.value().resource,
+            SNOWBALL.value().resource
         )
         UntitledWorld.LOGGER.debug("Casting start, is client side? {}\nCypherList: {}", level.isClientSide, cypherList)
 //        UntitledWorld.LOGGER.debug("read from data component: {}", stack.get(ModDataComponents.WAND_DATA))

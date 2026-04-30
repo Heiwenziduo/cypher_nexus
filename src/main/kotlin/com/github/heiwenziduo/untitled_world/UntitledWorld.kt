@@ -5,7 +5,7 @@ import com.github.heiwenziduo.untitled_world.init.ModDataComponents
 import com.github.heiwenziduo.untitled_world.init.ModEntities
 import com.github.heiwenziduo.untitled_world.init.ModItems
 import com.github.heiwenziduo.untitled_world.init.ModTabs
-import com.github.heiwenziduo.untitled_world.init.mod.CypherAttributeRegistry
+import com.github.heiwenziduo.untitled_world.init.mod.CypherAttributes
 import com.github.heiwenziduo.untitled_world.init.mod.CypherBehaviorHookRegistry
 import com.github.heiwenziduo.untitled_world.init.mod.CypherCategoryRegistry
 import com.github.heiwenziduo.untitled_world.init.mod.ModCyphers
@@ -55,7 +55,7 @@ object UntitledWorld {
         ModTabs.register()
 
         ModCyphers.register()
-        CypherAttributeRegistry.register()
+        CypherAttributes.register()
         CypherCategoryRegistry.register()
         CypherBehaviorHookRegistry.register()
 
@@ -102,7 +102,7 @@ object UntitledWorld {
     @SubscribeEvent
     fun registerRegistries(event: NewRegistryEvent) {
         event.register(ModCyphers.REGISTRY)
-        event.register(CypherAttributeRegistry.REGISTRY)
+        event.register(CypherAttributes.REGISTRY)
         event.register(CypherCategoryRegistry.REGISTRY)
         event.register(CypherBehaviorHookRegistry.REGISTRY)
     }

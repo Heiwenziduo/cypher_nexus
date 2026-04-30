@@ -13,7 +13,7 @@ import thedarkcolour.kotlinforforge.neoforge.forge.MOD_BUS
 /**
  * registry attribute keys
  * */
-object CypherAttributeRegistry {
+object CypherAttributes {
     val RESOURCE_KEY: ResourceKey<Registry<CypherAttribute>> =
         ResourceKey.createRegistryKey(UntitledWorld.modResource("cypher/attribute"))
     val REGISTRY: Registry<CypherAttribute> = RegistryBuilder(RESOURCE_KEY).create()

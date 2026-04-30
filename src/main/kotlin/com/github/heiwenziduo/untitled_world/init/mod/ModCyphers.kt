@@ -46,18 +46,28 @@ object ModCyphers {
     // TODO should these be sorted by functionality? or just by alphabet?
 
     // projectile
-    val SNOWBALL_CYPHER = registerCypher(SnowballCypher)
+    val SNOWBALL = registerCypher(SnowballCypher)
 
     // static projectile
 
     // modifier
-    val ACCELERATION_CYPHER = registerCypher(SimpleModifier(10f, "acceleration").attribute(CypherAttributeRegistry.SPEED, CypherAttributeOperation.MULTIPLY_BASE, 0.5))
-    val DAMAGE_BOOST_CYPHER = registerCypher(SimpleModifier(20f, "damage_boost").attribute(CypherAttributeRegistry.DAMAGE, CypherAttributeOperation.ADD, 1.0))
-    val FOCUS_CYPHER = registerCypher(SimpleModifier(1f, "focus").attribute(CypherAttributeRegistry.SPREAD, CypherAttributeOperation.ADD, -30.0))
-    val RECOIL_LESS_CYPHER = registerCypher(SimpleModifier(1f, "recoil_less").attribute(CypherAttributeRegistry.RECOIL, CypherAttributeOperation.ADD, -5.0))
-    val RECOIL_MORE_CYPHER = registerCypher(SimpleModifier(1f, "recoil_more").attribute(CypherAttributeRegistry.RECOIL, CypherAttributeOperation.ADD, 5.0))
+    val ACCELERATION = registerCypher(SimpleModifier(10f, "acceleration").attribute(CypherAttributes.SPEED, CypherAttributeOperation.MULTIPLY_BASE, 0.5))
+    val BOUNCY = registerCypher(SimpleModifier(5f, "bouncy").attribute(CypherAttributes.BOUNCE, CypherAttributeOperation.ADD, 5.0))
+    val DAMAGE_BOOST = registerCypher(SimpleModifier(20f, "damage_boost").attribute(CypherAttributes.DAMAGE, CypherAttributeOperation.ADD, 1.0).attribute(CypherAttributes.RECOIL, CypherAttributeOperation.ADD, 1.0))
+    val FOCUS = registerCypher(SimpleModifier(1f, "focus").attribute(CypherAttributes.SPREAD, CypherAttributeOperation.ADD, -30.0))
+    val FIERCE = registerCypher(SimpleModifier(20f, "fierce").attribute(CypherAttributes.CRIT_CHANCE, CypherAttributeOperation.ADD, 0.15))
+    val HEAVY_SHOOT = registerCypher(SimpleModifier(20f, "heavy_shoot").attribute(CypherAttributes.DAMAGE, CypherAttributeOperation.ADD, 5.0).attribute(CypherAttributes.SPEED, CypherAttributeOperation.MULTIPLY_TOTAL, 0.5))
+    val MANA_SURGE = registerCypher(SimpleModifier(-66f, "mana_surge").attribute(CypherAttributes.CAST_DELAY, CypherAttributeOperation.ADD, 4.0))
+    val NO_BOUNCE = registerCypher(SimpleModifier(0f, "no_bounce").attribute(CypherAttributes.BOUNCE, CypherAttributeOperation.SET, 0.0))
+    val POWER_IMBUE = registerCypher(SimpleModifier(66f, "power_imbue").attribute(CypherAttributes.DAMAGE, CypherAttributeOperation.MULTIPLY_BASE, 0.25).attribute(CypherAttributes.SPEED, CypherAttributeOperation.MULTIPLY_BASE, 0.25).attribute(CypherAttributes.RECOIL, CypherAttributeOperation.ADD, 1.0).attribute(CypherAttributes.CAST_DELAY, CypherAttributeOperation.ADD, 8.0))
+    val RECOIL_LESS = registerCypher(SimpleModifier(1f, "recoil_less").attribute(CypherAttributes.RECOIL, CypherAttributeOperation.ADD, -5.0))
+    val RECOIL_MORE = registerCypher(SimpleModifier(1f, "recoil_more").attribute(CypherAttributes.RECOIL, CypherAttributeOperation.ADD, 5.0))
+    val RELOAD = registerCypher(SimpleModifier(12f, "reload").attribute(CypherAttributes.CAST_DELAY, CypherAttributeOperation.ADD, -4.0).attribute(CypherAttributes.RECHARGE_TIME, CypherAttributeOperation.ADD, -6.0))
+    val STOPWATCH = registerCypher(SimpleModifier(35f, "stopwatch").attribute(CypherAttributes.RECHARGE_TIME, CypherAttributeOperation.ADD, -4.0).attribute(CypherAttributes.EXISTING, CypherAttributeOperation.MULTIPLY_TOTAL, 0.8))
+    val TIMER = registerCypher(SimpleModifier(35f, "timer").attribute(CypherAttributes.RECHARGE_TIME, CypherAttributeOperation.ADD, 4.0).attribute(CypherAttributes.EXISTING, CypherAttributeOperation.MULTIPLY_TOTAL, 1.2))
+    val ZO = registerCypher(SimpleModifier(44f, "zo").attribute(CypherAttributes.CAST_DELAY, CypherAttributeOperation.ADD, -2.0).attribute(CypherAttributes.RECHARGE_TIME, CypherAttributeOperation.ADD, -3.0).attribute(CypherAttributes.EXISTING, CypherAttributeOperation.SET, 1.0))
 
-    val HOMING_CYPHER = registerCypher(HomingCypher)
+    val HOMING = registerCypher(HomingCypher)
 
     // passive
 

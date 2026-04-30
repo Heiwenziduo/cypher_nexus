@@ -1,7 +1,7 @@
 package com.github.heiwenziduo.untitled_world.machinery.cypher
 
 import com.github.heiwenziduo.untitled_world.UntitledWorld
-import com.github.heiwenziduo.untitled_world.init.mod.CypherAttributeRegistry
+import com.github.heiwenziduo.untitled_world.init.mod.CypherAttributes
 import com.github.heiwenziduo.untitled_world.machinery.cypher.attribute.CypherAttribute
 import com.github.heiwenziduo.untitled_world.machinery.cypher.attribute.CypherAttributeOperation
 import com.github.heiwenziduo.untitled_world.machinery.cypher.category.CypherCategory
@@ -35,10 +35,10 @@ abstract class AbstractCypher(
         initializeData()
         registerHooks()
         // TODO: these attrs only affect the process of casting, while others affect the projectile behaviors, should we separate them?
-        addAttribute(CypherAttributeRegistry.CAST_DELAY, CypherAttributeOperation.ADD, 0.0)
-        addAttribute(CypherAttributeRegistry.RECHARGE_TIME, CypherAttributeOperation.ADD, 0.0)
-        addAttribute(CypherAttributeRegistry.RECOIL, CypherAttributeOperation.ADD, 0.0)
-        addAttribute(CypherAttributeRegistry.SPREAD, CypherAttributeOperation.ADD, 0.0)
+        addAttribute(CypherAttributes.CAST_DELAY, CypherAttributeOperation.ADD, 0.0)
+        addAttribute(CypherAttributes.RECHARGE_TIME, CypherAttributeOperation.ADD, 0.0)
+        addAttribute(CypherAttributes.RECOIL, CypherAttributeOperation.ADD, 0.0)
+        addAttribute(CypherAttributes.SPREAD, CypherAttributeOperation.ADD, 0.0)
     }
 
     /**

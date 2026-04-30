@@ -2,7 +2,7 @@ package com.github.heiwenziduo.untitled_world.content.cypher.projectile
 
 import com.github.heiwenziduo.untitled_world.UntitledWorld
 import com.github.heiwenziduo.untitled_world.content.entity.CypherProjectile
-import com.github.heiwenziduo.untitled_world.init.mod.CypherAttributeRegistry
+import com.github.heiwenziduo.untitled_world.init.mod.CypherAttributes
 import com.github.heiwenziduo.untitled_world.machinery.cypher.BasicProjectileCypher
 import com.github.heiwenziduo.untitled_world.machinery.cypher.CypherModifierHelper
 import net.minecraft.world.entity.LivingEntity
@@ -18,10 +18,10 @@ object SnowballCypher : BasicProjectileCypher(
 //        addAttribute(CypherAttributeRegistry.SPEED, 0.8)
 
         // test
-        addAttribute(CypherAttributeRegistry.DAMAGE, 1.0)
-        addAttribute(CypherAttributeRegistry.SPEED, 0.5)
-        addAttribute(CypherAttributeRegistry.EXISTING, 200.0)
-        addAttribute(CypherAttributeRegistry.BOUNCE, 5.0)
+        addAttribute(CypherAttributes.DAMAGE, 1.0)
+        addAttribute(CypherAttributes.SPEED, 0.5)
+        addAttribute(CypherAttributes.EXISTING, 200.0)
+        addAttribute(CypherAttributes.BOUNCE, 5.0)
 
     }
 
@@ -29,6 +29,7 @@ object SnowballCypher : BasicProjectileCypher(
         super.onCastServer(level, living, stack, helper, wandLength)
 
         val castDire = living.lookAngle.normalize()
+        // TODO consider wand tip inside an aabb
         val projPos = living.eyePosition.add(castDire.scale(wandLength.toDouble()))
 
         val snowball = CypherProjectile(level, living, this, helper, castDire)

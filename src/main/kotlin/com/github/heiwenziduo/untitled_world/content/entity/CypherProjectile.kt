@@ -2,7 +2,7 @@ package com.github.heiwenziduo.untitled_world.content.entity
 
 import com.github.heiwenziduo.untitled_world.UntitledWorld
 import com.github.heiwenziduo.untitled_world.init.ModEntities.CYPHER_PROJECTILE
-import com.github.heiwenziduo.untitled_world.init.mod.CypherAttributeRegistry
+import com.github.heiwenziduo.untitled_world.init.mod.CypherAttributes
 import com.github.heiwenziduo.untitled_world.machinery.cypher.AbstractCypher
 import com.github.heiwenziduo.untitled_world.machinery.cypher.CypherModifierHelper
 import com.github.heiwenziduo.untitled_world.machinery.cypher.EmptyCypher
@@ -12,8 +12,6 @@ import com.github.heiwenziduo.untitled_world.utility.VectorUtil
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.core.Holder
-import net.minecraft.core.particles.ItemParticleOption
-import net.minecraft.core.particles.ParticleOptions
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.syncher.EntityDataAccessor
@@ -25,7 +23,6 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.entity.projectile.ProjectileUtil
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.*
 import kotlin.jvm.optionals.getOrNull
@@ -103,9 +100,9 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
             }
         }
         // sync attrs render-related
-        existing = getAttrOrDefault(CypherAttributeRegistry.EXISTING).toInt()
-        speed = getAttrOrDefault(CypherAttributeRegistry.SPEED)
-        bounce = getAttrOrDefault(CypherAttributeRegistry.BOUNCE).toInt()
+        existing = getAttrOrDefault(CypherAttributes.EXISTING).toInt()
+        speed = getAttrOrDefault(CypherAttributes.SPEED)
+        bounce = getAttrOrDefault(CypherAttributes.BOUNCE).toInt()
 
         prepareMotion()
         // test
@@ -266,7 +263,7 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
         // TODO hook
         super.onHitEntity(result)
         val entity = result.entity
-        val damage = getAttrOrDefault(CypherAttributeRegistry.DAMAGE)
+        val damage = getAttrOrDefault(CypherAttributes.DAMAGE)
         if (damage >= 0)
             entity.hurt(damageSources().thrown(this, this.owner), damage.toFloat())
     }
