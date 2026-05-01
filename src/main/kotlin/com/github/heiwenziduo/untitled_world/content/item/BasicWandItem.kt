@@ -3,6 +3,9 @@ package com.github.heiwenziduo.untitled_world.content.item
 import com.github.heiwenziduo.untitled_world.init.ModDataComponents.WAND_HIGH_PAYLOAD
 import com.github.heiwenziduo.untitled_world.init.ModDataComponents.WAND_FREQUENT
 import com.github.heiwenziduo.untitled_world.init.ModDataComponents.WAND_INVARIABLE
+import com.github.heiwenziduo.untitled_world.init.mod.ModCyphers.DAMAGE_BOOST
+import com.github.heiwenziduo.untitled_world.init.mod.ModCyphers.SNOWBALL
+import com.github.heiwenziduo.untitled_world.machinery.cypher.AbstractCypher
 import com.github.heiwenziduo.untitled_world.machinery.wand.IWandLike
 import com.github.heiwenziduo.untitled_world.machinery.wand.data.WandDataFrequent
 import com.github.heiwenziduo.untitled_world.machinery.wand.data.WandDataHighPayload
@@ -51,7 +54,18 @@ open class BasicWandItem(
             val invariable = stack.get(WAND_INVARIABLE)
             val highPayload = stack.get(WAND_HIGH_PAYLOAD)
             val frequent = stack.get(WAND_FREQUENT)
-            if (invariable != null && highPayload != null && frequent != null) return IWandLike.WandDataBundle(invariable, highPayload, frequent)
+
+            // test
+            val testData: List<AbstractCypher> = listOf(
+                DAMAGE_BOOST.value(),
+                DAMAGE_BOOST.value(),
+                SNOWBALL.value()
+            )
+            val t = WandDataHighPayload(testData)
+
+            if (invariable != null && highPayload != null && frequent != null)
+//                return IWandLike.WandDataBundle(invariable, highPayload, frequent)
+                return IWandLike.WandDataBundle(invariable, t, frequent)
         }
         return null
     }

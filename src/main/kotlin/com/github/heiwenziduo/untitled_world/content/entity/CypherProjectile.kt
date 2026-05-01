@@ -65,25 +65,6 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
         owner = caster
         cypher = cypher0
         moveDirection = direction?: caster?.lookAngle?.normalize()?: moveDirection
-
-//        if (cypher is IConsumerCypher) {
-//            cypher.attributeMap.forEach { (holder, map) ->
-//                // do not modify the helper map here
-//                val attr = holder.value()
-//                if (!attr.isProjectileAttribute) return@forEach // kotlin@ this return jumps to "forEach" and start next loop, cool
-//                _attributeMap.compute(attr) { k, n ->
-//                    val def = map.getOrDefault(CypherAttributeOperation.BASE, attr.defaultValue)
-//                    val operMap = helper.computedMap.getOrElse(attr) { HashMap() }
-//                    val set = operMap[CypherAttributeOperation.SET]
-//                    val add = operMap[CypherAttributeOperation.ADD]?: CypherAttributeOperation.ADD.defaultValue
-//                    val mulBase = operMap[CypherAttributeOperation.MULTIPLY_BASE]?: CypherAttributeOperation.MULTIPLY_BASE.defaultValue
-//                    val mulTotal = operMap[CypherAttributeOperation.MULTIPLY_TOTAL]?: CypherAttributeOperation.MULTIPLY_TOTAL.defaultValue
-//                    val final = (set ?: ((def + add) * mulBase * mulTotal))
-//
-//                    final
-//                }
-//            }
-//        }
         helper.computedMap.forEach { (attr, helperMap) ->
             // do not modify the helper map here
             if (!attr.isProjectileAttribute) return@forEach

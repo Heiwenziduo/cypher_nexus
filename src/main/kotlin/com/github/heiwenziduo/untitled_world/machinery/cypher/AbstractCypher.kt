@@ -17,9 +17,7 @@ import net.minecraft.world.level.Level
 /**
  *
  * */
-abstract class AbstractCypher(
-
-): IRegisterable {
+sealed class AbstractCypher: IRegisterable {
     open val manaDrain: Float = 0f
     open val draw: Int = 0
     private val _attributeMap = HashMap<Holder<CypherAttribute>, HashMap<CypherAttributeOperation, Double>>()

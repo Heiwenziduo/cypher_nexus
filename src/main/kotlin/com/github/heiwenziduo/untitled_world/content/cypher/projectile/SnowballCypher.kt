@@ -3,13 +3,13 @@ package com.github.heiwenziduo.untitled_world.content.cypher.projectile
 import com.github.heiwenziduo.untitled_world.UntitledWorld
 import com.github.heiwenziduo.untitled_world.content.entity.CypherProjectile
 import com.github.heiwenziduo.untitled_world.init.mod.CypherAttributes
-import com.github.heiwenziduo.untitled_world.machinery.cypher.BasicProjectileCypher
+import com.github.heiwenziduo.untitled_world.machinery.cypher.ProjectileCypher
 import com.github.heiwenziduo.untitled_world.machinery.cypher.CypherModifierHelper
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 
-object SnowballCypher : BasicProjectileCypher(
+object SnowballCypher : ProjectileCypher(
     manaDrain = 20f
 ) {
     override val resource = UntitledWorld.modResource("snowball")

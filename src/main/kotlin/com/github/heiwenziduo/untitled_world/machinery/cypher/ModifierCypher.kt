@@ -4,9 +4,9 @@ import com.github.heiwenziduo.untitled_world.init.mod.CypherCategoryRegistry
 import com.github.heiwenziduo.untitled_world.machinery.cypher.category.CypherCategory
 import net.minecraft.core.Holder
 
-abstract class BasicModifierCypher (
+abstract class ModifierCypher (
     override val manaDrain: Float
-) : AbstractCypher(), IProviderCypher {
+) : AbstractNonProjectileCypher() {
     init {
 
     }

@@ -2,8 +2,6 @@ package com.github.heiwenziduo.untitled_world.machinery.wand
 
 import com.github.heiwenziduo.untitled_world.UntitledWorld
 import com.github.heiwenziduo.untitled_world.init.mod.ModCyphers
-import com.github.heiwenziduo.untitled_world.init.mod.ModCyphers.DAMAGE_BOOST
-import com.github.heiwenziduo.untitled_world.init.mod.ModCyphers.SNOWBALL
 import com.github.heiwenziduo.untitled_world.machinery.cypher.AbstractCypher
 import com.github.heiwenziduo.untitled_world.machinery.cypher.CypherModifierHelper
 import com.github.heiwenziduo.untitled_world.machinery.wand.data.WandDataFrequent
@@ -48,16 +46,8 @@ interface IWandLike {
         val (max, regen, length) = invariable.chunk0
         val (capa, draw, delay, recharge) = invariable.chunk1
         val (always) = invariable.chunk2
-        val (spellList) = highPayload
+        val (cypherList) = highPayload
         val (manaCurrent, index) = frequent
-
-        // read cypher-list from stack
-        // TODO data read from codec is list<AbstractCypher> directly
-        val cypherList: List<ResourceLocation> = listOf(
-            DAMAGE_BOOST.value().resource,
-            DAMAGE_BOOST.value().resource,
-            SNOWBALL.value().resource
-        )
 
         UntitledWorld.LOGGER.debug("Casting start, is client side? {}\nCypherList: {}", level.isClientSide, cypherList)
 //        UntitledWorld.LOGGER.debug("read from data component: {}", stack.get(ModDataComponents.WAND_DATA))

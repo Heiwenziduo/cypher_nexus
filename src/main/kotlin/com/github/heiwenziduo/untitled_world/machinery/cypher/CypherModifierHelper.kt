@@ -20,7 +20,7 @@ class CypherModifierHelper(
     var draw: Int = 1,
     val wandLength: Float = 1f,
 
-    val cypherList: List<ResourceLocation>,
+    val cypherList: List<AbstractCypher>,
     val level: Level,
     val caster: LivingEntity,
     val stack: ItemStack?,
@@ -73,8 +73,7 @@ class CypherModifierHelper(
     private fun castLoop() {
         if (draw <=0 || index >= cypherList.size) return
 
-        val resource = cypherList[index]
-        val cypher = ModCyphers.getCypherOrThrow(resource)
+        val cypher = cypherList[index]
 
         manaCurrent -= cypher.manaDrain
         println("casting $cypher \ncurrent mana: ${manaCurrent}")
@@ -97,8 +96,10 @@ class CypherModifierHelper(
         draw += cypher.draw
         cypher.addAttribute(this) // computedMap will include both Consumer-attr(BASE) and modifier-attr
 
-        if (cypher is IProviderCypher) { }
-        if (cypher is IConsumerCypher) { }
+        when(cypher) {
+            is AbstractProjectileCypher -> ""
+            is AbstractNonProjectileCypher -> ""
+        }
 
         if (!level.isClientSide) cypher.onCastServer(level, caster, stack, this, wandLength)
     }

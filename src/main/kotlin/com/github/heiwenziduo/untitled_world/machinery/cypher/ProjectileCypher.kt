@@ -2,9 +2,9 @@ package com.github.heiwenziduo.untitled_world.machinery.cypher
 
 import com.github.heiwenziduo.untitled_world.init.mod.CypherCategoryRegistry
 
-abstract class BasicProjectileCypher(
+abstract class ProjectileCypher(
     override val manaDrain: Float
-) : AbstractCypher(), IConsumerCypher {
+) : AbstractProjectileCypher() {
     init {
 
 //        println("====BasicProjectileCypher====")

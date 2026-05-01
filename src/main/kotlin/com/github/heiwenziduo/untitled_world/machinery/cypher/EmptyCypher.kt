@@ -6,7 +6,7 @@ import com.github.heiwenziduo.untitled_world.init.mod.CypherCategoryRegistry
 /**
  * default registered cypher, like blocks:air, any cypher missing a registry name will be replaced with this.
  * */
-object EmptyCypher: AbstractCypher(), IConsumerCypher {
+object EmptyCypher: AbstractNonProjectileCypher() {
     override val category = CypherCategoryRegistry.OTHER
     override val resource = UntitledWorld.modResource("empty_cypher")
 }
