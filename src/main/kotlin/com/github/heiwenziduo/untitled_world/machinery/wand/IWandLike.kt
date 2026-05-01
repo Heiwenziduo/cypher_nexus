@@ -1,12 +1,14 @@
 package com.github.heiwenziduo.untitled_world.machinery.wand
 
 import com.github.heiwenziduo.untitled_world.UntitledWorld
-import com.github.heiwenziduo.untitled_world.init.ModDataComponents
 import com.github.heiwenziduo.untitled_world.init.mod.ModCyphers
 import com.github.heiwenziduo.untitled_world.init.mod.ModCyphers.DAMAGE_BOOST
 import com.github.heiwenziduo.untitled_world.init.mod.ModCyphers.SNOWBALL
 import com.github.heiwenziduo.untitled_world.machinery.cypher.AbstractCypher
 import com.github.heiwenziduo.untitled_world.machinery.cypher.CypherModifierHelper
+import com.github.heiwenziduo.untitled_world.machinery.wand.data.WandDataFrequent
+import com.github.heiwenziduo.untitled_world.machinery.wand.data.WandDataHighPayload
+import com.github.heiwenziduo.untitled_world.machinery.wand.data.WandDataInvariable
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.item.ItemStack
@@ -14,20 +16,18 @@ import net.minecraft.world.level.Level
 
 /**
  * ---casting logics here---
- * Any Item implemented the interface here should be able to conduct the power of cyphers
+ * Any Item implemented the interface here should be able to conduct the power of spells
  * */
 interface IWandLike {
     val infiniteMana: Boolean
         get() = true
 
-    fun validateData(stack: ItemStack): Boolean {
-        val wandData = stack.get(ModDataComponents.WAND_DATA)
-        val castData = stack.get(ModDataComponents.CAST_DATA)
-        if (wandData == null || castData == null) {
-            UntitledWorld.LOGGER.warn("wand not valid, missing ${if (wandData == null) "wand" else "cast"}-data! $stack")
-        }
-        return wandData != null && castData != null
-    }
+
+    abstract fun getWandData(stack: ItemStack?, caster: LivingEntity?): WandDataBundle?
+    abstract fun setWandData(stack: ItemStack?, invariable: WandDataInvariable?, highPayload: WandDataHighPayload?, frequent: WandDataFrequent)
+    fun setWandData(stack: ItemStack?, frequent: WandDataFrequent) = setWandData(stack, null, null, frequent)
+    fun setWandData(stack: ItemStack?, bundle: WandDataBundle) = setWandData(stack, bundle.invariable, bundle.highPayload, bundle.frequent)
+
 
     fun parseCypherList(cyphers: String): List<AbstractCypher> =
         cyphers.split(",").map {
@@ -38,59 +38,61 @@ interface IWandLike {
 
 
     /**
-     * on manual cast
+     * a manual "draw"
      * */
-    fun cast(level: Level, living: LivingEntity, stack: ItemStack) {
+    fun cast(level: Level, caster: LivingEntity, stack: ItemStack?) {
+        // TODO let fake-player/machine can cast spells
+        val wandData = getWandData(stack, caster)
+        if (wandData == null) return
+        val (invariable, highPayload, frequent) = wandData
+        val (max, regen, length) = invariable.chunk0
+        val (capa, draw, delay, recharge) = invariable.chunk1
+        val (always) = invariable.chunk2
+        val (spellList) = highPayload
+        val (manaCurrent, index) = frequent
+
         // read cypher-list from stack
+        // TODO data read from codec is list<AbstractCypher> directly
         val cypherList: List<ResourceLocation> = listOf(
             DAMAGE_BOOST.value().resource,
             DAMAGE_BOOST.value().resource,
             SNOWBALL.value().resource
         )
+
         UntitledWorld.LOGGER.debug("Casting start, is client side? {}\nCypherList: {}", level.isClientSide, cypherList)
 //        UntitledWorld.LOGGER.debug("read from data component: {}", stack.get(ModDataComponents.WAND_DATA))
-
         if (level.isClientSide)
         // send casting info to server
             return
 
-        // read things from stack
-        val wandData = stack.get(ModDataComponents.WAND_DATA)
-        val castData = stack.get(ModDataComponents.CAST_DATA)
-        if (wandData == null || castData == null) {
-            UntitledWorld.LOGGER.warn("${living.name} try cast cyphers but missing ${if (wandData == null) "wand" else "cast"} data! $stack")
-            return
-        }
-
-        var (index, manaCurrent) = castData
-        val (manaMax, _, _, draw, wandLength, cyphers) = wandData
 
         // ... handle "always cast" things
         val helper = CypherModifierHelper(
             manaCurrent = if (infiniteMana) 3.0E9f else manaCurrent,
-            manaMax = manaMax,
+            manaMax = max,
             index = index,
             draw = draw,
-            wandLength = wandLength,
+            wandLength = length,
             cypherList = cypherList,
             level = level,
-            caster = living,
+            caster = caster,
             stack = stack,
         )
-        val (newMana, newIndex) = helper.start()
-
         // retrieve data from helper and write to components
+        val (newManaCurrent, newIndex) = helper.start()
+        setWandData(stack, WandDataFrequent(newManaCurrent, newIndex))
 
-        // update stack
         /* @doc
          * Any component values within the map should be treated as immutable.
          * Always call #set or one of its referring methods discussed below after modifying the value of a data component.
          * */
-        stack.set(ModDataComponents.CAST_DATA, castData.update(newIndex, newMana))
 
         // auto-sync
-        UntitledWorld.LOGGER.debug("server write to data component: {}", stack.get(ModDataComponents.WAND_DATA))
+        UntitledWorld.LOGGER.debug("server write to data component: {}", 1)
 
         UntitledWorld.LOGGER.debug("Casting finish...")
     }
+
+
+    data class WandDataBundle(val invariable: WandDataInvariable, val highPayload: WandDataHighPayload, val frequent: WandDataFrequent)
 }

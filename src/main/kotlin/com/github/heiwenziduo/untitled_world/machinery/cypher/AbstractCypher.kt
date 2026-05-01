@@ -85,7 +85,7 @@ abstract class AbstractCypher(
 
     /** custom logic up to subclasses */
     // TODO maybe change this to "hook"
-    open fun onCastServer(level: Level, living: LivingEntity, stack: ItemStack, helper: CypherModifierHelper, wandLength: Float) {}
+    open fun onCastServer(level: Level, living: LivingEntity, stack: ItemStack?, helper: CypherModifierHelper, wandLength: Float) {}
 
     // ============================================================================================================
 

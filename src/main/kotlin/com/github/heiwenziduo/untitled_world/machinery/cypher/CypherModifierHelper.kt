@@ -23,7 +23,7 @@ class CypherModifierHelper(
     val cypherList: List<ResourceLocation>,
     val level: Level,
     val caster: LivingEntity,
-    val stack: ItemStack,
+    val stack: ItemStack?,
 ) {
     operator fun component1() = manaCurrent // for destructuring
     operator fun component2() = index

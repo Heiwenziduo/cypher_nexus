@@ -1,13 +1,9 @@
 package com.github.heiwenziduo.untitled_world.init
 
 import com.github.heiwenziduo.untitled_world.UntitledWorld
-import com.github.heiwenziduo.untitled_world.machinery.wand.data.CastDataComponent
-import com.github.heiwenziduo.untitled_world.machinery.wand.data.CastDataComponent.CAST_DATA_CODEC
-import com.github.heiwenziduo.untitled_world.machinery.wand.data.CastDataComponent.CAST_DATA_STREAM_CODEC
-import com.github.heiwenziduo.untitled_world.machinery.wand.data.WandDataComponent
-import com.github.heiwenziduo.untitled_world.machinery.wand.data.WandDataComponent.WAND_DATA_CODEC
-import com.github.heiwenziduo.untitled_world.machinery.wand.data.WandDataComponent.WAND_DATA_STREAM_CODEC
-import net.minecraft.core.Holder
+import com.github.heiwenziduo.untitled_world.machinery.wand.data.WandDataFrequent
+import com.github.heiwenziduo.untitled_world.machinery.wand.data.WandDataHighPayload
+import com.github.heiwenziduo.untitled_world.machinery.wand.data.WandDataInvariable
 import net.minecraft.core.component.DataComponentType
 import net.minecraft.core.registries.Registries
 import net.neoforged.neoforge.registries.DeferredRegister
@@ -23,11 +19,15 @@ object ModDataComponents {
         DEFERRED_REGISTER.register(MOD_BUS)
     }
 
-    val WAND_DATA: Supplier<DataComponentType<WandDataComponent.WandData>> =
-        DEFERRED_REGISTER.registerComponentType("wand_data")
-        { it.persistent(WAND_DATA_CODEC).networkSynchronized(WAND_DATA_STREAM_CODEC) }
+    val WAND_INVARIABLE: Supplier<DataComponentType<WandDataInvariable>> =
+        DEFERRED_REGISTER.registerComponentType("wand_invariable")
+        { it.persistent(WandDataInvariable.INVARIABLE_DATA_CODEC).networkSynchronized(WandDataInvariable.INVARIABLE_DATA_STREAM) }
 
-    val CAST_DATA: Supplier<DataComponentType<CastDataComponent.CastData>> =
-        DEFERRED_REGISTER.registerComponentType("cast_data")
-        { it.persistent(CAST_DATA_CODEC).networkSynchronized(CAST_DATA_STREAM_CODEC) }
+    val WAND_HIGH_PAYLOAD: Supplier<DataComponentType<WandDataHighPayload>> =
+        DEFERRED_REGISTER.registerComponentType("wand_high_payload")
+        { it.persistent(WandDataHighPayload.HIGH_PAYLOAD_DATA_CODEC).networkSynchronized(WandDataHighPayload.HIGH_PAYLOAD_DATA_STREAM) }
+
+    val WAND_FREQUENT: Supplier<DataComponentType<WandDataFrequent>> =
+        DEFERRED_REGISTER.registerComponentType("wand_frequent")
+        { it.persistent(WandDataFrequent.FREQUENT_DATA_CODEC).networkSynchronized(WandDataFrequent.FREQUENT_DATA_STREAM) }
 }
