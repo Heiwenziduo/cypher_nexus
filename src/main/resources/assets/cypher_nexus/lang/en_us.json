@@ -1,0 +1,34 @@
+{
+  "advancements.literacy.cypher_nexus.root.title": "Cyphers",
+  "advancements.literacy.cypher_nexus.root.description": "Lexicon of cyphers",
+  "advancements.literacy.cypher_nexus.first_wand.title": "First Wand",
+  "advancements.literacy.cypher_nexus.first_wand.description": "Obtain your first wand",
+
+  "block.cypher_nexus.cypher_index": "Cypher Index",
+
+  "cypher.attribute.cypher_nexus.cast_delay": "Cast Delay",
+  "cypher.attribute.cypher_nexus.recharge_time": "Recharge",
+  "cypher.attribute.cypher_nexus.damage": "Damage",
+  "cypher.attribute.cypher_nexus.speed": "Speed",
+  "cypher.attribute.cypher_nexus.spread": "Spread",
+  "cypher.attribute.cypher_nexus.recoil": "Recoil",
+  "cypher.attribute.cypher_nexus.redius": "Redius",
+  "cypher.attribute.cypher_nexus.bounce": "Bounce",
+  "cypher.attribute.cypher_nexus.crit_chance": "Crit",
+
+  "cypher.category.cypher_nexus.projectile": "Projectile",
+  "cypher.category.cypher_nexus.static_projectile": "Static",
+  "cypher.category.cypher_nexus.modifier": "Modifier",
+  "cypher.category.cypher_nexus.passive": "Passive",
+  "cypher.category.cypher_nexus.other": "Other",
+
+  "cypher.cypher_nexus.modifier.damage_boost": "Damage Boost",
+  "cypher.cypher_nexus.modifier.homing": "Homing",
+  "cypher.cypher_nexus.projectile.snowball": "Snowball",
+
+  "gui.cypher_nexus.cypher_index.": "--tmp",
+
+  "item_group.cypher_nexus": "Untitled World All",
+
+  "item.cypher_nexus.basic_wand": "Basic Wand"
+}
