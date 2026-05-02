@@ -4,6 +4,7 @@ import com.github.heiwenziduo.cypher_nexus.CypherNexus
 import com.github.heiwenziduo.cypher_nexus.init.mod.ModCyphers
 import com.github.heiwenziduo.cypher_nexus.machinery.cypher.AbstractCypher
 import com.github.heiwenziduo.cypher_nexus.machinery.cypher.CypherModifierHelper
+import com.github.heiwenziduo.cypher_nexus.machinery.cypher.CypherModifierHelper.HelperDataBundle
 import com.github.heiwenziduo.cypher_nexus.machinery.wand.data.WandDataFrequent
 import com.github.heiwenziduo.cypher_nexus.machinery.wand.data.WandDataHighPayload
 import com.github.heiwenziduo.cypher_nexus.machinery.wand.data.WandDataInvariable
@@ -17,9 +18,6 @@ import net.minecraft.world.level.Level
  * Any Item implemented the interface here should be able to conduct the power of cyphers
  * */
 interface IWandLike {
-    val infiniteMana: Boolean
-        get() = true
-
 
     abstract fun getWandData(stack: ItemStack?, caster: LivingEntity?): WandDataBundle?
     abstract fun setWandData(stack: ItemStack?, invariable: WandDataInvariable?, highPayload: WandDataHighPayload?, frequent: WandDataFrequent)
@@ -36,49 +34,29 @@ interface IWandLike {
 
 
     /**
-     * a manual "draw"
+     * try a manual "draw", may not success due to delay/recharge/disabled/noMana/E.D. e.t.c.
      * */
-    fun conduct(level: Level, caster: LivingEntity, stack: ItemStack?) {
+    fun tryConduct(level: Level, caster: LivingEntity, stack: ItemStack?) {
         // TODO let fake-player/machine can cast cyphers
         val wandData = getWandData(stack, caster)
         if (wandData == null) return
         val (invariable, highPayload, frequent) = wandData
-        val (max, regen, length) = invariable.chunk0
-        val (capa, draw, delay, recharge) = invariable.chunk1
-        val (always) = invariable.chunk2
         val (cypherList) = highPayload
-        val (manaCurrent, index) = frequent
 
         CypherNexus.LOGGER.debug("Casting start, is client side? {}\nCypherList: {}", level.isClientSide, cypherList)
-//        UntitledWorld.LOGGER.debug("read from data component: {}", stack.get(ModDataComponents.WAND_DATA))
+        CypherNexus.LOGGER.debug("read from data component: {}\n\n\n", wandData)
         if (level.isClientSide)
         // send casting info to server
             return
 
-
-        // ... handle "always cast" things
-        val helper = CypherModifierHelper(
-            manaCurrent = if (infiniteMana) 3.0E9f else manaCurrent,
-            manaMax = max,
-            index = index,
-            draw = draw,
-            wandLength = length,
-            cypherList = cypherList,
-            level = level,
-            caster = caster,
-            stack = stack,
-        )
+        val bundle = HelperDataBundle(invariable.chunkI.draw, frequent)
+        val helper = CypherModifierHelper(level, caster, stack, invariable, cypherList, bundle)
         // retrieve data from helper and write to components
-        val (newManaCurrent, newIndex) = helper.start()
-        setWandData(stack, WandDataFrequent(newManaCurrent, newIndex))
-
-        /* @doc
-         * Any component values within the map should be treated as immutable.
-         * Always call #set or one of its referring methods discussed below after modifying the value of a data component.
-         * */
+        helper.start()
+        setWandData(stack, WandDataFrequent(bundle))
 
         // auto-sync
-        CypherNexus.LOGGER.debug("server write to data component: {}", 1)
+        CypherNexus.LOGGER.debug("server write to data component: {}", bundle)
 
         CypherNexus.LOGGER.debug("Casting finish...")
     }

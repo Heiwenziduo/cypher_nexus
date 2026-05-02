@@ -1,24 +1,32 @@
 package com.github.heiwenziduo.cypher_nexus.machinery.wand.data
 
+import com.github.heiwenziduo.cypher_nexus.machinery.cypher.CypherModifierHelper
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import io.netty.buffer.ByteBuf
 import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
 
-data class WandDataFrequent (val manaCurrent: Float, val index: Int, ) {
+data class WandDataFrequent (val manaCurrent: Float, val index: Int, val delay: Int, val recharge: Int, val rechargeTotal: Int) {
+    constructor(data: CypherModifierHelper.HelperDataBundle) : this(data.manaCurrent, data.index, data.delay, data.recharge, data.recharge)
 
     companion object {
         val FREQUENT_DATA_CODEC: Codec<WandDataFrequent> = RecordCodecBuilder.create { it.group(
             Codec.FLOAT.fieldOf("manaCurrent").forGetter(WandDataFrequent::manaCurrent),
             Codec.INT.fieldOf("index").forGetter(WandDataFrequent::index),
+            Codec.INT.fieldOf("delay").forGetter(WandDataFrequent::delay),
+            Codec.INT.fieldOf("recharge").forGetter(WandDataFrequent::recharge),
+            Codec.INT.fieldOf("rechargeTotal").forGetter(WandDataFrequent::rechargeTotal),
         ).apply(it, ::WandDataFrequent) }
 
         val FREQUENT_DATA_STREAM: StreamCodec<ByteBuf, WandDataFrequent> = StreamCodec.composite(
                 ByteBufCodecs.FLOAT, WandDataFrequent::manaCurrent,
             ByteBufCodecs.INT, WandDataFrequent::index,
+            ByteBufCodecs.INT, WandDataFrequent::delay,
+            ByteBufCodecs.INT, WandDataFrequent::recharge,
+            ByteBufCodecs.INT, WandDataFrequent::rechargeTotal,
                 ::WandDataFrequent)
 
-        val DEFAULT = WandDataFrequent(0f, 0)
+        val DEFAULT = WandDataFrequent(0f, 0, 0, 0, 0)
     }
 }

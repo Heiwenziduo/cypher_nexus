@@ -13,64 +13,64 @@ import net.minecraft.network.codec.StreamCodec
 /**
  * holds wand invariable data, separate into chunks
  * */
-data class WandDataInvariable(val chunk0: WandDataChunk0, val chunk1: WandDataChunk1, val chunk2: WandDataChunk2) {
-    data class WandDataChunk0(val maxMana: Float, val manaRegen: Float, val wandLength: Float)
-    data class WandDataChunk1(val capacity: Int, val draw: Int, val castDelay: Int, val recharge: Int,)
-    data class WandDataChunk2(val alwaysCast: List<AbstractCypher>)
+data class WandDataInvariable(val chunkF: WandDataChunkF, val chunkI: WandDataChunkI, val chunkL: WandDataChunkL) {
+    data class WandDataChunkF(val maxMana: Float, val manaRegen: Float, val wandLength: Float,)
+    data class WandDataChunkI(val capacity: Int, val draw: Int, val castDelay: Int, val rechargeTime: Int,)
+    data class WandDataChunkL(val alwaysCast: List<AbstractCypher>)
 
     companion object {
-        val CHUNK0_CODEX: Codec<WandDataChunk0> = RecordCodecBuilder.create { it.group(
-            Codec.FLOAT.fieldOf("manaMax").forGetter(WandDataChunk0::maxMana),
-            Codec.FLOAT.fieldOf("manaRegen").forGetter(WandDataChunk0::manaRegen),
-            Codec.FLOAT.fieldOf("wandLength").forGetter(WandDataChunk0::wandLength),
-        ).apply(it, ::WandDataChunk0) }
-        val CHUNK1_CODEX: Codec<WandDataChunk1> = RecordCodecBuilder.create { it.group(
-            Codec.INT.fieldOf("capacity").forGetter(WandDataChunk1::capacity),
-            Codec.INT.fieldOf("draw").forGetter(WandDataChunk1::draw),
-            Codec.INT.fieldOf("castDelay").forGetter(WandDataChunk1::castDelay),
-            Codec.INT.fieldOf("recharge").forGetter(WandDataChunk1::recharge),
-        ).apply(it, ::WandDataChunk1) }
-        val CHUNK2_CODEX: Codec<WandDataChunk2> = RecordCodecBuilder.create { it.group(
+        val CHUNK0_CODEX: Codec<WandDataChunkF> = RecordCodecBuilder.create { it.group(
+            Codec.FLOAT.fieldOf("manaMax").forGetter(WandDataChunkF::maxMana),
+            Codec.FLOAT.fieldOf("manaRegen").forGetter(WandDataChunkF::manaRegen),
+            Codec.FLOAT.fieldOf("wandLength").forGetter(WandDataChunkF::wandLength),
+        ).apply(it, ::WandDataChunkF) }
+        val CHUNK1_CODEX: Codec<WandDataChunkI> = RecordCodecBuilder.create { it.group(
+            Codec.INT.fieldOf("capacity").forGetter(WandDataChunkI::capacity),
+            Codec.INT.fieldOf("draw").forGetter(WandDataChunkI::draw),
+            Codec.INT.fieldOf("castDelay").forGetter(WandDataChunkI::castDelay),
+            Codec.INT.fieldOf("rechargeTime").forGetter(WandDataChunkI::rechargeTime),
+        ).apply(it, ::WandDataChunkI) }
+        val CHUNK2_CODEX: Codec<WandDataChunkL> = RecordCodecBuilder.create { it.group(
             ModCyphers.REGISTRY
                 .byNameCodec().listOf()
                 .fieldOf("alwaysCast")
-                .forGetter(WandDataChunk2::alwaysCast)
-        ).apply(it, ::WandDataChunk2) }
+                .forGetter(WandDataChunkL::alwaysCast)
+        ).apply(it, ::WandDataChunkL) }
 
         val INVARIABLE_DATA_CODEC: Codec<WandDataInvariable> = RecordCodecBuilder.create { it.group(
-            CHUNK0_CODEX.fieldOf("chunk0").forGetter(WandDataInvariable::chunk0),
-            CHUNK1_CODEX.fieldOf("chunk1").forGetter(WandDataInvariable::chunk1),
-            CHUNK2_CODEX.fieldOf("chunk2").forGetter(WandDataInvariable::chunk2),
+            CHUNK0_CODEX.fieldOf("chunk0").forGetter(WandDataInvariable::chunkF),
+            CHUNK1_CODEX.fieldOf("chunk1").forGetter(WandDataInvariable::chunkI),
+            CHUNK2_CODEX.fieldOf("chunk2").forGetter(WandDataInvariable::chunkL),
         ).apply(it, ::WandDataInvariable) }
 
 
-        val CHUNK0_STREAM: StreamCodec<ByteBuf, WandDataChunk0> = StreamCodec.composite(
-            ByteBufCodecs.FLOAT, WandDataChunk0::maxMana,
-            ByteBufCodecs.FLOAT, WandDataChunk0::manaRegen,
-            ByteBufCodecs.FLOAT, WandDataChunk0::wandLength,
-            ::WandDataChunk0)
-        val CHUNK1_STREAM: StreamCodec<ByteBuf, WandDataChunk1> = StreamCodec.composite(
-            ByteBufCodecs.INT, WandDataChunk1::capacity,
-            ByteBufCodecs.INT, WandDataChunk1::draw,
-            ByteBufCodecs.INT, WandDataChunk1::castDelay,
-            ByteBufCodecs.INT, WandDataChunk1::recharge,
-            ::WandDataChunk1)
-        val CHUNK2_STREAM: StreamCodec<RegistryFriendlyByteBuf, WandDataChunk2> =
+        val CHUNK0_STREAM: StreamCodec<ByteBuf, WandDataChunkF> = StreamCodec.composite(
+            ByteBufCodecs.FLOAT, WandDataChunkF::maxMana,
+            ByteBufCodecs.FLOAT, WandDataChunkF::manaRegen,
+            ByteBufCodecs.FLOAT, WandDataChunkF::wandLength,
+            ::WandDataChunkF)
+        val CHUNK1_STREAM: StreamCodec<ByteBuf, WandDataChunkI> = StreamCodec.composite(
+            ByteBufCodecs.INT, WandDataChunkI::capacity,
+            ByteBufCodecs.INT, WandDataChunkI::draw,
+            ByteBufCodecs.INT, WandDataChunkI::castDelay,
+            ByteBufCodecs.INT, WandDataChunkI::rechargeTime,
+            ::WandDataChunkI)
+        val CHUNK2_STREAM: StreamCodec<RegistryFriendlyByteBuf, WandDataChunkL> =
             ByteBufCodecs.registry(ModCyphers.RESOURCE_KEY).apply(ByteBufCodecs.list())
-                .map(::WandDataChunk2, WandDataChunk2::alwaysCast)
+                .map(::WandDataChunkL, WandDataChunkL::alwaysCast)
 
         val INVARIABLE_DATA_STREAM: StreamCodec<RegistryFriendlyByteBuf, WandDataInvariable> = StreamCodec.composite(
-            CHUNK0_STREAM, WandDataInvariable::chunk0,
-            CHUNK1_STREAM, WandDataInvariable::chunk1,
-            CHUNK2_STREAM, WandDataInvariable::chunk2,
+            CHUNK0_STREAM, WandDataInvariable::chunkF,
+            CHUNK1_STREAM, WandDataInvariable::chunkI,
+            CHUNK2_STREAM, WandDataInvariable::chunkL,
             ::WandDataInvariable
         )
 
 
         val DEFAULT = WandDataInvariable(
-            WandDataChunk0(300f, 1.5f, 1.2f),
-            WandDataChunk1(6, 1, 12, 15),
-            WandDataChunk2(listOf())
+            WandDataChunkF(300f, 3f, 1.2f),
+            WandDataChunkI(6, 1, 12, 15),
+            WandDataChunkL(listOf())
         )
     }
 }

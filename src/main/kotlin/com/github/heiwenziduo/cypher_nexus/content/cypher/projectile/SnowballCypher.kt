@@ -25,14 +25,14 @@ object SnowballCypher : ProjectileCypher(
 
     }
 
-    override fun onCastServer(level: Level, living: LivingEntity, stack: ItemStack?, helper: CypherModifierHelper, wandLength: Float) {
-        super.onCastServer(level, living, stack, helper, wandLength)
+    override fun onCastServer(level: Level, caster: LivingEntity, stack: ItemStack?, helper: CypherModifierHelper, wandLength: Float) {
+        super.onCastServer(level, caster, stack, helper, wandLength)
 
-        val castDire = living.lookAngle.normalize()
+        val castDire = caster.lookAngle.normalize()
         // TODO consider wand tip inside an aabb
-        val projPos = living.eyePosition.add(castDire.scale(wandLength.toDouble()))
+        val projPos = caster.eyePosition.add(castDire.scale(wandLength.toDouble()))
 
-        val snowball = CypherProjectile(level, living, this, helper, castDire)
+        val snowball = CypherProjectile(level, caster, this, helper, castDire)
         snowball.setPos(projPos)
         level.addFreshEntity(snowball)
 

@@ -40,12 +40,13 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
 //            return Vec3(v3f)
 //        }
 //        set(value) = entityData.set(MOVE_DIRECTION, value.toVector3f())
-    var existing: Int
-        get() = entityData.get(EXISTING)
-        set(value) = entityData.set(EXISTING, value)
     var speed: Double
         get() = entityData.get(SPEED).toDouble()
         set(value) = entityData.set(SPEED, value.toFloat())
+
+    var existing: Int
+        get() = entityData.get(EXISTING)
+        set(value) = entityData.set(EXISTING, value)
     var bounce: Int
         get() = entityData.get(BOUNCE)
         set(value) = entityData.set(BOUNCE, value)
@@ -65,7 +66,7 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
         owner = caster
         cypher = cypher0
         moveDirection = direction?: caster?.lookAngle?.normalize()?: moveDirection
-        helper.computedMap.forEach { (attr, helperMap) ->
+        helper.computedOperationMap.forEach { (attr, helperMap) ->
             // do not modify the helper map here
             if (!attr.isProjectileAttribute) return@forEach
             _attributeMap.compute(attr) { a, v ->
