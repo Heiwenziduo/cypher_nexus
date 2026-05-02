@@ -5,6 +5,7 @@ import com.github.heiwenziduo.cypher_nexus.init.mod.CypherAttributes
 import com.github.heiwenziduo.cypher_nexus.machinery.cypher.attribute.CypherAttribute
 import com.github.heiwenziduo.cypher_nexus.machinery.cypher.attribute.CypherAttributeOperation
 import com.github.heiwenziduo.cypher_nexus.machinery.cypher.category.CypherCategory
+import com.github.heiwenziduo.cypher_nexus.machinery.cypher.flag.CypherFlags
 import com.github.heiwenziduo.cypher_nexus.utility.i.IRegisterable
 import net.minecraft.core.Holder
 import net.minecraft.network.chat.Component
@@ -20,6 +21,10 @@ import net.minecraft.world.level.Level
 sealed class AbstractCypher: IRegisterable {
     open val manaDrain: Float = 0f
     open val draw: Int = 0
+    private var _flag: Int = 0
+    /** use #addFlag during init */
+    val flag: Int
+        get() = _flag
     private val _attributeMap = HashMap<Holder<CypherAttribute>, HashMap<CypherAttributeOperation, Double>>()
     val attributeMap
         get() = _attributeMap
@@ -39,13 +44,6 @@ sealed class AbstractCypher: IRegisterable {
         addAttribute(CypherAttributes.SPREAD, CypherAttributeOperation.ADD, 0.0)
     }
 
-    /**
-     * add Attributes use #defaultValue as BASE value
-     * */
-    @Deprecated("no need to claim redundant #defaultValue")
-    protected fun addAttribute(holder: Holder<CypherAttribute>): AbstractCypher {
-        return addAttribute(holder, CypherAttributeOperation.BASE, null)
-    }
     /**
      * add Attributes with its BASE value
      * */
@@ -79,6 +77,11 @@ sealed class AbstractCypher: IRegisterable {
      * register a hook to modifier projectile-AI at specific moments
      * */
     protected open fun registerHooks() {}
+
+    protected fun addFlag(flags: CypherFlags): AbstractCypher {
+        _flag = _flag or flags.value
+        return this
+    }
 
 
     /** custom logic up to subclasses */

@@ -10,7 +10,7 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 
 object SnowballCypher : ProjectileCypher(
-    manaDrain = 20f
+    manaDrain = 10f
 ) {
     override val resource = CypherNexus.modResource("snowball")
 
@@ -19,7 +19,7 @@ object SnowballCypher : ProjectileCypher(
 
         // test
         addAttribute(CypherAttributes.DAMAGE, 1.0)
-        addAttribute(CypherAttributes.SPEED, 0.5)
+        addAttribute(CypherAttributes.SPEED, 0.3)
         addAttribute(CypherAttributes.EXISTING, 200.0)
         addAttribute(CypherAttributes.BOUNCE, 5.0)
 

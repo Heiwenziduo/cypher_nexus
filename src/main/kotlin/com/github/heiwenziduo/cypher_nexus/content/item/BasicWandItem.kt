@@ -73,7 +73,7 @@ open class BasicWandItem(
         if (manaCurrent < maxMana) {
             manaCurrent = min(manaCurrent + manaRegen, maxMana)
             flag = true
-            println("mana regen -> $manaCurrent")
+//            println("mana regen -> $manaCurrent")
         }
         if (delay > 0) {
             delay--
@@ -101,8 +101,8 @@ open class BasicWandItem(
 
             // test
             val testData: List<AbstractCypher> = listOf(
-                    ModCyphers.HOMING.value(),
-                    ModCyphers.HOMING.value(),
+                    ModCyphers.T_T_T_Modifier.value(),
+                    ModCyphers.T_T_T_Modifier.value(),
                     ModCyphers.SNOWBALL.value()
                 )
             val t = WandDataHighPayload(testData)

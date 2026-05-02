@@ -3,6 +3,8 @@ package com.github.heiwenziduo.cypher_nexus.init.mod
 import com.github.heiwenziduo.cypher_nexus.CypherNexus
 import com.github.heiwenziduo.cypher_nexus.content.cypher.SimpleModifier
 import com.github.heiwenziduo.cypher_nexus.content.cypher.modifier.HomingCypher
+import com.github.heiwenziduo.cypher_nexus.content.cypher.modifier.PierceEntityCypher
+import com.github.heiwenziduo.cypher_nexus.content.cypher._TestModifier
 import com.github.heiwenziduo.cypher_nexus.content.cypher.projectile.SnowballCypher
 import com.github.heiwenziduo.cypher_nexus.machinery.CypherNotFoundException
 import com.github.heiwenziduo.cypher_nexus.machinery.cypher.AbstractCypher
@@ -51,6 +53,8 @@ object ModCyphers {
     // static projectile
 
     // modifier
+    val T_T_T_Modifier = registerCypher(_TestModifier)
+
     val ACCELERATION = registerCypher(SimpleModifier(10f, "acceleration").attribute(CypherAttributes.SPEED, CypherAttributeOperation.MULTIPLY_BASE, 0.5))
     val BOUNCY = registerCypher(SimpleModifier(5f, "bouncy").attribute(CypherAttributes.BOUNCE, CypherAttributeOperation.ADD, 5.0))
     val DAMAGE_BOOST = registerCypher(SimpleModifier(20f, "damage_boost").attribute(CypherAttributes.DAMAGE, CypherAttributeOperation.ADD, 1.0).attribute(CypherAttributes.RECOIL, CypherAttributeOperation.ADD, 1.0))
@@ -68,6 +72,7 @@ object ModCyphers {
     val ZO = registerCypher(SimpleModifier(44f, "zo").attribute(CypherAttributes.CAST_DELAY, CypherAttributeOperation.ADD, -2.0).attribute(CypherAttributes.RECHARGE_TIME, CypherAttributeOperation.ADD, -3.0).attribute(CypherAttributes.EXISTING, CypherAttributeOperation.SET, 1.0))
 
     val HOMING = registerCypher(HomingCypher)
+    val PIERCE_ENTITY = registerCypher(PierceEntityCypher)
 
     // passive
 

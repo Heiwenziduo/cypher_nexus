@@ -8,6 +8,7 @@ import com.github.heiwenziduo.cypher_nexus.machinery.cypher.CypherModifierHelper
 import com.github.heiwenziduo.cypher_nexus.machinery.cypher.EmptyCypher
 import com.github.heiwenziduo.cypher_nexus.machinery.cypher.attribute.CypherAttribute
 import com.github.heiwenziduo.cypher_nexus.machinery.cypher.attribute.CypherAttributeOperation
+import com.github.heiwenziduo.cypher_nexus.machinery.cypher.flag.CypherFlags
 import com.github.heiwenziduo.cypher_nexus.utility.VectorUtil
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
@@ -34,15 +35,20 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
     private var modifierList: List<AbstractCypher> = listOf()
     // private var _moveDireCache: Vec3? = null
     var moveDirection: Vec3 = Vec3.ZERO
+    /** a flag is basically a bundle of booleans */
+    var flag: Int
+        get() = entityData.get(FLAG)
+        set(value) = entityData.set(FLAG, value)
+
 //    var moveDirection: Vec3
 //        get() {
 //            val v3f = entityData.get(MOVE_DIRECTION)
 //            return Vec3(v3f)
 //        }
 //        set(value) = entityData.set(MOVE_DIRECTION, value.toVector3f())
-    var speed: Double
-        get() = entityData.get(SPEED).toDouble()
-        set(value) = entityData.set(SPEED, value.toFloat())
+//    var speed: Double
+//        get() = entityData.get(SPEED).toDouble()
+//        set(value) = entityData.set(SPEED, value.toFloat())
 
     var existing: Int
         get() = entityData.get(EXISTING)
@@ -50,6 +56,7 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
     var bounce: Int
         get() = entityData.get(BOUNCE)
         set(value) = entityData.set(BOUNCE, value)
+
 
     // should be immutable after initialization
     private val _attributeMap = HashMap<CypherAttribute, Double>()
@@ -65,7 +72,7 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
         // secondary constructor specific initialization
         owner = caster
         cypher = cypher0
-        moveDirection = direction?: caster?.lookAngle?.normalize()?: moveDirection
+        flag = helper.flags
         helper.computedOperationMap.forEach { (attr, helperMap) ->
             // do not modify the helper map here
             if (!attr.isProjectileAttribute) return@forEach
@@ -83,33 +90,47 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
         }
         // sync attrs render-related
         existing = getAttrOrDefault(CypherAttributes.EXISTING).toInt()
-        speed = getAttrOrDefault(CypherAttributes.SPEED)
+//        speed = getAttrOrDefault(CypherAttributes.SPEED)
         bounce = getAttrOrDefault(CypherAttributes.BOUNCE).toInt()
 
-        prepareMotion()
+        // prepareMotion
+        moveDirection = direction?: caster?.lookAngle?.normalize()?: moveDirection
+        if (moveDirection != Vec3.ZERO){
+            deltaMovement = moveDirection.scale(getAttrOrDefault(CypherAttributes.SPEED))
+            if (caster != null) deltaMovement.add(caster.deltaMovement) // FIXME inertia behavior seems strange
+        } else {
+            deltaMovement = Vec3.ZERO
+        }
+
         // test
         CypherNexus.LOGGER.info("create projectile $cypher")
+        if (caster != null) println("caster move: ${caster.deltaMovement}")
+        CypherFlags.printFlag(flag)
         printModifiedAttrMap()
     }
 
     companion object {
+        val FLAG: EntityDataAccessor<Int> = SynchedEntityData.defineId(
+            CypherProjectile::class.java,
+            EntityDataSerializers.INT)
 //        val MOVE_DIRECTION: EntityDataAccessor<Vector3f> = SynchedEntityData.defineId(
 //            CypherProjectile::class.java,
 //            EntityDataSerializers.VECTOR3)
+//        val SPEED: EntityDataAccessor<Float> = SynchedEntityData.defineId(
+//            CypherProjectile::class.java,
+//            EntityDataSerializers.FLOAT)
         val EXISTING: EntityDataAccessor<Int> = SynchedEntityData.defineId(
             CypherProjectile::class.java,
             EntityDataSerializers.INT)
-        val SPEED: EntityDataAccessor<Float> = SynchedEntityData.defineId(
-            CypherProjectile::class.java,
-            EntityDataSerializers.FLOAT)
         val BOUNCE: EntityDataAccessor<Int> = SynchedEntityData.defineId(
             CypherProjectile::class.java,
             EntityDataSerializers.INT)
     }
     override fun defineSynchedData(builder: SynchedEntityData.Builder) {
+        builder.define(FLAG, 0)
 //        builder.define(MOVE_DIRECTION, Vector3f(0f, 0f, 0f))
+//        builder.define(SPEED, 0f)
         builder.define(EXISTING, 1)
-        builder.define(SPEED, 0f)
         builder.define(BOUNCE, 0)
     }
 
@@ -117,7 +138,6 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
     // ==================================================================================================================
     override fun tick() {
         // called on both server side and client side
-        // prepareMotion()
         if (firstTick) {
             // start from tickCount == 1
             // hook
@@ -131,8 +151,8 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
 //        updateSwimming()
         super.tick() // TODO: prune default tick
 
-        doModifierTick()
-        doProjectileTick()
+        modifierTick()
+        projectileTick()
         if (existing == tickCount) {
             // here's a trick, if player make existing-time less or equal to 0, projectile will last till the game quit
 
@@ -142,11 +162,11 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
     }
 
 
-    private fun doModifierTick() {}
+    protected fun modifierTick() {}
     /**
      * check hit-result and set delta-movement here
      * */
-    private fun doProjectileTick() {
+    protected fun projectileTick() {
         /*
          * deltaMovement: the movement for the "next tick", client smooth animation relay on this
          * */
@@ -173,17 +193,16 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
 
     // ==================================================================================================================
     // ==================================================================================================================
-    override fun shoot(x: Double, y: Double, z: Double, velocity: Float, inaccuracy: Float) { } // do nothing, don't call
     /**
      * since the projectile can't exist without a related cypher,
      * the #deltaMovement initialization will be done automatically, call #shoot is not necessary
      * */
-    private fun prepareMotion() {
-        // #getMovementToShoot
-        if (moveDirection == Vec3.ZERO) deltaMovement = Vec3.ZERO
-
-        deltaMovement = moveDirection.scale(speed)
-    }
+    override fun shoot(x: Double, y: Double, z: Double, velocity: Float, inaccuracy: Float) { } // do nothing, don't call
+//    private fun prepareMotion() {
+//        // #getMovementToShoot
+//        if (moveDirection == Vec3.ZERO) deltaMovement = Vec3.ZERO
+//        deltaMovement = moveDirection.scale(speed)
+//    }
 
     override fun applyGravity() {
         // TODO hook, gravity
@@ -194,10 +213,19 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
 
     override fun onHit(result: HitResult) {
         super.onHit(result)
+        val pierceFlag =
+            result is EntityHitResult && haveFlag(CypherFlags.PIERCE_ENTITY) ||
+            result is BlockHitResult && haveFlag(CypherFlags.PIERCE_BLOCK)
 
+        if (!level().isClientSide) {
+            if (bounce <= 0 && !pierceFlag) {
+                level().broadcastEntityEvent(this, 3) // combine with #handleEntityEvent
+                discard()
+            }
+        }
         // bounce only when not pierce
-        run bounce@ {
-            if (bounce > 0) {
+        if (bounce > 0 && !pierceFlag) {
+            run bounce@ {
                 bounce--
                 val start = position()
                 val targetBox = when(result){ // let's hope no one wants to extend HitResult, I assume a result is either entity or block
@@ -230,12 +258,6 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
             }
         }
 
-        if (!level().isClientSide) {
-            if (bounce <= 0) {
-                level().broadcastEntityEvent(this, 3) // combine with #handleEntityEvent
-                discard()
-            }
-        }
     }
     override fun canHitEntity(target: Entity): Boolean {
         // TODO hook
@@ -246,7 +268,7 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
         super.onHitEntity(result)
         val entity = result.entity
         val damage = getAttrOrDefault(CypherAttributes.DAMAGE)
-        if (damage >= 0)
+        if (notHaveFlag(CypherFlags.NO_DAMAGE))
             entity.hurt(damageSources().thrown(this, this.owner), damage.toFloat())
     }
     override fun onHitBlock(result: BlockHitResult) {
@@ -288,6 +310,9 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
     fun getAttribute(holer: Holder<CypherAttribute>): Double? = getAttribute(holer.value())
     fun getAttrOrDefault(attr: CypherAttribute): Double = _attributeMap.get(attr)?: attr.defaultValue
     fun getAttrOrDefault(holer: Holder<CypherAttribute>): Double = getAttrOrDefault(holer.value())
+
+    fun haveFlag(flags: CypherFlags) = flag and flags.value > 0
+    fun notHaveFlag(flags: CypherFlags) = !haveFlag(flags)
 
 
     // ==================================================================================================================

@@ -25,6 +25,7 @@ class CypherModifierHelper(
 ) {
     val computedOperationMap = HashMap<CypherAttribute, HashMap<CypherAttributeOperation, Double>>()
     val invokeList = mutableListOf<AbstractCypher>()
+    var flags: Int = 0
 
     // the operation-system
     fun addAttribute(map: HashMap<Holder<CypherAttribute>, HashMap<CypherAttributeOperation, Double>>) {
@@ -116,6 +117,7 @@ class CypherModifierHelper(
     /***/
     private fun invoke(cypher: AbstractCypher) {
         helperData.draw += cypher.draw
+        flags = flags or cypher.flag
         cypher.addAttribute(this) // computedMap will include both Consumer-attr(BASE) and modifier-attr
 
         when(cypher) {
