@@ -7,13 +7,13 @@ import com.github.heiwenziduo.cypher_nexus.machinery.cypher.attribute.CypherAttr
 import com.github.heiwenziduo.cypher_nexus.machinery.cypher.flag.CypherFlags
 
 object _TestModifier: ModifierCypher(
-    manaDrain = 20f
+    manaDrain = 60f
 ) {
     override val resource = CypherNexus.modResource("test_modifier")
 
     init {
-        // addFlag(CypherFlags.PIERCE_BLOCK)
-        // addFlag(CypherFlags.NO_DAMAGE)
+         addFlag(CypherFlags.PIERCE_BLOCK)
+         addFlag(CypherFlags.NO_DAMAGE)
 
         addAttribute(CypherAttributes.DAMAGE, CypherAttributeOperation.ADD, 1.0)
         addAttribute(CypherAttributes.SPEED, CypherAttributeOperation.MULTIPLY_BASE, 0.5)

@@ -8,7 +8,6 @@ import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
 
 data class WandDataFrequent (val manaCurrent: Float, val index: Int, val delay: Int, val recharge: Int, val rechargeTotal: Int) {
-    constructor(data: CypherModifierHelper.HelperDataBundle) : this(data.manaCurrent, data.index, data.delay, data.recharge, data.recharge)
 
     companion object {
         val FREQUENT_DATA_CODEC: Codec<WandDataFrequent> = RecordCodecBuilder.create { it.group(

@@ -102,7 +102,6 @@ open class BasicWandItem(
             // test
             val testData: List<AbstractCypher> = listOf(
                     ModCyphers.T_T_T_Modifier.value(),
-                    ModCyphers.T_T_T_Modifier.value(),
                     ModCyphers.SNOWBALL.value()
                 )
             val t = WandDataHighPayload(testData)

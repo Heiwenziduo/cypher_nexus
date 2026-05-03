@@ -4,6 +4,7 @@ import com.github.heiwenziduo.cypher_nexus.CypherNexus
 import com.github.heiwenziduo.cypher_nexus.init.mod.CypherAttributes
 import com.github.heiwenziduo.cypher_nexus.machinery.cypher.attribute.CypherAttribute
 import com.github.heiwenziduo.cypher_nexus.machinery.cypher.attribute.CypherAttributeOperation
+import com.github.heiwenziduo.cypher_nexus.machinery.cypher.flag.IFlaggable
 import com.github.heiwenziduo.cypher_nexus.machinery.wand.data.WandDataFrequent
 import com.github.heiwenziduo.cypher_nexus.machinery.wand.data.WandDataInvariable
 import net.minecraft.core.Holder
@@ -22,10 +23,10 @@ class CypherModifierHelper(
     val wandStats: WandDataInvariable,
     val cypherList: List<AbstractCypher>,
     val helperData: HelperDataBundle
-) {
+) : IFlaggable {
     val computedOperationMap = HashMap<CypherAttribute, HashMap<CypherAttributeOperation, Double>>()
     val invokeList = mutableListOf<AbstractCypher>()
-    var flags: Int = 0
+    override var enabledFlags: Int = 0
 
     // the operation-system
     fun addAttribute(map: HashMap<Holder<CypherAttribute>, HashMap<CypherAttributeOperation, Double>>) {
@@ -117,7 +118,7 @@ class CypherModifierHelper(
     /***/
     private fun invoke(cypher: AbstractCypher) {
         helperData.draw += cypher.draw
-        flags = flags or cypher.flag
+        enableFlag(cypher.flag)
         cypher.addAttribute(this) // computedMap will include both Consumer-attr(BASE) and modifier-attr
 
         when(cypher) {
@@ -139,7 +140,7 @@ class CypherModifierHelper(
         var manaCurrent: Float,
     ) {
         constructor(draw: Int, data: WandDataFrequent) : this(draw, data.index, data.delay, data.recharge, data.manaCurrent)
-        fun createData() = WandDataFrequent(manaCurrent, index, delay, recharge, 0)
+        fun frequentData() = WandDataFrequent(manaCurrent, index, delay, recharge, 0)
     }
 
 }

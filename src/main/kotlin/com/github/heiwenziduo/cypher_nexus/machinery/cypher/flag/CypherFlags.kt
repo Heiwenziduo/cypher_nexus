@@ -19,7 +19,7 @@ package com.github.heiwenziduo.cypher_nexus.machinery.cypher.flag
  * */
 
 /** a flag is basically a bundle of booleans, all flag-bits are 0 by default */
-enum class CypherFlags(val value: Int) {
+enum class CypherFlags(override val value: Int): IFlaggable.IFlagEnum {
     HURT_OWNER(1),
     PIERCE_ENTITY(2),
     PIERCE_BLOCK(4),
@@ -28,7 +28,8 @@ enum class CypherFlags(val value: Int) {
 
     ;
     init {
-        // require(value)
+        require(value != 0)
+        require(value == 1 || value % 2 == 0)
     }
 
     companion object {

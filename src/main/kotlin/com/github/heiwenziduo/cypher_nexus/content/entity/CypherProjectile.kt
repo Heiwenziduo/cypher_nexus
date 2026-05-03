@@ -9,6 +9,7 @@ import com.github.heiwenziduo.cypher_nexus.machinery.cypher.EmptyCypher
 import com.github.heiwenziduo.cypher_nexus.machinery.cypher.attribute.CypherAttribute
 import com.github.heiwenziduo.cypher_nexus.machinery.cypher.attribute.CypherAttributeOperation
 import com.github.heiwenziduo.cypher_nexus.machinery.cypher.flag.CypherFlags
+import com.github.heiwenziduo.cypher_nexus.machinery.cypher.flag.IFlaggable
 import com.github.heiwenziduo.cypher_nexus.utility.VectorUtil
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
@@ -29,14 +30,14 @@ import net.minecraft.world.phys.*
 import kotlin.jvm.optionals.getOrNull
 
 
-open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level) : Projectile(entityType, level) {
+open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level) : Projectile(entityType, level), IFlaggable {
 
     var cypher: AbstractCypher = EmptyCypher
     private var modifierList: List<AbstractCypher> = listOf()
     // private var _moveDireCache: Vec3? = null
     var moveDirection: Vec3 = Vec3.ZERO
     /** a flag is basically a bundle of booleans */
-    var flag: Int
+    override var enabledFlags: Int
         get() = entityData.get(FLAG)
         set(value) = entityData.set(FLAG, value)
 
@@ -72,7 +73,7 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
         // secondary constructor specific initialization
         owner = caster
         cypher = cypher0
-        flag = helper.flags
+        enabledFlags = helper.enabledFlags
         helper.computedOperationMap.forEach { (attr, helperMap) ->
             // do not modify the helper map here
             if (!attr.isProjectileAttribute) return@forEach
@@ -83,7 +84,7 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
                 val mulBase = helperMap[CypherAttributeOperation.MULTIPLY_BASE]?: CypherAttributeOperation.MULTIPLY_BASE.defaultValue
                 val mulTotal = helperMap[CypherAttributeOperation.MULTIPLY_TOTAL]?: CypherAttributeOperation.MULTIPLY_TOTAL.defaultValue
                 // TODO restrict values in range
-                val final = (set ?: ((def + add) * mulBase * mulTotal))
+                val final = (set ?: ((def + add) * (mulBase + 1) * mulTotal))
 
                 final
             }
@@ -105,7 +106,7 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
         // test
         CypherNexus.LOGGER.info("create projectile $cypher")
         if (caster != null) println("caster move: ${caster.deltaMovement}")
-        CypherFlags.printFlag(flag)
+        CypherFlags.printFlag(enabledFlags)
         printModifiedAttrMap()
     }
 
@@ -310,9 +311,6 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
     fun getAttribute(holer: Holder<CypherAttribute>): Double? = getAttribute(holer.value())
     fun getAttrOrDefault(attr: CypherAttribute): Double = _attributeMap.get(attr)?: attr.defaultValue
     fun getAttrOrDefault(holer: Holder<CypherAttribute>): Double = getAttrOrDefault(holer.value())
-
-    fun haveFlag(flags: CypherFlags) = flag and flags.value > 0
-    fun notHaveFlag(flags: CypherFlags) = !haveFlag(flags)
 
 
     // ==================================================================================================================
