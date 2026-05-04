@@ -12,10 +12,11 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
+import net.minecraft.world.phys.Vec3
 
 /**
  * ---casting logics here---
- * Any Item implemented the interface here should be able to conduct the power of cyphers
+ * Any Item/LivingEntity implemented the interface here should be able to conduct the power of cyphers #tryConduct
  * */
 interface IWandLike {
 
@@ -24,6 +25,8 @@ interface IWandLike {
     fun setWandData(stack: ItemStack?, frequent: WandDataFrequent) = setWandData(stack, null, null, frequent)
     fun setWandData(stack: ItemStack?, bundle: WandDataBundle) = setWandData(stack, bundle.invariable, bundle.highPayload, bundle.frequent)
 
+    abstract fun getInvokePos(level: Level, caster: LivingEntity, wandLength: Float): Vec3
+    abstract fun getInvokeDire(level: Level, caster: LivingEntity): Vec3
 
     fun parseCypherList(cyphers: String): List<AbstractCypher> =
         cyphers.split(",").map {
@@ -52,7 +55,8 @@ interface IWandLike {
 
 
         val bundle = HelperDataBundle(invariable.chunkI.draw, frequent)
-        val helper = CypherModifierHelper(level, caster, stack, invariable, cypherList, bundle)
+        val helper = CypherModifierHelper(level, caster, stack, invariable, cypherList, bundle,
+            getInvokePos(level, caster, invariable.chunkF.wandLength), getInvokeDire(level, caster))
         helper.start()
 
         // retrieve data from helper and write to components

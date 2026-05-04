@@ -1,9 +1,12 @@
 package com.github.heiwenziduo.cypher_nexus.machinery.cypher.attribute
 
+import com.github.heiwenziduo.cypher_nexus.init.mod.CypherAttributes
 import com.github.heiwenziduo.cypher_nexus.utility.i.IRegisterable
+import net.minecraft.core.Holder
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.ResourceLocation
+import kotlin.jvm.optionals.getOrNull
 import kotlin.math.max
 import kotlin.math.min
 
@@ -29,6 +32,12 @@ open class CypherAttribute(
 
 
     // ==========================================================================================================
+    fun attrRegistryHolder(): Holder<CypherAttribute> {
+//        val resourceKeyOptional = CypherAttributes.REGISTRY.getResourceKey(attr)
+//        return resourceKeyOptional.flatMap { CypherAttributes.REGISTRY.getHolder(resourceKeyOptional) }.orElse(null)
+        return CypherAttributes.REGISTRY.getHolder(resource).get() // if this throw, means the attr is not registered
+    }
+
     override fun toString(): String {
         return "attribute_${resource.path}"
     }

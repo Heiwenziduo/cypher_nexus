@@ -12,7 +12,6 @@ object VectorUtility {
     fun toVec3i(v: Vec3) = Vec3i(v.x.toInt(), v.y.toInt(), v.z.toInt())
 
     fun getDireFromHit(hitPoint: Vec3?, aabb: AABB): Direction? {
-        println("hitPoint $hitPoint \naabb $aabb")
         if (hitPoint == null) return null
         val epsilon = 1e-5
         return when {

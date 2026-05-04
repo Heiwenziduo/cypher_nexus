@@ -37,7 +37,6 @@ sealed class AbstractCypher: IRegisterable {
     init {
         initializeData()
         registerHooks()
-        // TODO: these attrs only affect the process of casting, while others affect the projectile behaviors, should we separate them?
         addAttribute(CypherAttributes.CAST_DELAY, CypherAttributeOperation.ADD, 0.0)
         addAttribute(CypherAttributes.RECHARGE_TIME, CypherAttributeOperation.ADD, 0.0)
         addAttribute(CypherAttributes.RECOIL, CypherAttributeOperation.ADD, 0.0)
@@ -47,7 +46,7 @@ sealed class AbstractCypher: IRegisterable {
     /**
      * add Attributes with its BASE value
      * */
-    protected fun addAttribute(holder: Holder<CypherAttribute>, base: Double): AbstractCypher {
+    protected open fun addAttribute(holder: Holder<CypherAttribute>, base: Double): AbstractCypher {
         return addAttribute(holder, CypherAttributeOperation.BASE, base)
     }
     /**
@@ -86,7 +85,7 @@ sealed class AbstractCypher: IRegisterable {
 
     /** custom logic up to subclasses */
     // TODO maybe change this to "hook"
-    open fun onCastServer(level: Level, caster: LivingEntity, stack: ItemStack?, helper: CypherModifierHelper, wandLength: Float) {}
+    open fun onCastServer(level: Level, caster: LivingEntity?, stack: ItemStack?, helper: CypherModifierHelper, wandLength: Float) {}
 
     // ============================================================================================================
 

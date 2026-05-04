@@ -16,7 +16,7 @@ object _TestModifier: ModifierCypher(
 //         addFlag(CypherFlags.NO_DAMAGE)
 
         addAttribute(CypherAttributes.DAMAGE, CypherAttributeOperation.ADD, 1.0)
-        addAttribute(CypherAttributes.SPEED, CypherAttributeOperation.MULTIPLY_BASE, 0.5)
+        addAttribute(CypherAttributes.SPEED, CypherAttributeOperation.MULTIPLY_BASE, 3.0)
         addAttribute(CypherAttributes.EXISTING, CypherAttributeOperation.ADD, 60.0)
         addAttribute(CypherAttributes.CAST_DELAY, CypherAttributeOperation.ADD, 3.0)
         addAttribute(CypherAttributes.RECHARGE_TIME, CypherAttributeOperation.ADD, 5.0)

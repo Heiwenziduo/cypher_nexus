@@ -19,6 +19,7 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.UseAnim
 import net.minecraft.world.level.Level
+import net.minecraft.world.phys.Vec3
 import kotlin.math.min
 
 /**
@@ -126,6 +127,19 @@ open class BasicWandItem(
 
         //if (invariable != null)
         stack?.set(WAND_FREQUENT, frequent)
+    }
+
+    /** for an Item Wand, pos and dire just use the living's view vector */
+    override fun getInvokePos(level: Level, caster: LivingEntity, wandLength: Float): Vec3 {
+        val dir = getInvokeDire(level, caster)
+        return caster.eyePosition.add(dir.scale(wandLength.toDouble()))
+    }
+
+    override fun getInvokeDire(
+        level: Level,
+        caster: LivingEntity
+    ): Vec3 {
+        return caster.lookAngle.normalize()
     }
 
 

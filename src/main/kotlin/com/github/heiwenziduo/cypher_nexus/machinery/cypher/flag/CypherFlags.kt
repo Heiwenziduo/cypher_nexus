@@ -21,6 +21,7 @@ package com.github.heiwenziduo.cypher_nexus.machinery.cypher.flag
 /** a flag is basically a bundle of booleans, all flag-bits are 0 by default */
 enum class CypherFlags(override val value: Int): IFlaggable.IFlagEnum {
     HURT_OWNER(1),
+    // TODO deal pierce & bounce logic
     PIERCE_ENTITY(2),
     PIERCE_BLOCK(4),
     NO_DAMAGE(8),

@@ -26,7 +26,7 @@ class CypherProjectileRenderer(
     val stack = ItemStack(Items.SNOWBALL)
 
     override fun render(
-        p_entity: CypherProjectile,
+        projectile: CypherProjectile,
         entityYaw: Float,
         partialTick: Float,
         poseStack: PoseStack,
@@ -37,6 +37,7 @@ class CypherProjectileRenderer(
 
         poseStack.pushPose()
         poseStack.scale(.5f, .5f, .5f)
+        // projectile.cypher.render(projectile, entityYaw, partialTick, poseStack, bufferSource, packedLight, itemRenderer, blockRenderer)
         poseStack.mulPose(entityRenderDispatcher.cameraOrientation())
         itemRenderer
             .renderStatic(
@@ -46,8 +47,8 @@ class CypherProjectileRenderer(
                 OverlayTexture.NO_OVERLAY,
                 poseStack,
                 bufferSource,
-                p_entity.level(),
-                p_entity.id
+                projectile.level(),
+                projectile.id
             )
 
         poseStack.popPose()

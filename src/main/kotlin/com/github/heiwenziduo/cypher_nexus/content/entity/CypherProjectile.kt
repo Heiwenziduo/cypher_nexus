@@ -4,6 +4,7 @@ import com.github.heiwenziduo.cypher_nexus.CypherNexus
 import com.github.heiwenziduo.cypher_nexus.init.ModEntities.CYPHER_PROJECTILE
 import com.github.heiwenziduo.cypher_nexus.init.mod.CypherAttributes
 import com.github.heiwenziduo.cypher_nexus.machinery.cypher.AbstractCypher
+import com.github.heiwenziduo.cypher_nexus.machinery.cypher.AbstractProjectileCypher
 import com.github.heiwenziduo.cypher_nexus.machinery.cypher.CypherModifierHelper
 import com.github.heiwenziduo.cypher_nexus.machinery.cypher.EmptyCypher
 import com.github.heiwenziduo.cypher_nexus.machinery.cypher.attribute.CypherAttribute
@@ -12,6 +13,7 @@ import com.github.heiwenziduo.cypher_nexus.machinery.cypher.flag.CypherFlags
 import com.github.heiwenziduo.cypher_nexus.machinery.cypher.flag.IFlaggable
 import com.github.heiwenziduo.cypher_nexus.utility.ProjectileUtility
 import com.github.heiwenziduo.cypher_nexus.utility.VectorUtility
+import com.github.heiwenziduo.cypher_nexus.utility.mod.CypherUtility
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.core.Holder
@@ -33,8 +35,8 @@ import kotlin.jvm.optionals.getOrNull
 
 open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level) : Projectile(entityType, level), IFlaggable {
 
-    var cypher: AbstractCypher = EmptyCypher
-    private var modifierList: List<AbstractCypher> = listOf()
+    var cypher: AbstractProjectileCypher = EmptyCypher
+    private var invokeList: List<AbstractCypher> = listOf()
     // private var _moveDireCache: Vec3? = null
     var moveDirection: Vec3 = Vec3.ZERO
     /** a flag is basically a bundle of booleans */
@@ -75,21 +77,17 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
 //        }
     }
 
-    constructor(level: Level, caster: LivingEntity?, cypher0: AbstractCypher, helper: CypherModifierHelper, direction: Vec3? = null) : this(CYPHER_PROJECTILE.get(), level) {
+    constructor(level: Level, caster: LivingEntity?, cypher0: AbstractProjectileCypher, helper: CypherModifierHelper, direction: Vec3? = null) : this(CYPHER_PROJECTILE.get(), level) {
         // secondary constructor specific initialization
         owner = caster
         cypher = cypher0
         enabledFlags = helper.enabledFlags
-        helper.computedOperationMap.forEach { (attr, helperMap) ->
+        helper.computedOperationMap.forEach { (attr, opMap) ->
             // do not modify the helper map here
             if (!attr.isProjectileAttribute) return@forEach
             _attributeMap.compute(attr) { a, v ->
-                val def = helperMap.getOrDefault(CypherAttributeOperation.BASE, attr.defaultValue)
-                val set = helperMap[CypherAttributeOperation.SET]
-                val add = helperMap[CypherAttributeOperation.ADD]?: CypherAttributeOperation.ADD.defaultValue // same as Map#getOrDefault
-                val mulBase = helperMap[CypherAttributeOperation.MULTIPLY_BASE]?: CypherAttributeOperation.MULTIPLY_BASE.defaultValue
-                val mulTotal = helperMap[CypherAttributeOperation.MULTIPLY_TOTAL]?: CypherAttributeOperation.MULTIPLY_TOTAL.defaultValue
-                val final = (set ?: ((def + add) * (mulBase + 1) * mulTotal))
+                val def = cypher.getAttrBaseOrDefault(attr)
+                val final = CypherUtility.attributeCalculator(opMap, def)
                 attr.restrictRange(final)
             }
         }
@@ -177,8 +175,7 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
          * // an AABB check is used everyTick every vanilla projectile, sounds outrageous, but is ok in performance
          * */
 
-        val hitResult = ProjectileUtility.getHitResult(position(), this, ::canHitEntity, deltaMovement, level(), clipMargin, ClipContext.Block.COLLIDER)
-        // EventHooks.onProjectileImpact(this, hitResult), maybe get a result from broadcast
+        val hitResult = ProjectileUtility.getHitResult(position(), this, ::canHitEntity, deltaMovement, level(), clipMargin, ClipContext.Block.OUTLINE)
         bouncePoints.clear()
         val (lastBouncePoint, lastDeltaMove) = bounceLoop(hitResult)
         if (bounceTick) deltaMovement = VectorUtility.toSameDire(deltaMovement, lastDeltaMove)
@@ -233,7 +230,8 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
         var deltaMoveStep = deltaMovement
 
         do {
-            if (!level().isClientSide) println("loop: \n$hitResultStep\n$startPosStep\n$deltaMoveStep")
+            // EventHooks.onProjectileImpact(this, hitResultStep), maybe get a result from broadcast
+            if (!level().isClientSide) println("loop$bounce: \n$hitResultStep\n$startPosStep\n$deltaMoveStep")
 
             // FIXME image a situation that one proj with bounce can pierce block but can not pierce entity, it should bounce back when an entity stand behind a wall
             onHit(hitResultStep) // or hitTargetOrDeflectSelf(hitResult)
@@ -247,9 +245,12 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
                 else -> AABB(BlockPos(VectorUtility.toVec3i(hitResultStep.location)))
             }
             val hitPoint = targetBox.clip(startPosStep, startPosStep.add(deltaMoveStep)).getOrNull()
+
+            if (!level().isClientSide) println("hitPoint $hitPoint \naabb $targetBox")
+
             val direction = VectorUtility.getDireFromHit(hitPoint, targetBox)
-            if (direction == null || hitPoint == null) { // this block should not be reached
-                CypherNexus.LOGGER.fatal("direction == null || hitPoint == null\n$direction")
+            if (hitPoint == null || direction == null) { // this block should not be reached
+                if (!level().isClientSide) CypherNexus.LOGGER.fatal("hitPoint == null || direction == null\n$direction")
                 return defaultReturn
             }
 
@@ -265,7 +266,7 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
             bouncePoints.add(hitPoint)
 
             // handle next bounce
-            hitResultStep = ProjectileUtility.getHitResult(startPosStep, this, ::canHitEntity, deltaMoveStep, level(), clipMargin, ClipContext.Block.COLLIDER)
+            hitResultStep = ProjectileUtility.getHitResult(startPosStep, this, ::canHitEntity, deltaMoveStep, level(), clipMargin, ClipContext.Block.OUTLINE)
 
         } while (hitResultStep.type != HitResult.Type.MISS)
 
@@ -273,8 +274,9 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
     }
 
     override fun onHit(result: HitResult) {
+        // distribute hitResult
         super.onHit(result)
-        /** distribute hitResult */
+
 
         if (level().isClientSide) return
         val canPierce =
@@ -339,7 +341,7 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
         return _attributeMap.get(attr)
     }
     fun getAttribute(holer: Holder<CypherAttribute>): Double? = getAttribute(holer.value())
-    fun getAttrOrDefault(attr: CypherAttribute): Double = _attributeMap.get(attr)?: attr.defaultValue
+    fun getAttrOrDefault(attr: CypherAttribute): Double = _attributeMap[attr] ?: attr.defaultValue
     fun getAttrOrDefault(holer: Holder<CypherAttribute>): Double = getAttrOrDefault(holer.value())
 
 
