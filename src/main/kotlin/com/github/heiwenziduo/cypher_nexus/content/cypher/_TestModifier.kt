@@ -12,8 +12,8 @@ object _TestModifier: ModifierCypher(
     override val resource = CypherNexus.modResource("test_modifier")
 
     init {
-         addFlag(CypherFlags.PIERCE_BLOCK)
-         addFlag(CypherFlags.NO_DAMAGE)
+//         addFlag(CypherFlags.PIERCE_BLOCK)
+//         addFlag(CypherFlags.NO_DAMAGE)
 
         addAttribute(CypherAttributes.DAMAGE, CypherAttributeOperation.ADD, 1.0)
         addAttribute(CypherAttributes.SPEED, CypherAttributeOperation.MULTIPLY_BASE, 0.5)

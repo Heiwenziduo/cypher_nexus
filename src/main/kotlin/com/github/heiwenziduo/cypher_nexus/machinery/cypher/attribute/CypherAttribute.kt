@@ -4,6 +4,8 @@ import com.github.heiwenziduo.cypher_nexus.utility.i.IRegisterable
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.ResourceLocation
+import kotlin.math.max
+import kotlin.math.min
 
 /**
  * a bit like vanilla LivingEntity's Attribute system
@@ -22,6 +24,8 @@ open class CypherAttribute(
     init {
         // UntitledWorld.LOGGER.debug("CypherAttribute created: {}", resource.toString())
     }
+
+    fun restrictRange(v: Double) = max(min(max, v), min)
 
 
     // ==========================================================================================================

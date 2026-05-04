@@ -10,7 +10,8 @@ import com.github.heiwenziduo.cypher_nexus.machinery.cypher.attribute.CypherAttr
 import com.github.heiwenziduo.cypher_nexus.machinery.cypher.attribute.CypherAttributeOperation
 import com.github.heiwenziduo.cypher_nexus.machinery.cypher.flag.CypherFlags
 import com.github.heiwenziduo.cypher_nexus.machinery.cypher.flag.IFlaggable
-import com.github.heiwenziduo.cypher_nexus.utility.VectorUtil
+import com.github.heiwenziduo.cypher_nexus.utility.ProjectileUtility
+import com.github.heiwenziduo.cypher_nexus.utility.VectorUtility
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.core.Holder
@@ -23,8 +24,8 @@ import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.projectile.Projectile
-import net.minecraft.world.entity.projectile.ProjectileUtil
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.level.ClipContext
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.*
 import kotlin.jvm.optionals.getOrNull
@@ -61,6 +62,11 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
 
     // should be immutable after initialization
     private val _attributeMap = HashMap<CypherAttribute, Double>()
+    /** store bounce points triggered in one tick */
+    protected val bouncePoints = mutableListOf<Vec3>()
+    protected val bounceTick
+        get() = bouncePoints.isNotEmpty()
+    val clipMargin = 0.2f
     init {
         // initialize attribute, make sure every value is ready
         // since we have #getAttrOrDefault, this step seems unnecessary
@@ -83,10 +89,8 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
                 val add = helperMap[CypherAttributeOperation.ADD]?: CypherAttributeOperation.ADD.defaultValue // same as Map#getOrDefault
                 val mulBase = helperMap[CypherAttributeOperation.MULTIPLY_BASE]?: CypherAttributeOperation.MULTIPLY_BASE.defaultValue
                 val mulTotal = helperMap[CypherAttributeOperation.MULTIPLY_TOTAL]?: CypherAttributeOperation.MULTIPLY_TOTAL.defaultValue
-                // TODO restrict values in range
                 val final = (set ?: ((def + add) * (mulBase + 1) * mulTotal))
-
-                final
+                attr.restrictRange(final)
             }
         }
         // sync attrs render-related
@@ -98,14 +102,14 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
         moveDirection = direction?: caster?.lookAngle?.normalize()?: moveDirection
         if (moveDirection != Vec3.ZERO){
             deltaMovement = moveDirection.scale(getAttrOrDefault(CypherAttributes.SPEED))
-            if (caster != null) deltaMovement.add(caster.deltaMovement) // FIXME inertia behavior seems strange
+            // if (caster != null) deltaMovement.add(caster.deltaMovement) // FIXME inertia behavior seems strange
         } else {
             deltaMovement = Vec3.ZERO
         }
 
         // test
         CypherNexus.LOGGER.info("create projectile $cypher")
-        if (caster != null) println("caster move: ${caster.deltaMovement}")
+        if (caster != null) println("caster move: ${caster.deltaMovement}") // always (0,0,0)
         CypherFlags.printFlag(enabledFlags)
         printModifiedAttrMap()
     }
@@ -139,25 +143,25 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
     // ==================================================================================================================
     override fun tick() {
         // called on both server side and client side
-        if (firstTick) {
-            // start from tickCount == 1
-            // hook
+        if (firstTick) { // start from tickCount == 1
+            // TODO hook
 
 //            if (level().isClientSide){
 //                println("tick$tickCount, clientSide speed: $speed") // attrs are synced from the start
 //            }
         }
+
 //        updateInWaterStateAndDoFluidPushing()
 //        updateFluidOnEyes()
 //        updateSwimming()
         super.tick() // TODO: prune default tick
 
-        modifierTick()
         projectileTick()
+        modifierTick()
         if (existing == tickCount) {
             // here's a trick, if player make existing-time less or equal to 0, projectile will last till the game quit
 
-            // hook, expire
+            // TODO hook, expire
             discard()
         }
     }
@@ -170,25 +174,31 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
     protected fun projectileTick() {
         /*
          * deltaMovement: the movement for the "next tick", client smooth animation relay on this
+         * // an AABB check is used everyTick every vanilla projectile, sounds outrageous, but is ok in performance
          * */
-        val hitResult = // an AABB check is used everyTick every vanilla projectile, sounds outrageous, but is ok in performance
-            ProjectileUtil.getHitResultOnMoveVector(this, { target: Entity -> canHitEntity(target) })
+
+        val hitResult = ProjectileUtility.getHitResult(position(), this, ::canHitEntity, deltaMovement, level(), clipMargin, ClipContext.Block.COLLIDER)
         // EventHooks.onProjectileImpact(this, hitResult), maybe get a result from broadcast
-        if (hitResult.type != HitResult.Type.MISS) {
-            hitTargetOrDeflectSelf(hitResult)
-        }
+        bouncePoints.clear()
+        val (lastBouncePoint, lastDeltaMove) = bounceLoop(hitResult)
+        if (bounceTick) deltaMovement = VectorUtility.toSameDire(deltaMovement, lastDeltaMove)
+
+
+//        run collideCheck@ {
+//            val fluidCheck = ClipContext.Fluid.NONE // bounce when touching water surface?
+//            val blockHit = level().clip(ClipContext(position(), deltaMovement, ClipContext.Block.COLLIDER, fluidCheck, this))
+//        }
 
         checkInsideBlocks() // trigger #onInsideBlock
-        val vec3 = deltaMovement
-        val d0 = x + vec3.x
-        val d1 = y + vec3.y
-        val d2 = z + vec3.z
-        updateRotation()
-        val f: Float = if (isInWater) 0.8f else 0.99f
 
-        deltaMovement = vec3.scale(f.toDouble())
+        updateRotation()
+
+        applySpeedChange()
         applyGravity()
-        setPos(d0, d1, d2) // #move do exactly the same with #setPos when dealing with "noPhysics"
+
+        // #move do exactly the same with #setPos when dealing with "noPhysics"
+        if (bounceTick) setPos(lastBouncePoint.add(lastDeltaMove))
+        else setPos(position().add(deltaMovement))
     }
 
 
@@ -199,70 +209,90 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
      * the #deltaMovement initialization will be done automatically, call #shoot is not necessary
      * */
     override fun shoot(x: Double, y: Double, z: Double, velocity: Float, inaccuracy: Float) { } // do nothing, don't call
-//    private fun prepareMotion() {
-//        // #getMovementToShoot
-//        if (moveDirection == Vec3.ZERO) deltaMovement = Vec3.ZERO
-//        deltaMovement = moveDirection.scale(speed)
-//    }
 
     override fun applyGravity() {
         // TODO hook, gravity
-        var g0 = 0.01
-        if (g0 != 0.0) deltaMovement = deltaMovement.add(0.0, -g0, 0.0)
+        val g0 = 0.01
+        deltaMovement = deltaMovement.add(0.0, -g0, 0.0)
+    }
+    protected fun applySpeedChange() {
+        // TODO hook, speed
+        val f: Float = if (isInWater) 0.8f else 0.99f
+        deltaMovement = deltaMovement.scale(f.toDouble())
     }
 
+    /**
+     * handle bounce movement logic and trigger #onHit.
+     * @return a pair of lastHitPoint and deltaMove for the last leg, current #position and #deltaMovement if no bounce.
+     * */
+    private fun bounceLoop(hitResult: HitResult): Pair<Vec3, Vec3> {
+        val defaultReturn = Pair(position(), deltaMovement)
+        if (hitResult.type == HitResult.Type.MISS) return defaultReturn
+        var hitResultStep = hitResult
+        var startPosStep = position()
+        var deltaMoveStep = deltaMovement
+
+        do {
+            if (!level().isClientSide) println("loop: \n$hitResultStep\n$startPosStep\n$deltaMoveStep")
+
+            // FIXME image a situation that one proj with bounce can pierce block but can not pierce entity, it should bounce back when an entity stand behind a wall
+            onHit(hitResultStep) // or hitTargetOrDeflectSelf(hitResult)
+            val canPierce = hitResultStep is BlockHitResult && haveFlag(CypherFlags.PIERCE_BLOCK)
+                    || hitResultStep is EntityHitResult && haveFlag(CypherFlags.PIERCE_ENTITY)
+            if (bounce <= 0 || canPierce) break
+
+            val targetBox = when(hitResultStep) {
+                is EntityHitResult -> hitResultStep.entity.boundingBox.inflate(clipMargin.toDouble())
+                is BlockHitResult -> AABB(hitResultStep.blockPos)
+                else -> AABB(BlockPos(VectorUtility.toVec3i(hitResultStep.location)))
+            }
+            val hitPoint = targetBox.clip(startPosStep, startPosStep.add(deltaMoveStep)).getOrNull()
+            val direction = VectorUtility.getDireFromHit(hitPoint, targetBox)
+            if (direction == null || hitPoint == null) { // this block should not be reached
+                CypherNexus.LOGGER.fatal("direction == null || hitPoint == null\n$direction")
+                return defaultReturn
+            }
+
+            // do reflect
+            deltaMoveStep = hitPoint.vectorTo(startPosStep.add(deltaMoveStep))
+            deltaMoveStep = when(direction) {
+                Direction.DOWN, Direction.UP -> deltaMoveStep.multiply(1.0, -1.0, 1.0)
+                Direction.NORTH, Direction.SOUTH -> deltaMoveStep.multiply(1.0, 1.0, -1.0)
+                Direction.WEST, Direction.EAST -> deltaMoveStep.multiply(-1.0, 1.0, 1.0)
+            }
+            startPosStep = hitPoint
+            bounce--
+            bouncePoints.add(hitPoint)
+
+            // handle next bounce
+            hitResultStep = ProjectileUtility.getHitResult(startPosStep, this, ::canHitEntity, deltaMoveStep, level(), clipMargin, ClipContext.Block.COLLIDER)
+
+        } while (hitResultStep.type != HitResult.Type.MISS)
+
+        return Pair(startPosStep, deltaMoveStep)
+    }
 
     override fun onHit(result: HitResult) {
         super.onHit(result)
-        val pierceFlag =
-            result is EntityHitResult && haveFlag(CypherFlags.PIERCE_ENTITY) ||
-            result is BlockHitResult && haveFlag(CypherFlags.PIERCE_BLOCK)
+        /** distribute hitResult */
 
-        if (!level().isClientSide) {
-            if (bounce <= 0 && !pierceFlag) {
-                level().broadcastEntityEvent(this, 3) // combine with #handleEntityEvent
-                discard()
-            }
+        if (level().isClientSide) return
+        val canPierce =
+            result is BlockHitResult && haveFlag(CypherFlags.PIERCE_BLOCK) ||
+            result is EntityHitResult && haveFlag(CypherFlags.PIERCE_ENTITY)
+        if (!canPierce && bounce <= 0) {
+            level().broadcastEntityEvent(this, 3) // combine with #handleEntityEvent
+            discard()
         }
-        // bounce only when not pierce
-        if (bounce > 0 && !pierceFlag) {
-            run bounce@ {
-                bounce--
-                val start = position()
-                val targetBox = when(result){ // let's hope no one wants to extend HitResult, I assume a result is either entity or block
-                    is EntityHitResult -> result.entity.boundingBox
-                    is BlockHitResult -> AABB(result.blockPos)
-                    else -> AABB(BlockPos(VectorUtil.toVec3i(result.location)))
-                }
-                // Direction.getRandom(random) // this will be fun, xd
-
-                println("bounce check: ${if(level().isClientSide) "client" else "server"}")
-                println("$start, $deltaMovement")
-
-                val hitPoint = targetBox.clip(start, start.add(deltaMovement)) // TODO should store hitPoints, render them on client
-                val direction = VectorUtil.getDireFromHit(hitPoint.getOrNull(), targetBox)
-                if (direction == null) return@bounce "⑨"
-
-                // bounce
-                when(direction) {
-                    // z axis represents NORTH&SOUTH
-                    // FIXME this is crude, may not work when speed is high
-                    Direction.DOWN, Direction.UP ->
-                        deltaMovement = deltaMovement.multiply(1.0, -1.0, 1.0)
-                    Direction.NORTH, Direction.SOUTH ->
-                        deltaMovement = deltaMovement.multiply(1.0, 1.0, -1.0)
-                    Direction.WEST, Direction.EAST ->
-                        deltaMovement = deltaMovement.multiply(-1.0, 1.0, 1.0)
-                }
-                // TODO hook, bounce
-                println("bounce!!! client: ${level().isClientSide}")
-            }
-        }
-
     }
     override fun canHitEntity(target: Entity): Boolean {
+        if (!target.canBeHitByProjectile()) {
+             return false // vanilla logic, for item-entities
+        }
+        if (haveFlag(CypherFlags.NO_DAMAGE)) return false
+        if (owner == target && notHaveFlag(CypherFlags.HURT_OWNER)) return false
         // TODO hook
-        return super.canHitEntity(target)
+        return true
     }
     override fun onHitEntity(result: EntityHitResult) {
         // TODO hook

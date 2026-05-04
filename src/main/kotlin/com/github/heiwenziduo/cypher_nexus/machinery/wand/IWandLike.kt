@@ -43,12 +43,13 @@ interface IWandLike {
         val (invariable, highPayload, frequent) = wandData
         val (cypherList) = highPayload
 
-        CypherNexus.LOGGER.debug("Casting start, is client side? {}\nCypherList: {}", level.isClientSide, cypherList)
-        CypherNexus.LOGGER.debug("read from data component: {}\n\n\n", wandData)
         if (level.isClientSide){
             // send casting info to server
             return
         }
+        CypherNexus.LOGGER.debug("Casting start, is client side? {}\nCypherList: {}", level.isClientSide, cypherList)
+        CypherNexus.LOGGER.debug("read from data component: {}\n\n\n", wandData)
+
 
         val bundle = HelperDataBundle(invariable.chunkI.draw, frequent)
         val helper = CypherModifierHelper(level, caster, stack, invariable, cypherList, bundle)

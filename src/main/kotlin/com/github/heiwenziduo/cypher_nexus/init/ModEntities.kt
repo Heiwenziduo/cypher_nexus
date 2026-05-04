@@ -20,7 +20,7 @@ object ModEntities {
     val CYPHER_PROJECTILE: Supplier<EntityType<CypherProjectile>> =
         DEFERRED_REGISTER.register("cypher_projectile") { resource ->
             EntityType.Builder.of({ t, l -> CypherProjectile(t, l) }, MobCategory.MISC)
-                .sized(0.25f, 0.25f)
+                .sized(0.125f, 0.125f)
                 // Prevents the entity from being saved to disk.
                 .noSave()
                 // Disables the entity being summonable via /summon.

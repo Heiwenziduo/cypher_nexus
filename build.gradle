@@ -178,3 +178,8 @@ idea {
         downloadJavadoc = true
     }
 }
+
+// "Because :createMinecraftArtifacts tries to read the metadata file before Gradle has an official guarantee that :generateModMetadata is finished making it, Gradle panics and throws this error to prevent a race condition."
+//tasks.named('createMinecraftArtifacts').configure {
+//    dependsOn 'generateModMetadata'
+//}
