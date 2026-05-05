@@ -2,10 +2,12 @@ package com.github.heiwenziduo.cypher_nexus.client
 
 import com.github.heiwenziduo.cypher_nexus.CypherNexus
 import com.github.heiwenziduo.cypher_nexus.CypherNexus.LOGGER
-import com.github.heiwenziduo.cypher_nexus.client.renderer.CypherProjectileRenderer
+import com.github.heiwenziduo.cypher_nexus.client.cypher.CypherVisualizerRegistry
+import com.github.heiwenziduo.cypher_nexus.client.cypher.CypherProjectileRenderer
 import com.github.heiwenziduo.cypher_nexus.init.ModEntities.CYPHER_PROJECTILE
 import net.minecraft.client.Minecraft
 import net.neoforged.api.distmarker.Dist
+import net.neoforged.api.distmarker.OnlyIn
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent
@@ -27,11 +29,18 @@ object ClientSetup {
     private fun onClientStarting(event: FMLClientSetupEvent) {
         LOGGER.info("HELLO FROM CLIENT SETUP")
         LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().user.name)
+        // only on physical client
+        // sided setup is the last step of 4-step neo lifecycle, here registry is fully prepared
     }
+
+//    @SubscribeEvent
+//    private fun registerClientPayloadHandler(event: RegisterClientPayloadHandlersEvent) {
+//
+//    }
 
     // ===================== entity renderer ================================
     @SubscribeEvent
-    fun registerEntityRenderers(event: RegisterRenderers) {
+    private fun registerEntityRenderers(event: RegisterRenderers) {
         event.registerEntityRenderer(CYPHER_PROJECTILE.get()) { context -> CypherProjectileRenderer(context) }
     }
 

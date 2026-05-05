@@ -8,6 +8,7 @@ import com.github.heiwenziduo.cypher_nexus.machinery.cypher.category.CypherCateg
 class CypherData private constructor (){
     companion object {
         private var _cypherMap: Map<CypherCategory, List<AbstractCypher>> = mapOf()
+        // TODO validate registry from server
         val cypherMap
             get() = _cypherMap
 

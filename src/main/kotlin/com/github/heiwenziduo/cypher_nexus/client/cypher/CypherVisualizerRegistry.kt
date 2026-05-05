@@ -1,0 +1,35 @@
+package com.github.heiwenziduo.cypher_nexus.client.cypher
+
+import com.github.heiwenziduo.cypher_nexus.client.cypher.visualizer.EnderTeleportationVi
+import com.github.heiwenziduo.cypher_nexus.client.cypher.visualizer.SnowballVi
+import com.github.heiwenziduo.cypher_nexus.client.cypher.visualizer.modifier.TestVi
+import com.github.heiwenziduo.cypher_nexus.init.mod.ModCyphers
+import com.github.heiwenziduo.cypher_nexus.machinery.cypher.AbstractCypher
+import net.minecraft.resources.ResourceLocation
+import net.neoforged.api.distmarker.Dist
+import net.neoforged.api.distmarker.OnlyIn
+
+@OnlyIn(Dist.CLIENT)
+object CypherVisualizerRegistry {
+    private val _visualizers = mutableMapOf<AbstractCypher, ICypherVisualizer>()
+
+    // call this in FMLClientSetupEvent
+    fun register(visualizer: ICypherVisualizer) {
+        _visualizers[visualizer.cypher()] = visualizer
+    }
+
+    fun get(cypherId: ResourceLocation): ICypherVisualizer? {
+        val cy = ModCyphers.REGISTRY.get(cypherId)
+        return _visualizers[cy]
+    }
+    fun get(cypher: AbstractCypher): ICypherVisualizer? {
+        return _visualizers[cypher]
+    }
+
+    init {
+        register(TestVi)
+
+        register(SnowballVi)
+        register(EnderTeleportationVi)
+    }
+}

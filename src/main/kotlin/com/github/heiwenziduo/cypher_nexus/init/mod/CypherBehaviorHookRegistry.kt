@@ -12,7 +12,7 @@ import thedarkcolour.kotlinforforge.neoforge.forge.MOD_BUS
 object CypherBehaviorHookRegistry {
     val RESOURCE_KEY: ResourceKey<Registry<CypherBehaviorHook>> =
         ResourceKey.createRegistryKey(CypherNexus.modResource("cypher/hook"))
-    val REGISTRY: Registry<CypherBehaviorHook> = RegistryBuilder(RESOURCE_KEY).create()
+    val REGISTRY: Registry<CypherBehaviorHook> = RegistryBuilder(RESOURCE_KEY).sync(true).create()
 
     val DEFERRED_REGISTER: DeferredRegister<CypherBehaviorHook> =
         DeferredRegister.create(REGISTRY, CypherNexus.MOD_ID)

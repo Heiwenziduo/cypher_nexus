@@ -1,4 +1,4 @@
-package com.github.heiwenziduo.cypher_nexus.client.renderer
+package com.github.heiwenziduo.cypher_nexus.client.cypher
 
 import com.github.heiwenziduo.cypher_nexus.CypherNexus
 import com.github.heiwenziduo.cypher_nexus.content.entity.CypherProjectile
@@ -8,11 +8,7 @@ import net.minecraft.client.renderer.block.BlockRenderDispatcher
 import net.minecraft.client.renderer.entity.EntityRenderer
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.entity.ItemRenderer
-import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.resources.ResourceLocation
-import net.minecraft.world.item.ItemDisplayContext
-import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.Items
 import net.neoforged.api.distmarker.Dist
 import net.neoforged.api.distmarker.OnlyIn
 
@@ -23,8 +19,6 @@ class CypherProjectileRenderer(
     private val itemRenderer: ItemRenderer = context.itemRenderer
     private val blockRenderer: BlockRenderDispatcher = context.blockRenderDispatcher
 
-    val stack = ItemStack(Items.SNOWBALL)
-
     override fun render(
         projectile: CypherProjectile,
         entityYaw: Float,
@@ -33,23 +27,18 @@ class CypherProjectileRenderer(
         bufferSource: MultiBufferSource,
         packedLight: Int // 0-255
     ) {
-//        super.render(p_entity, entityYaw, partialTick, poseStack, bufferSource, packedLight)
+        // super.render(projectile, entityYaw, partialTick, poseStack, bufferSource, packedLight)
 
         poseStack.pushPose()
-        poseStack.scale(.5f, .5f, .5f)
-        // projectile.cypher.render(projectile, entityYaw, partialTick, poseStack, bufferSource, packedLight, itemRenderer, blockRenderer)
-        poseStack.mulPose(entityRenderDispatcher.cameraOrientation())
-        itemRenderer
-            .renderStatic(
-                stack,
-                ItemDisplayContext.FIXED,
-                packedLight,
-                OverlayTexture.NO_OVERLAY,
-                poseStack,
-                bufferSource,
-                projectile.level(),
-                projectile.id
+        // use which stack depends on the visualizer implementation
+        for (modifier in projectile.invokeList) {
+            CypherVisualizerRegistry.get(modifier)?.render(
+                projectile, entityYaw, partialTick, poseStack, bufferSource, packedLight, itemRenderer, blockRenderer, entityRenderDispatcher
             )
+        }
+        CypherVisualizerRegistry.get(projectile.cypher)?.render(
+            projectile, entityYaw, partialTick, poseStack, bufferSource, packedLight, itemRenderer, blockRenderer, entityRenderDispatcher
+        )
 
         poseStack.popPose()
     }

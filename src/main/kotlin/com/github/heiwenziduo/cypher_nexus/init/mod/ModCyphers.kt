@@ -5,6 +5,7 @@ import com.github.heiwenziduo.cypher_nexus.content.cypher.SimpleModifier
 import com.github.heiwenziduo.cypher_nexus.content.cypher.modifier.HomingCypher
 import com.github.heiwenziduo.cypher_nexus.content.cypher.modifier.PierceEntityCypher
 import com.github.heiwenziduo.cypher_nexus.content.cypher._TestModifier
+import com.github.heiwenziduo.cypher_nexus.content.cypher.projectile.EnderTeleportationCypher
 import com.github.heiwenziduo.cypher_nexus.content.cypher.projectile.SnowballCypher
 import com.github.heiwenziduo.cypher_nexus.machinery.CypherNotFoundException
 import com.github.heiwenziduo.cypher_nexus.machinery.cypher.AbstractCypher
@@ -24,7 +25,7 @@ import thedarkcolour.kotlinforforge.neoforge.forge.MOD_BUS
 object ModCyphers {
     val RESOURCE_KEY: ResourceKey<Registry<AbstractCypher>> =
         ResourceKey.createRegistryKey(CypherNexus.modResource("cypher"))
-    val REGISTRY: Registry<AbstractCypher> = RegistryBuilder(RESOURCE_KEY).create()
+    val REGISTRY: Registry<AbstractCypher> = RegistryBuilder(RESOURCE_KEY).sync(true).create()
 
     val DEFERRED_REGISTER: DeferredRegister<AbstractCypher> =
         DeferredRegister.create(REGISTRY, CypherNexus.MOD_ID)
@@ -49,6 +50,7 @@ object ModCyphers {
 
     // projectile
     val SNOWBALL = registerCypher(SnowballCypher)
+    val ENDER_TELEPORTATION = registerCypher(EnderTeleportationCypher)
 
     // static projectile
 

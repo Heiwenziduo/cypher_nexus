@@ -30,7 +30,8 @@ class CypherModifierHelper(
     val invokeDire: Vec3 = Vec3.ZERO,
 ) : IFlaggable {
     val computedOperationMap = HashMap<CypherAttribute, HashMap<CypherAttributeOperation, Double>>()
-    val invokeList = mutableListOf<AbstractCypher>()
+    val invokeListTmp = mutableListOf<AbstractCypher>()
+    var invokeList = listOf<AbstractCypher>()
     private val projCyList = mutableListOf<AbstractProjectileCypher>()
     override var enabledFlags: Int = 0
 
@@ -96,12 +97,11 @@ class CypherModifierHelper(
             helperData.draw--
             helperData.index++
             preInvoke(current)
-            invokeList.add(current)
-
+            if (current is ModifierCypher) invokeListTmp.add(current)
         }
-
+       invokeList = invokeListTmp.toList()
        for (c in projCyList) {
-           invoke(c)
+           invoke(c, invokeList)
        }
     }
 
@@ -117,9 +117,9 @@ class CypherModifierHelper(
             is AbstractNonProjectileCypher -> ""
         }
     }
-    private fun invoke(cypher: AbstractProjectileCypher) {
+    private fun invoke(cypher: AbstractProjectileCypher, invokes: List<AbstractCypher>) {
         // TODO redirect starting position event
-        cypher.createProjectile(level, this, caster, stack, invokePos, invokeDire,)
+        cypher.createProjectile(level, this, caster, stack, invokePos, invokeDire, invokes)
     }
 
 

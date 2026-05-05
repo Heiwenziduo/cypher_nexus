@@ -1,6 +1,7 @@
 package com.github.heiwenziduo.cypher_nexus.content.entity
 
 import com.github.heiwenziduo.cypher_nexus.CypherNexus
+import com.github.heiwenziduo.cypher_nexus.init.ModDataSerializer
 import com.github.heiwenziduo.cypher_nexus.init.ModEntities.CYPHER_PROJECTILE
 import com.github.heiwenziduo.cypher_nexus.init.mod.CypherAttributes
 import com.github.heiwenziduo.cypher_nexus.machinery.cypher.AbstractCypher
@@ -8,7 +9,6 @@ import com.github.heiwenziduo.cypher_nexus.machinery.cypher.AbstractProjectileCy
 import com.github.heiwenziduo.cypher_nexus.machinery.cypher.CypherModifierHelper
 import com.github.heiwenziduo.cypher_nexus.machinery.cypher.EmptyCypher
 import com.github.heiwenziduo.cypher_nexus.machinery.cypher.attribute.CypherAttribute
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.attribute.CypherAttributeOperation
 import com.github.heiwenziduo.cypher_nexus.machinery.cypher.flag.CypherFlags
 import com.github.heiwenziduo.cypher_nexus.machinery.cypher.flag.IFlaggable
 import com.github.heiwenziduo.cypher_nexus.utility.ProjectileUtility
@@ -35,8 +35,22 @@ import kotlin.jvm.optionals.getOrNull
 
 open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level) : Projectile(entityType, level), IFlaggable {
 
-    var cypher: AbstractProjectileCypher = EmptyCypher
-    private var invokeList: List<AbstractCypher> = listOf()
+    // var cypher: AbstractProjectileCypher = EmptyCypher
+    // private var invokeList: List<AbstractCypher> = listOf()
+    private var _cypher: AbstractProjectileCypher
+        get() = entityData.get(CYPHER) as AbstractProjectileCypher // FIXME
+        set(value) = entityData.set(CYPHER, value)
+    /** only modifier cyphers, check CypherModifierHelper#castLoop */
+    private var _invokeList: List<AbstractCypher>
+        get() = entityData.get(CYPHER_LIST)
+        set(value) = entityData.set(CYPHER_LIST, value)
+
+    val cypher
+        get() = _cypher
+    /***/
+    val invokeList
+        get() = _invokeList
+
     // private var _moveDireCache: Vec3? = null
     var moveDirection: Vec3 = Vec3.ZERO
     /** a flag is basically a bundle of booleans */
@@ -77,16 +91,19 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
 //        }
     }
 
-    constructor(level: Level, caster: LivingEntity?, cypher0: AbstractProjectileCypher, helper: CypherModifierHelper, direction: Vec3? = null) : this(CYPHER_PROJECTILE.get(), level) {
-        // secondary constructor specific initialization
+    constructor(
+        level: Level, caster: LivingEntity?, cypher0: AbstractProjectileCypher, helper: CypherModifierHelper,
+        direction: Vec3? = null, invokeList0: List<AbstractCypher> = listOf()
+    ) : this(CYPHER_PROJECTILE.get(), level) {
         owner = caster
-        cypher = cypher0
+        _cypher = cypher0
+        _invokeList = invokeList0
         enabledFlags = helper.enabledFlags
         helper.computedOperationMap.forEach { (attr, opMap) ->
             // do not modify the helper map here
             if (!attr.isProjectileAttribute) return@forEach
             _attributeMap.compute(attr) { a, v ->
-                val def = cypher.getAttrBaseOrDefault(attr)
+                val def = _cypher.getAttrBaseOrDefault(attr)
                 val final = CypherUtility.attributeCalculator(opMap, def)
                 attr.restrictRange(final)
             }
@@ -106,13 +123,19 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
         }
 
         // test
-        CypherNexus.LOGGER.info("create projectile $cypher")
-        if (caster != null) println("caster move: ${caster.deltaMovement}") // always (0,0,0)
+        CypherNexus.LOGGER.info("create projectile $_cypher")
+//        if (caster != null) println("caster move: ${caster.deltaMovement}")
         CypherFlags.printFlag(enabledFlags)
         printModifiedAttrMap()
     }
 
     companion object {
+        val CYPHER: EntityDataAccessor<AbstractCypher> = SynchedEntityData.defineId(
+            CypherProjectile::class.java,
+            ModDataSerializer.CYPHER_DATA.get())
+        val CYPHER_LIST: EntityDataAccessor<List<AbstractCypher>> = SynchedEntityData.defineId(
+            CypherProjectile::class.java,
+            ModDataSerializer.CYPHER_LIST_DATA.get())
         val FLAG: EntityDataAccessor<Int> = SynchedEntityData.defineId(
             CypherProjectile::class.java,
             EntityDataSerializers.INT)
@@ -130,6 +153,8 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
             EntityDataSerializers.INT)
     }
     override fun defineSynchedData(builder: SynchedEntityData.Builder) {
+        builder.define(CYPHER, EmptyCypher)
+        builder.define(CYPHER_LIST, listOf())
         builder.define(FLAG, 0)
 //        builder.define(MOVE_DIRECTION, Vector3f(0f, 0f, 0f))
 //        builder.define(SPEED, 0f)
@@ -144,9 +169,9 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
         if (firstTick) { // start from tickCount == 1
             // TODO hook
 
-//            if (level().isClientSide){
-//                println("tick$tickCount, clientSide speed: $speed") // attrs are synced from the start
-//            }
+            if (level().isClientSide) {
+                println("firstTickCheck: Client\n$_cypher\n$_invokeList") // attrs are synced from the start
+            }
         }
 
 //        updateInWaterStateAndDoFluidPushing()
@@ -174,12 +199,10 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
          * deltaMovement: the movement for the "next tick", client smooth animation relay on this
          * // an AABB check is used everyTick every vanilla projectile, sounds outrageous, but is ok in performance
          * */
-
         val hitResult = ProjectileUtility.getHitResult(position(), this, ::canHitEntity, deltaMovement, level(), clipMargin, ClipContext.Block.OUTLINE)
         bouncePoints.clear()
         val (lastBouncePoint, lastDeltaMove) = bounceLoop(hitResult)
         if (bounceTick) deltaMovement = VectorUtility.toSameDire(deltaMovement, lastDeltaMove)
-
 
 //        run collideCheck@ {
 //            val fluidCheck = ClipContext.Fluid.NONE // bounce when touching water surface?
@@ -311,11 +334,6 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
 
     // ==================================================================================================================
     // ==================================================================================================================
-    override fun handlePortal() {
-        // TODO
-        super.handlePortal()
-    }
-
     override fun handleEntityEvent(id: Byte) {
         // trigger on client
         super.handleEntityEvent(id)
@@ -328,6 +346,12 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
         // check: ItemParticleOption(ParticleTypes.ITEM, itemstack), and ParticleTypes.ITEM_SNOWBALL
     }
 
+    override fun handlePortal() {
+        // TODO
+        super.handlePortal()
+    }
+
+    override fun shouldRender(x: Double, y: Double, z: Double): Boolean = super.shouldRender(x, y, z)
     override fun shouldRenderAtSqrDistance(distance: Double): Boolean {
         // default distance based on AABB size, this is vital for very small entities
         // getViewScale()

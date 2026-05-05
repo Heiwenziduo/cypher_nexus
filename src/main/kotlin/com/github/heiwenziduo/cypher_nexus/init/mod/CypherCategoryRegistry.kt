@@ -16,7 +16,7 @@ import thedarkcolour.kotlinforforge.neoforge.forge.MOD_BUS
 object CypherCategoryRegistry {
     val RESOURCE_KEY: ResourceKey<Registry<CypherCategory>> =
         ResourceKey.createRegistryKey(CypherNexus.modResource("cypher/category"))
-    val REGISTRY: Registry<CypherCategory> = RegistryBuilder(RESOURCE_KEY).create()
+    val REGISTRY: Registry<CypherCategory> = RegistryBuilder(RESOURCE_KEY).sync(true).create()
 
     val DEFERRED_REGISTER: DeferredRegister<CypherCategory> =
         DeferredRegister.create(REGISTRY, CypherNexus.MOD_ID)

@@ -2,6 +2,7 @@ package com.github.heiwenziduo.cypher_nexus
 
 import com.github.heiwenziduo.cypher_nexus.init.ModBlocks
 import com.github.heiwenziduo.cypher_nexus.init.ModDataComponents
+import com.github.heiwenziduo.cypher_nexus.init.ModDataSerializer
 import com.github.heiwenziduo.cypher_nexus.init.ModEntities
 import com.github.heiwenziduo.cypher_nexus.init.ModItems
 import com.github.heiwenziduo.cypher_nexus.init.ModTabs
@@ -51,6 +52,7 @@ object CypherNexus {
         ModItems.register()
         ModDataComponents.register()
         ModEntities.register()
+        ModDataSerializer.register()
 
         ModTabs.register()
 
