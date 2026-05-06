@@ -1,12 +1,13 @@
-package com.github.heiwenziduo.cypher_nexus.machinery.cypher
+package com.github.heiwenziduo.cypher_nexus.mechanic.cypher
 
 import com.github.heiwenziduo.cypher_nexus.CypherNexus
 import com.github.heiwenziduo.cypher_nexus.init.mod.CypherAttributes
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.attribute.CypherAttribute
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.attribute.CypherAttributeOperation
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.flag.IFlaggable
-import com.github.heiwenziduo.cypher_nexus.machinery.wand.data.WandDataFrequent
-import com.github.heiwenziduo.cypher_nexus.machinery.wand.data.WandDataInvariable
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.attribute.CypherAttribute
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.attribute.CypherAttributeOperation
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.flag.IFlaggable
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.HookContainer
+import com.github.heiwenziduo.cypher_nexus.mechanic.wand.data.WandDataFrequent
+import com.github.heiwenziduo.cypher_nexus.mechanic.wand.data.WandDataInvariable
 import com.github.heiwenziduo.cypher_nexus.utility.mod.CypherUtility
 import net.minecraft.core.Holder
 import net.minecraft.world.entity.LivingEntity
@@ -34,6 +35,7 @@ class CypherModifierHelper(
     var invokeList = listOf<AbstractCypher>()
     private val projCyList = mutableListOf<AbstractProjectileCypher>()
     override var enabledFlags: Int = 0
+    // val hooks = HookContainer()
 
     // the operation-system
     fun addAttribute(map: HashMap<Holder<CypherAttribute>, HashMap<CypherAttributeOperation, Double>>) {

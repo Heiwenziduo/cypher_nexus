@@ -1,7 +1,7 @@
-package com.github.heiwenziduo.cypher_nexus.machinery.wand.data
+package com.github.heiwenziduo.cypher_nexus.mechanic.wand.data
 
 import com.github.heiwenziduo.cypher_nexus.init.mod.ModCyphers
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.AbstractCypher
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.AbstractCypher
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import io.netty.buffer.ByteBuf

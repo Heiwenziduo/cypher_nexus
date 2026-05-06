@@ -1,8 +1,8 @@
 package com.github.heiwenziduo.cypher_nexus.content.cypher.modifier
 
 import com.github.heiwenziduo.cypher_nexus.CypherNexus
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.ModifierCypher
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.flag.CypherFlags
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.ModifierCypher
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.flag.CypherFlags
 
 // this can be registered by using SimpleModifier
 object PierceEntityCypher: ModifierCypher(

@@ -1,22 +1,62 @@
 package com.github.heiwenziduo.cypher_nexus.content.cypher
 
 import com.github.heiwenziduo.cypher_nexus.CypherNexus
+import com.github.heiwenziduo.cypher_nexus.content.entity.CypherProjectile
 import com.github.heiwenziduo.cypher_nexus.init.mod.CypherAttributes
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.ModifierCypher
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.attribute.CypherAttributeOperation
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.flag.CypherFlags
+import com.github.heiwenziduo.cypher_nexus.init.mod.CypherBehaviorHookRegistry.TICK_BEHAVIOR
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.ModifierCypher
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.attribute.CypherAttributeOperation
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.BeforeExpireHook
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.FirstTickHook
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.HitEntityHook
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.TickBehaviorHook
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.level.Level
 
 object _TestModifier: ModifierCypher(
     manaDrain = 60f
-) {
+), TickBehaviorHook, FirstTickHook, BeforeExpireHook, HitEntityHook {
     override val resource = CypherNexus.modResource("test_modifier")
+    override fun tickBehaviorBoth(level: Level, projectile: CypherProjectile, strength: Int) {
+        if (projectile.tickCount % 20 != 0) return
+        if (level.isClientSide) println("client tick hook")
+        else println("server tick hook")
+    }
+
+    override fun firstTickBoth(
+        level: Level,
+        projectile: CypherProjectile,
+        strength: Int
+    ) {
+        if (level.isClientSide) println("client firstTickBoth")
+        else println("server firstTickBoth")
+    }
+
+    override fun beforeExpireBoth(
+        level: Level,
+        projectile: CypherProjectile,
+        strength: Int
+    ) {
+        if (level.isClientSide) println("client beforeExpireBoth")
+        else println("server beforeExpireBoth")
+    }
+
+    override fun onHitEntityServer(
+        level: Level,
+        projectile: CypherProjectile,
+        strength: Int,
+        target: Entity
+    ) {
+        if (level.isClientSide) println("client onHitEntityServer")
+        else println("server onHitEntityServer")
+    }
 
     init {
 //         addFlag(CypherFlags.PIERCE_BLOCK)
 //         addFlag(CypherFlags.NO_DAMAGE)
 
         addAttribute(CypherAttributes.DAMAGE, CypherAttributeOperation.ADD, 1.0)
-        addAttribute(CypherAttributes.SPEED, CypherAttributeOperation.MULTIPLY_BASE, 3.0)
+        addAttribute(CypherAttributes.SPEED, CypherAttributeOperation.MULTIPLY_BASE, 0.5)
         addAttribute(CypherAttributes.EXISTING, CypherAttributeOperation.ADD, 60.0)
         addAttribute(CypherAttributes.CAST_DELAY, CypherAttributeOperation.ADD, 3.0)
         addAttribute(CypherAttributes.RECHARGE_TIME, CypherAttributeOperation.ADD, 5.0)

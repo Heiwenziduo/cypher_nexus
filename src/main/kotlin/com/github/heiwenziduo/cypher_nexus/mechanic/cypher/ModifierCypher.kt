@@ -1,7 +1,7 @@
-package com.github.heiwenziduo.cypher_nexus.machinery.cypher
+package com.github.heiwenziduo.cypher_nexus.mechanic.cypher
 
 import com.github.heiwenziduo.cypher_nexus.init.mod.CypherCategoryRegistry
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.category.CypherCategory
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.category.CypherCategory
 import net.minecraft.core.Holder
 
 abstract class ModifierCypher (

@@ -1,7 +1,7 @@
 package com.github.heiwenziduo.cypher_nexus.network
 
 import com.github.heiwenziduo.cypher_nexus.init.mod.ModCyphers
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.AbstractCypher
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.AbstractCypher
 import com.mojang.serialization.Codec
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.codec.ByteBufCodecs

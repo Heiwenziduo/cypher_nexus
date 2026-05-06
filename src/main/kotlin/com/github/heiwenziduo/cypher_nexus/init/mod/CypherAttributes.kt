@@ -1,8 +1,8 @@
 package com.github.heiwenziduo.cypher_nexus.init.mod
 
 import com.github.heiwenziduo.cypher_nexus.CypherNexus
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.attribute.CypherAttribute
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.attribute.CypherAttribute.AttributeTarget
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.attribute.CypherAttribute
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.attribute.CypherAttribute.AttributeTarget
 import net.minecraft.core.Holder
 import net.minecraft.core.Registry
 import net.minecraft.resources.ResourceKey

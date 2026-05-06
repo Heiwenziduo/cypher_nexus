@@ -1,4 +1,4 @@
-package com.github.heiwenziduo.cypher_nexus.machinery.cypher
+package com.github.heiwenziduo.cypher_nexus.mechanic.cypher
 
 import com.github.heiwenziduo.cypher_nexus.CypherNexus
 import com.github.heiwenziduo.cypher_nexus.init.mod.CypherCategoryRegistry

@@ -1,7 +1,7 @@
 package com.github.heiwenziduo.cypher_nexus.init.mod
 
 import com.github.heiwenziduo.cypher_nexus.CypherNexus
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.category.CypherCategory
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.category.CypherCategory
 import net.minecraft.core.Holder
 import net.minecraft.core.Registry
 import net.minecraft.resources.ResourceKey

@@ -1,7 +1,7 @@
-package com.github.heiwenziduo.cypher_nexus.machinery.cypher
+package com.github.heiwenziduo.cypher_nexus.mechanic.cypher
 
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.attribute.CypherAttribute
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.attribute.CypherAttributeOperation
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.attribute.CypherAttribute
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.attribute.CypherAttributeOperation
 import net.minecraft.core.Holder
 
 abstract class AbstractNonProjectileCypher: AbstractCypher() {

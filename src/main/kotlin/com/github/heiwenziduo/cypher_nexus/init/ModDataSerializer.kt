@@ -1,7 +1,7 @@
 package com.github.heiwenziduo.cypher_nexus.init
 
 import com.github.heiwenziduo.cypher_nexus.CypherNexus
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.AbstractCypher
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.AbstractCypher
 import com.github.heiwenziduo.cypher_nexus.network.CNCodecs
 import net.minecraft.network.syncher.EntityDataSerializer
 import net.neoforged.neoforge.registries.DeferredHolder

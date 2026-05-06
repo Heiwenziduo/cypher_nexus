@@ -4,13 +4,17 @@ import com.github.heiwenziduo.cypher_nexus.CypherNexus
 import com.github.heiwenziduo.cypher_nexus.init.ModDataSerializer
 import com.github.heiwenziduo.cypher_nexus.init.ModEntities.CYPHER_PROJECTILE
 import com.github.heiwenziduo.cypher_nexus.init.mod.CypherAttributes
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.AbstractCypher
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.AbstractProjectileCypher
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.CypherModifierHelper
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.EmptyCypher
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.attribute.CypherAttribute
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.flag.CypherFlags
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.flag.IFlaggable
+import com.github.heiwenziduo.cypher_nexus.init.mod.CypherBehaviorHookRegistry.BEFORE_EXPIRE
+import com.github.heiwenziduo.cypher_nexus.init.mod.CypherBehaviorHookRegistry.FIRST_TICK
+import com.github.heiwenziduo.cypher_nexus.init.mod.CypherBehaviorHookRegistry.TICK_BEHAVIOR
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.AbstractCypher
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.AbstractProjectileCypher
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.CypherModifierHelper
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.EmptyCypher
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.attribute.CypherAttribute
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.flag.CypherFlags
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.flag.IFlaggable
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.HookContainer
 import com.github.heiwenziduo.cypher_nexus.utility.ProjectileUtility
 import com.github.heiwenziduo.cypher_nexus.utility.VectorUtility
 import com.github.heiwenziduo.cypher_nexus.utility.mod.CypherUtility
@@ -27,7 +31,6 @@ import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.level.ClipContext
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.*
 import kotlin.jvm.optionals.getOrNull
@@ -38,7 +41,7 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
     // var cypher: AbstractProjectileCypher = EmptyCypher
     // private var invokeList: List<AbstractCypher> = listOf()
     private var _cypher: AbstractProjectileCypher
-        get() = entityData.get(CYPHER) as AbstractProjectileCypher // FIXME
+        get() = entityData.get(CYPHER) as AbstractProjectileCypher
         set(value) = entityData.set(CYPHER, value)
     /** only modifier cyphers, check CypherModifierHelper#castLoop */
     private var _invokeList: List<AbstractCypher>
@@ -83,6 +86,8 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
     protected val bounceTick
         get() = bouncePoints.isNotEmpty()
     val clipMargin = 0.2f
+    val hookContainer = HookContainer()
+
     init {
         // initialize attribute, make sure every value is ready
         // since we have #getAttrOrDefault, this step seems unnecessary
@@ -99,6 +104,7 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
         _cypher = cypher0
         _invokeList = invokeList0
         enabledFlags = helper.enabledFlags
+        syncHooks(_invokeList, _cypher)
         helper.computedOperationMap.forEach { (attr, opMap) ->
             // do not modify the helper map here
             if (!attr.isProjectileAttribute) return@forEach
@@ -162,15 +168,29 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
         builder.define(BOUNCE, 0)
     }
 
+    private fun syncHooks(modifiers: List<AbstractCypher>, thiz: AbstractCypher? = null) {
+        for (c in modifiers) {
+            for (h in c.implementHooks) {
+                hookContainer.add(h, c)
+            }
+        }
+        if (thiz != null) {
+            for (h in thiz.implementHooks) {
+                hookContainer.add(h, thiz)
+            }
+        }
+    }
+
     // ==================================================================================================================
     // ==================================================================================================================
     override fun tick() {
         // called on both server side and client side
         if (firstTick) { // start from tickCount == 1
-            // TODO hook
+            hookContainer.playHooks(FIRST_TICK)
+            { h, i -> h.firstTickBoth(level(), this, i) }
 
             if (level().isClientSide) {
-                println("firstTickCheck: Client\n$_cypher\n$_invokeList") // attrs are synced from the start
+                println("firstTickCheckOnClient: _cypher, _invokeList\n$_cypher\n$_invokeList") // attrs are synced from the start
             }
         }
 
@@ -179,13 +199,14 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
 //        updateSwimming()
         super.tick() // TODO: prune default tick
 
+        // hookContainer.get(TICK_BEHAVIOR).forEach { h, i -> h.tickBehaviorBoth(level(), this, i) }
+        hookContainer.playHooks(TICK_BEHAVIOR)
+        { h, i -> h.tickBehaviorBoth(level(), this, i) }
         projectileTick()
         modifierTick()
         if (existing == tickCount) {
             // here's a trick, if player make existing-time less or equal to 0, projectile will last till the game quit
-
-            // TODO hook, expire
-            discard()
+            myDiscard(DiscardReason.EXPIRE)
         }
     }
 
@@ -199,7 +220,7 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
          * deltaMovement: the movement for the "next tick", client smooth animation relay on this
          * // an AABB check is used everyTick every vanilla projectile, sounds outrageous, but is ok in performance
          * */
-        val hitResult = ProjectileUtility.getHitResult(position(), this, ::canHitEntity, deltaMovement, level(), clipMargin, ClipContext.Block.OUTLINE)
+        val hitResult = ProjectileUtility.getHitResult(position(), this, ::canHitEntity, deltaMovement, level(), clipMargin)
         bouncePoints.clear()
         val (lastBouncePoint, lastDeltaMove) = bounceLoop(hitResult)
         if (bounceTick) deltaMovement = VectorUtility.toSameDire(deltaMovement, lastDeltaMove)
@@ -289,7 +310,7 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
             bouncePoints.add(hitPoint)
 
             // handle next bounce
-            hitResultStep = ProjectileUtility.getHitResult(startPosStep, this, ::canHitEntity, deltaMoveStep, level(), clipMargin, ClipContext.Block.OUTLINE)
+            hitResultStep = ProjectileUtility.getHitResult(startPosStep, this, ::canHitEntity, deltaMoveStep, level(), clipMargin)
 
         } while (hitResultStep.type != HitResult.Type.MISS)
 
@@ -307,7 +328,7 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
             result is EntityHitResult && haveFlag(CypherFlags.PIERCE_ENTITY)
         if (!canPierce && bounce <= 0) {
             level().broadcastEntityEvent(this, 3) // combine with #handleEntityEvent
-            discard()
+            myDiscard(DiscardReason.HIT)
         }
     }
     override fun canHitEntity(target: Entity): Boolean {
@@ -316,7 +337,7 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
         }
         if (haveFlag(CypherFlags.NO_DAMAGE)) return false
         if (owner == target && notHaveFlag(CypherFlags.HURT_OWNER)) return false
-        // TODO hook
+        // maybe hook
         return true
     }
     override fun onHitEntity(result: EntityHitResult) {
@@ -338,12 +359,8 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
         // trigger on client
         super.handleEntityEvent(id)
         if (id.toInt() == 3) {
-            for (i in 0..7) {
-                // TODO
-                this.level().addParticle(ParticleTypes.ITEM_SNOWBALL, x, y, z, 0.0, 0.0, 0.0)
-            }
+            _cypher.visualEffectOnHit(level(), this)
         }
-        // check: ItemParticleOption(ParticleTypes.ITEM, itemstack), and ParticleTypes.ITEM_SNOWBALL
     }
 
     override fun handlePortal() {
@@ -391,11 +408,38 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
 //        return super.pick(hitDistance, partialTicks, hitFluids)
 //    }
 
+
+    fun myDiscard(reason: DiscardReason) {
+        when (reason) {
+            DiscardReason.EXPIRE -> {
+                hookContainer.playHooks(BEFORE_EXPIRE)
+                { h, i -> h.beforeExpireBoth(level(), this, i) }
+            }
+            else -> {}
+        }
+        discard()
+    }
+
     // ==================================================================================================================
     // ==================================================================================================================
     private fun printModifiedAttrMap() {
         _attributeMap.forEach { a, v ->
             println("$a: $v")
         }
+    }
+
+
+    // check Entity.RemovalReason for more info
+    // here only for cypher-projectile usage
+    enum class DiscardReason {
+        /** reach its time limit */
+        EXPIRE,
+        /** through a collapse */
+        HIT,
+        HIT_ENTITY,
+        HIT_BLOCK,
+
+        /** by some special approach */
+        ERASE,
     }
 }

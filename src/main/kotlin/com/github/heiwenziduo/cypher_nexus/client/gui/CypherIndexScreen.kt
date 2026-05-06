@@ -1,7 +1,7 @@
 package com.github.heiwenziduo.cypher_nexus.client.gui
 
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.AbstractCypher
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.category.CypherCategory
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.AbstractCypher
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.category.CypherCategory
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component

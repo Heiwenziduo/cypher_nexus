@@ -1,9 +1,9 @@
 package com.github.heiwenziduo.cypher_nexus.init
 
 import com.github.heiwenziduo.cypher_nexus.CypherNexus
-import com.github.heiwenziduo.cypher_nexus.machinery.wand.data.WandDataFrequent
-import com.github.heiwenziduo.cypher_nexus.machinery.wand.data.WandDataHighPayload
-import com.github.heiwenziduo.cypher_nexus.machinery.wand.data.WandDataInvariable
+import com.github.heiwenziduo.cypher_nexus.mechanic.wand.data.WandDataFrequent
+import com.github.heiwenziduo.cypher_nexus.mechanic.wand.data.WandDataHighPayload
+import com.github.heiwenziduo.cypher_nexus.mechanic.wand.data.WandDataInvariable
 import net.minecraft.core.component.DataComponentType
 import net.minecraft.core.registries.Registries
 import net.neoforged.neoforge.registries.DeferredRegister

@@ -1,6 +1,6 @@
 package com.github.heiwenziduo.cypher_nexus.utility.mod
 
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.attribute.CypherAttributeOperation
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.attribute.CypherAttributeOperation
 
 object CypherUtility {
     fun attributeCalculator(opMap: HashMap<CypherAttributeOperation, Double>, base: Double) : Double {

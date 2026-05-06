@@ -1,8 +1,8 @@
 package com.github.heiwenziduo.cypher_nexus.utility.mod
 
 import com.github.heiwenziduo.cypher_nexus.init.mod.ModCyphers
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.AbstractCypher
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.category.CypherCategory
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.AbstractCypher
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.category.CypherCategory
 
 // prevent from instantiating
 class CypherData private constructor (){

@@ -1,4 +1,4 @@
-package com.github.heiwenziduo.cypher_nexus.machinery.cypher.flag
+package com.github.heiwenziduo.cypher_nexus.mechanic.cypher.flag
 
 /**
  * Kotlin provides a few operators for bits operation

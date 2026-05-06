@@ -1,11 +1,13 @@
-package com.github.heiwenziduo.cypher_nexus.machinery.cypher
+package com.github.heiwenziduo.cypher_nexus.mechanic.cypher
 
 import com.github.heiwenziduo.cypher_nexus.CypherNexus
 import com.github.heiwenziduo.cypher_nexus.init.mod.CypherAttributes
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.attribute.CypherAttribute
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.attribute.CypherAttributeOperation
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.category.CypherCategory
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.flag.CypherFlags
+import com.github.heiwenziduo.cypher_nexus.init.mod.CypherBehaviorHookRegistry
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.attribute.CypherAttribute
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.attribute.CypherAttributeOperation
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.category.CypherCategory
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.flag.CypherFlags
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.HookModule
 import com.github.heiwenziduo.cypher_nexus.utility.i.IRegisterable
 import net.minecraft.core.Holder
 import net.minecraft.network.chat.Component
@@ -14,6 +16,8 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
+import net.neoforged.neoforge.registries.DeferredHolder
+import java.util.function.Supplier
 
 /**
  *
@@ -28,15 +32,19 @@ sealed class AbstractCypher: IRegisterable {
     private val _attributeMap = HashMap<Holder<CypherAttribute>, HashMap<CypherAttributeOperation, Double>>()
     val attributeMap
         get() = _attributeMap
+    /** auto detect hooks */
+    val implementHooks: List<HookModule<*>> by lazy { // lazy init and cache result, cool
+        val hookModules = CypherBehaviorHookRegistry.REGISTRY
+        hookModules.filter { it.hook.isInstance(this) }
+    }
 
-    private var MAP_IS_LOCKED = false // this seems unnecessary
+    private var _initLock = false // this seems unnecessary
 
     abstract val category: Holder<CypherCategory>
     abstract override val resource: ResourceLocation
 
     init {
         initializeData()
-        registerHooks()
         addAttribute(CypherAttributes.CAST_DELAY, CypherAttributeOperation.ADD, 0.0)
         addAttribute(CypherAttributes.RECHARGE_TIME, CypherAttributeOperation.ADD, 0.0)
         addAttribute(CypherAttributes.RECOIL, CypherAttributeOperation.ADD, 0.0)
@@ -53,7 +61,7 @@ sealed class AbstractCypher: IRegisterable {
      * add Attributes with specific operator
      * */
     protected fun addAttribute(holder: Holder<CypherAttribute>, operator: CypherAttributeOperation, value: Double?): AbstractCypher {
-        if (!MAP_IS_LOCKED) {
+        if (!_initLock) {
             val map = _attributeMap.getOrPut(holder) { HashMap() }
             if (value != null) map.compute(operator) { k,v -> operator.cumulate(v?: operator.defaultValue, value) }
         }
@@ -75,7 +83,9 @@ sealed class AbstractCypher: IRegisterable {
     /**
      * register a hook to modifier projectile-AI at specific moments
      * */
-    protected open fun registerHooks() {}
+//    protected fun registerHooks(hooks: Supplier<out HookModule<*>>) {
+//        if (!_initLock) _hookList.add(hooks)
+//    }
 
     protected fun addFlag(flags: CypherFlags): AbstractCypher {
         _flag = _flag or flags.value

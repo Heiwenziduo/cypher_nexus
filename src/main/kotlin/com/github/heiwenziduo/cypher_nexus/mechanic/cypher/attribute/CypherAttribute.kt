@@ -1,4 +1,4 @@
-package com.github.heiwenziduo.cypher_nexus.machinery.cypher.attribute
+package com.github.heiwenziduo.cypher_nexus.mechanic.cypher.attribute
 
 import com.github.heiwenziduo.cypher_nexus.init.mod.CypherAttributes
 import com.github.heiwenziduo.cypher_nexus.utility.i.IRegisterable
@@ -6,7 +6,6 @@ import net.minecraft.core.Holder
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.ResourceLocation
-import kotlin.jvm.optionals.getOrNull
 import kotlin.math.max
 import kotlin.math.min
 

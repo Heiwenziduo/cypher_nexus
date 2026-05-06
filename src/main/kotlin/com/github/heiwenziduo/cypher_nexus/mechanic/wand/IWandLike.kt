@@ -1,13 +1,13 @@
-package com.github.heiwenziduo.cypher_nexus.machinery.wand
+package com.github.heiwenziduo.cypher_nexus.mechanic.wand
 
 import com.github.heiwenziduo.cypher_nexus.CypherNexus
 import com.github.heiwenziduo.cypher_nexus.init.mod.ModCyphers
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.AbstractCypher
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.CypherModifierHelper
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.CypherModifierHelper.HelperDataBundle
-import com.github.heiwenziduo.cypher_nexus.machinery.wand.data.WandDataFrequent
-import com.github.heiwenziduo.cypher_nexus.machinery.wand.data.WandDataHighPayload
-import com.github.heiwenziduo.cypher_nexus.machinery.wand.data.WandDataInvariable
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.AbstractCypher
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.CypherModifierHelper
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.CypherModifierHelper.HelperDataBundle
+import com.github.heiwenziduo.cypher_nexus.mechanic.wand.data.WandDataFrequent
+import com.github.heiwenziduo.cypher_nexus.mechanic.wand.data.WandDataHighPayload
+import com.github.heiwenziduo.cypher_nexus.mechanic.wand.data.WandDataInvariable
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.item.ItemStack

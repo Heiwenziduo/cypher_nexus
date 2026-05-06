@@ -4,7 +4,7 @@ import com.github.heiwenziduo.cypher_nexus.client.cypher.visualizer.EnderTelepor
 import com.github.heiwenziduo.cypher_nexus.client.cypher.visualizer.SnowballVi
 import com.github.heiwenziduo.cypher_nexus.client.cypher.visualizer.modifier.TestVi
 import com.github.heiwenziduo.cypher_nexus.init.mod.ModCyphers
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.AbstractCypher
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.AbstractCypher
 import net.minecraft.resources.ResourceLocation
 import net.neoforged.api.distmarker.Dist
 import net.neoforged.api.distmarker.OnlyIn

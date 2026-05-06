@@ -7,10 +7,10 @@ import com.github.heiwenziduo.cypher_nexus.content.cypher.modifier.PierceEntityC
 import com.github.heiwenziduo.cypher_nexus.content.cypher._TestModifier
 import com.github.heiwenziduo.cypher_nexus.content.cypher.projectile.EnderTeleportationCypher
 import com.github.heiwenziduo.cypher_nexus.content.cypher.projectile.SnowballCypher
-import com.github.heiwenziduo.cypher_nexus.machinery.CypherNotFoundException
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.AbstractCypher
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.EmptyCypher
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.attribute.CypherAttributeOperation
+import com.github.heiwenziduo.cypher_nexus.mechanic.CypherNotFoundException
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.AbstractCypher
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.EmptyCypher
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.attribute.CypherAttributeOperation
 import net.minecraft.core.Holder
 import net.minecraft.core.Registry
 import net.minecraft.resources.ResourceKey

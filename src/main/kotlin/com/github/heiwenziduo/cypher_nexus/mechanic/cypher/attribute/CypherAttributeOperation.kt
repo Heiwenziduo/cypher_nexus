@@ -1,4 +1,4 @@
-package com.github.heiwenziduo.cypher_nexus.machinery.cypher.attribute
+package com.github.heiwenziduo.cypher_nexus.mechanic.cypher.attribute
 
 enum class CypherAttributeOperation {
     /**

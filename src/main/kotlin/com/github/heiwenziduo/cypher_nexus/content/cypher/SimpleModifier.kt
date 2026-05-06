@@ -1,10 +1,10 @@
 package com.github.heiwenziduo.cypher_nexus.content.cypher
 
 import com.github.heiwenziduo.cypher_nexus.CypherNexus
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.ModifierCypher
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.attribute.CypherAttribute
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.attribute.CypherAttributeOperation
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.flag.CypherFlags
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.ModifierCypher
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.attribute.CypherAttribute
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.attribute.CypherAttributeOperation
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.flag.CypherFlags
 import net.minecraft.core.Holder
 
 /** easy way to create lots of simple modifiers */

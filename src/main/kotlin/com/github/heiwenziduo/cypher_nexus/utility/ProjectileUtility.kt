@@ -13,7 +13,7 @@ object ProjectileUtility {
      * custom projectile hit check function exactly same as {net.minecraft.world.entity.projectile.ProjectileUtil.getHitResult()},
      * but avoid magic number "0.3" (e.g. margin)
      * */
-    fun getHitResult(start: Vec3, entity: Entity, filter: Predicate<Entity>, deltaMovement: Vec3, level: Level, margin: Float, clipContext: ClipContext.Block) : HitResult {
+    fun getHitResult(start: Vec3, entity: Entity, filter: Predicate<Entity>, deltaMovement: Vec3, level: Level, margin: Float, clipContext: ClipContext.Block = ClipContext.Block.COLLIDER) : HitResult {
         var end = start.add(deltaMovement)
         var hitresult: HitResult = level.clip(ClipContext(start, end, clipContext, ClipContext.Fluid.NONE, entity))
         if (hitresult.type != HitResult.Type.MISS) {

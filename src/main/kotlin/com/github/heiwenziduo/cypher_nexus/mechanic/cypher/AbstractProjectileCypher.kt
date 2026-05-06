@@ -1,8 +1,8 @@
-package com.github.heiwenziduo.cypher_nexus.machinery.cypher
+package com.github.heiwenziduo.cypher_nexus.mechanic.cypher
 
 import com.github.heiwenziduo.cypher_nexus.content.entity.CypherProjectile
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.attribute.CypherAttribute
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.attribute.CypherAttributeOperation
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.attribute.CypherAttribute
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.attribute.CypherAttributeOperation
 import net.minecraft.core.Holder
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.item.ItemStack
@@ -24,4 +24,10 @@ abstract class AbstractProjectileCypher: AbstractCypher() {
         attributeMap[holder]?.get(CypherAttributeOperation.BASE)?: holder.value().defaultValue
     fun getAttrBaseOrDefault(attr: CypherAttribute) = getAttrBaseOrDefault(attr.attrRegistryHolder())
 
+
+    // due to cost, should prioritise these to hook on expire
+    /** called on client side. due to cost, should prioritise these to hook on expire */
+    open fun visualEffectOnHit(level: Level, projectile: CypherProjectile) {}
+    /** called on client side. due to cost, should prioritise these to hook on expire */
+    open fun visualEffectOnExpire(level: Level, projectile: CypherProjectile) {}
 }

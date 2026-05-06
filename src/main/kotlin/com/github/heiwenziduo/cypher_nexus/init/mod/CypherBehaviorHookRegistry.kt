@@ -1,27 +1,39 @@
 package com.github.heiwenziduo.cypher_nexus.init.mod
 
 import com.github.heiwenziduo.cypher_nexus.CypherNexus
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.hook.CypherBehaviorHook
-import net.minecraft.core.Holder
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.BeforeExpireHook
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.FirstTickHook
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.HitEntityHook
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.HookModule
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.TickBehaviorHook
 import net.minecraft.core.Registry
 import net.minecraft.resources.ResourceKey
+import net.neoforged.neoforge.registries.DeferredHolder
 import net.neoforged.neoforge.registries.DeferredRegister
 import net.neoforged.neoforge.registries.RegistryBuilder
 import thedarkcolour.kotlinforforge.neoforge.forge.MOD_BUS
+import java.util.function.Supplier
+import kotlin.reflect.KClass
 
 object CypherBehaviorHookRegistry {
-    val RESOURCE_KEY: ResourceKey<Registry<CypherBehaviorHook>> =
+    val RESOURCE_KEY: ResourceKey<Registry<HookModule<*>>> =
         ResourceKey.createRegistryKey(CypherNexus.modResource("cypher/hook"))
-    val REGISTRY: Registry<CypherBehaviorHook> = RegistryBuilder(RESOURCE_KEY).sync(true).create()
+    val REGISTRY: Registry<HookModule<*>> = RegistryBuilder(RESOURCE_KEY).sync(true).create()
 
-    val DEFERRED_REGISTER: DeferredRegister<CypherBehaviorHook> =
+    val DEFERRED_REGISTER: DeferredRegister<HookModule<*>> =
         DeferredRegister.create(REGISTRY, CypherNexus.MOD_ID)
 
     fun register() {
         DEFERRED_REGISTER.register(MOD_BUS)
     }
 
-    fun registerBehavior(hook: CypherBehaviorHook): Holder<CypherBehaviorHook> {
-        return DEFERRED_REGISTER.register(hook.resource.path) { -> hook }
+    fun <T : Any> registerHook(path: String, hook: KClass<T>, target: HookModule.HookTarget): Supplier<out HookModule<T>> {
+        // I find checking DeferredHolder<R, T>'s type is annoying...
+        return DEFERRED_REGISTER.register(path) { resource -> HookModule(resource, hook, target = target) }
     }
+
+    val BEFORE_EXPIRE = registerHook("before_expire", BeforeExpireHook::class, HookModule.HookTarget.PROJECTILE)
+    val FIRST_TICK = registerHook("first_tick", FirstTickHook::class, HookModule.HookTarget.PROJECTILE)
+    val HIT_ENTITY = registerHook("hit_entity", HitEntityHook::class, HookModule.HookTarget.PROJECTILE)
+    val TICK_BEHAVIOR = registerHook("tick_behavior", TickBehaviorHook::class, HookModule.HookTarget.PROJECTILE)
 }

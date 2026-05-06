@@ -1,4 +1,4 @@
-package com.github.heiwenziduo.cypher_nexus.machinery.cypher.category
+package com.github.heiwenziduo.cypher_nexus.mechanic.cypher.category
 
 import com.github.heiwenziduo.cypher_nexus.utility.i.IRegisterable
 import net.minecraft.network.chat.Component

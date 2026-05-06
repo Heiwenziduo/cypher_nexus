@@ -3,15 +3,13 @@ package com.github.heiwenziduo.cypher_nexus.client.cypher.visualizer.modifier
 import com.github.heiwenziduo.cypher_nexus.client.cypher.ICypherVisualizer
 import com.github.heiwenziduo.cypher_nexus.content.cypher._TestModifier
 import com.github.heiwenziduo.cypher_nexus.content.entity.CypherProjectile
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.AbstractCypher
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.AbstractCypher
 import com.mojang.blaze3d.vertex.PoseStack
-import net.minecraft.client.particle.Particle
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.block.BlockRenderDispatcher
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher
 import net.minecraft.client.renderer.entity.ItemRenderer
 import net.minecraft.core.particles.ParticleTypes
-import net.minecraft.util.ParticleUtils
 
 object TestVi : ICypherVisualizer {
     override fun cypher(): AbstractCypher = _TestModifier

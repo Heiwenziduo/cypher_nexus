@@ -4,11 +4,11 @@ import com.github.heiwenziduo.cypher_nexus.init.ModDataComponents.WAND_FREQUENT
 import com.github.heiwenziduo.cypher_nexus.init.ModDataComponents.WAND_HIGH_PAYLOAD
 import com.github.heiwenziduo.cypher_nexus.init.ModDataComponents.WAND_INVARIABLE
 import com.github.heiwenziduo.cypher_nexus.init.mod.ModCyphers
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.AbstractCypher
-import com.github.heiwenziduo.cypher_nexus.machinery.wand.IWandLike
-import com.github.heiwenziduo.cypher_nexus.machinery.wand.data.WandDataFrequent
-import com.github.heiwenziduo.cypher_nexus.machinery.wand.data.WandDataHighPayload
-import com.github.heiwenziduo.cypher_nexus.machinery.wand.data.WandDataInvariable
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.AbstractCypher
+import com.github.heiwenziduo.cypher_nexus.mechanic.wand.IWandLike
+import com.github.heiwenziduo.cypher_nexus.mechanic.wand.data.WandDataFrequent
+import com.github.heiwenziduo.cypher_nexus.mechanic.wand.data.WandDataHighPayload
+import com.github.heiwenziduo.cypher_nexus.mechanic.wand.data.WandDataInvariable
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResultHolder
 import net.minecraft.world.entity.Entity

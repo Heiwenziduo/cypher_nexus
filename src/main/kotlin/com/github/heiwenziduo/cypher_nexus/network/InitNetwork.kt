@@ -21,10 +21,10 @@ object InitNetwork {
 
 
         // remain unused for now...
-        registrar.playToClient(
-            CypherEntitySyncData.TYPE,
-            CypherEntitySyncData.STREAM,
-            ClientPayloadHandler::cypherEntitySyncData
-        )
+//        registrar.playToClient(
+//            CypherEntitySyncData.TYPE,
+//            CypherEntitySyncData.STREAM,
+//            ClientPayloadHandler::cypherEntitySyncData
+//        )
     }
 }

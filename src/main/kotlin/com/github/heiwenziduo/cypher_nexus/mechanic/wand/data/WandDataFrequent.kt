@@ -1,6 +1,5 @@
-package com.github.heiwenziduo.cypher_nexus.machinery.wand.data
+package com.github.heiwenziduo.cypher_nexus.mechanic.wand.data
 
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.CypherModifierHelper
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import io.netty.buffer.ByteBuf

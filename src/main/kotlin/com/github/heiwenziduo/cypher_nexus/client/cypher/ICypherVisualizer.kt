@@ -1,7 +1,7 @@
 package com.github.heiwenziduo.cypher_nexus.client.cypher
 
 import com.github.heiwenziduo.cypher_nexus.content.entity.CypherProjectile
-import com.github.heiwenziduo.cypher_nexus.machinery.cypher.AbstractCypher
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.AbstractCypher
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.block.BlockRenderDispatcher
