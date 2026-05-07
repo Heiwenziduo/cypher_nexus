@@ -1,15 +1,16 @@
 package com.github.heiwenziduo.cypher_nexus.content.block
 
-import com.github.heiwenziduo.cypher_nexus.client.gui.CypherIndexScreen
+import com.github.heiwenziduo.cypher_nexus.network.OpenIndexScreen
 import com.github.heiwenziduo.cypher_nexus.utility.mod.CypherData
-import net.minecraft.client.Minecraft
 import net.minecraft.core.BlockPos
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.BlockHitResult
+import net.neoforged.neoforge.network.PacketDistributor
 
 /**
  *
@@ -33,8 +34,12 @@ class CypherIndexBlock(): Block(
     ): InteractionResult {
         // triggered on both logical sides
         // UntitledWorld.LOGGER.info("SpellIndexBlock clicking, side: ${ if(level.isClientSide) "client" else "server" }")
-        if (level.isClientSide) {
-            Minecraft.getInstance().setScreen(CypherIndexScreen(CypherData.cypherMap))
+//        if (level.isClientSide) {
+//            Minecraft.getInstance().setScreen(CypherIndexScreen(CypherData.cypherMap))
+//        }
+        if (!level.isClientSide) {
+            PacketDistributor.sendToPlayer(player as ServerPlayer, OpenIndexScreen(
+                    CypherData.cyphersEnabled, CypherData.cyphersPlayerUnlocked(player)))
         }
         return InteractionResult.SUCCESS
     }

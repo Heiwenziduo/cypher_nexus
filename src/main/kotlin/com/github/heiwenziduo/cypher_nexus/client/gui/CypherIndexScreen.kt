@@ -18,11 +18,11 @@ class CypherIndexScreen(
     companion object {
         // specifications
         const val ICON_TEXTURE = 16
-        const val ICON_SIZE = 16
+        const val ICON_SIZE = 14
         const val MARGIN = 8 // space between content and border
-        const val PADDING = 4 // space between icons
+        const val PADDING = 2 // space between icons
         const val ITEM_SIZE = ICON_SIZE + PADDING
-        const val CATEGORY_TITLE_PADDING = 12
+        const val CATEGORY_TITLE_PADDING = 24
 
         const val SCROLLBAR_WIDTH = 4
     }
@@ -47,6 +47,7 @@ class CypherIndexScreen(
     // ====================================
 
     override fun init() {
+        // instance will be created each time player open the screen
         // also fire each time player resizes the window
         // println("window resize")
         super.init()
@@ -69,7 +70,7 @@ class CypherIndexScreen(
             renderCypherGrid(guiGraphics, mouseX, mouseY, block)
         }
 //        guiGraphics.disableScissor()
-        //
+
         renderScrollbar(guiGraphics)
     }
 
@@ -93,9 +94,9 @@ class CypherIndexScreen(
 
     override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
         // button 0 is the left mouse button
-        if (button == 0 && maxScroll > 0) {
+        if (button == 0) {
             // Check if the user clicked horizontally within the scrollbar area
-            if (mouseX >= scrollbarX && mouseX <= scrollbarX + SCROLLBAR_WIDTH) {
+            if (maxScroll > 0 && mouseX >= scrollbarX && mouseX <= scrollbarX + SCROLLBAR_WIDTH) {
                 isDraggingScrollbar = true
                 updateScrollFromMouse(mouseY)
                 return true
@@ -131,6 +132,7 @@ class CypherIndexScreen(
         // if (reY > this.height) return // out of border
 
         // render category title
+        guiGraphics.drawString(font, block.title, PADDING, reY, 0xFFFFFFFF.toInt())
         ////////////////////////
 
         val cols = columns

@@ -28,6 +28,6 @@ object LifeCycle {
 
         // Config.items.forEach(Consumer { item: Item? -> LOGGER.info("ITEM >> {}", item.toString()) })
 
-        CypherData.Companion.init()
+        // CypherData.Companion.init()
     }
 }

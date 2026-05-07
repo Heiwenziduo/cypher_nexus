@@ -5,6 +5,7 @@ import com.github.heiwenziduo.cypher_nexus.client.network.ClientPayloadHandler
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent
+import net.neoforged.neoforge.network.registration.HandlerThread
 import net.neoforged.neoforge.network.registration.PayloadRegistrar
 
 
@@ -17,7 +18,7 @@ object InitNetwork {
          * then the work should be done on the network thread, instead of blocking the main thread.
          * */
         val registrar: PayloadRegistrar = event.registrar("114514")
-//            .executesOn(HandlerThread.NETWORK)
+        registrar.executesOn(HandlerThread.NETWORK)
 
 
         // remain unused for now...
@@ -26,5 +27,11 @@ object InitNetwork {
 //            CypherEntitySyncData.STREAM,
 //            ClientPayloadHandler::cypherEntitySyncData
 //        )
+
+        registrar.playToClient(
+            OpenIndexScreen.TYPE,
+            OpenIndexScreen.STREAM,
+            ClientPayloadHandler::openIndexScreen
+        )
     }
 }
