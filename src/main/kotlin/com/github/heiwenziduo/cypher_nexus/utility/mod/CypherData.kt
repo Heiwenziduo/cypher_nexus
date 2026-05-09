@@ -18,34 +18,26 @@ class CypherData private constructor (){
             println("cypher _categoryMap init: $map")
             map
         }
+        private val _cyphersUnhide: List<AbstractCypher> by lazy {
+            _enabledList.filter { !it.hide }
+        }
+
+        val cyphersEnabled // guess these should not be called on logical client
+            get() = _enabledList
 
         val cypherCategoryMap // _cypherMap will not compute (or take memory) if this is not called
             get() = _categoryMap
 
-        val cyphersEnabled // guess these two should not be called on logical client
-            get() = _enabledList
+        val cyphersUnhide
+            get() = _cyphersUnhide
 
         fun cyphersPlayerUnlocked (player: ServerPlayer): List<AbstractCypher> {
-            return _enabledList
+            return _cyphersUnhide
         }
 
         // called during common-setup, can access registry list safely
         // Q: what about other mods modified the registry?
         // A: access it during game play only, this timing make sure all registry is settled
 
-//        fun init() {
-//            val map = mutableMapOf<CypherCategory, MutableList<AbstractCypher>>()
-//            ModCyphers.REGISTRY.toList().forEach { cypher ->
-//                val list = map.getOrPut(cypher.category.value(), { mutableListOf() })
-//                list.add(cypher)
-//
-//                // ====== test ========
-////                for (i in 0..40) {
-////                    list.add(cypher)
-////                }
-//                // ======      ========
-//            }
-//            _cypherMap = map
-//        }
     }
 }

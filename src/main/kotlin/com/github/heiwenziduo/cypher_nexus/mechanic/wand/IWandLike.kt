@@ -1,14 +1,11 @@
 package com.github.heiwenziduo.cypher_nexus.mechanic.wand
 
 import com.github.heiwenziduo.cypher_nexus.CypherNexus
-import com.github.heiwenziduo.cypher_nexus.init.mod.ModCyphers
-import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.AbstractCypher
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.CypherModifierHelper
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.CypherModifierHelper.HelperDataBundle
 import com.github.heiwenziduo.cypher_nexus.mechanic.wand.data.WandDataFrequent
 import com.github.heiwenziduo.cypher_nexus.mechanic.wand.data.WandDataHighPayload
 import com.github.heiwenziduo.cypher_nexus.mechanic.wand.data.WandDataInvariable
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
@@ -28,27 +25,35 @@ interface IWandLike {
     abstract fun getInvokePos(level: Level, caster: LivingEntity, wandLength: Float): Vec3
     abstract fun getInvokeDire(level: Level, caster: LivingEntity): Vec3
 
-    fun parseCypherList(cyphers: String): List<AbstractCypher> =
-        cyphers.split(",").map {
-            val str = it.split(".")
-            val resource = ResourceLocation.fromNamespaceAndPath(str[0], str[1])
-            ModCyphers.getCypherOrThrow(resource)
-        }
+    /** for item implementations to determine whether it can be modified in cypher-index */
+    val isEditableWand: Boolean
+
+//    fun parseCypherList(cyphers: String): List<AbstractCypher> =
+//        cyphers.split(",").map {
+//            val str = it.split(".")
+//            val resource = ResourceLocation.fromNamespaceAndPath(str[0], str[1])
+//            ModCyphers.getCypherOrThrow(resource)
+//        }
 
 
     /**
      * try a manual "draw", may not success due to delay/recharge/disabled/noMana/E.D. e.t.c.
      * */
-    fun tryConduct(level: Level, caster: LivingEntity, stack: ItemStack?) {
+    fun tryConduct(level: Level, caster: LivingEntity, stack: ItemStack?): Boolean {
         // TODO let fake-player/machine can cast cyphers
         val wandData = getWandData(stack, caster)
-        if (wandData == null) return
+        if (wandData == null) return false
         val (invariable, highPayload, frequent) = wandData
+        if (frequent.delay > 0) {
+            if (!level.isClientSide) println("casting rejected due to: \ndelay: ${frequent.delay}")
+            return false
+        }
+
         val (cypherList) = highPayload
 
         if (level.isClientSide){
             // send casting info to server
-            return
+            return false
         }
         CypherNexus.LOGGER.debug("Casting start, is client side? {}\nCypherList: {}", level.isClientSide, cypherList)
         CypherNexus.LOGGER.debug("read from data component: {}\n\n\n", wandData)
@@ -66,6 +71,7 @@ interface IWandLike {
         CypherNexus.LOGGER.debug("server write to data component: {}", bundle)
 
         CypherNexus.LOGGER.debug("Casting finish...")
+        return true
     }
 
 

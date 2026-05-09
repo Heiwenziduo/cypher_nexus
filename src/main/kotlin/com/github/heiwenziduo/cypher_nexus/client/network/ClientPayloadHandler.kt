@@ -3,7 +3,7 @@ package com.github.heiwenziduo.cypher_nexus.client.network
 import com.github.heiwenziduo.cypher_nexus.CypherNexus
 import com.github.heiwenziduo.cypher_nexus.client.gui.CypherIndexScreen
 import com.github.heiwenziduo.cypher_nexus.network.CypherEntitySyncData
-import com.github.heiwenziduo.cypher_nexus.network.OpenIndexScreen
+import com.github.heiwenziduo.cypher_nexus.network.clientbound.OpenIndexScreen
 import com.github.heiwenziduo.cypher_nexus.utility.mod.CypherUtility
 import net.minecraft.client.Minecraft
 import net.neoforged.api.distmarker.Dist
@@ -36,7 +36,7 @@ object ClientPayloadHandler {
     fun openIndexScreen(data: OpenIndexScreen, context: IPayloadContext) {
         println("client receive package -> openIndexScreen: \n$data")
 
-        val map = CypherUtility.sortCyphersByCategory(data.listTotal) // TODO
+        val map = CypherUtility.sortCyphersByCategory(data.cyphersTotal) // TODO
         context.enqueueWork {
             // val player = context.player()
             Minecraft.getInstance().setScreen(CypherIndexScreen(map))

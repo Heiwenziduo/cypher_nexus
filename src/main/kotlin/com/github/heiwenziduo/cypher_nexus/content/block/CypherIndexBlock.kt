@@ -1,6 +1,6 @@
 package com.github.heiwenziduo.cypher_nexus.content.block
 
-import com.github.heiwenziduo.cypher_nexus.network.OpenIndexScreen
+import com.github.heiwenziduo.cypher_nexus.network.clientbound.OpenIndexScreen
 import com.github.heiwenziduo.cypher_nexus.utility.mod.CypherData
 import net.minecraft.core.BlockPos
 import net.minecraft.server.level.ServerPlayer
@@ -39,7 +39,7 @@ class CypherIndexBlock(): Block(
 //        }
         if (!level.isClientSide) {
             PacketDistributor.sendToPlayer(player as ServerPlayer, OpenIndexScreen(
-                    CypherData.cyphersEnabled, CypherData.cyphersPlayerUnlocked(player)))
+                    CypherData.cyphersUnhide, CypherData.cyphersPlayerUnlocked(player)))
         }
         return InteractionResult.SUCCESS
     }

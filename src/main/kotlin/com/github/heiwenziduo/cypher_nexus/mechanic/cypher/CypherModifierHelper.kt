@@ -5,7 +5,6 @@ import com.github.heiwenziduo.cypher_nexus.init.mod.CypherAttributes
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.attribute.CypherAttribute
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.attribute.CypherAttributeOperation
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.flag.IFlaggable
-import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.HookContainer
 import com.github.heiwenziduo.cypher_nexus.mechanic.wand.data.WandDataFrequent
 import com.github.heiwenziduo.cypher_nexus.mechanic.wand.data.WandDataInvariable
 import com.github.heiwenziduo.cypher_nexus.utility.mod.CypherUtility
@@ -66,11 +65,13 @@ class CypherModifierHelper(
     fun start() {
         if (level.isClientSide) return
         // do some initialization
+        helperData.delay += wandStats.chunkI.castDelay
+        helperData.recharge += wandStats.chunkI.rechargeTime
 
         // TODO onCastStartEvent
         castLoop()
 
-        helperData.manaCurrent = max(min(helperData.manaCurrent, wandStats.chunkF.maxMana), 0f)
+        helperData.manaCurrent = max(min(helperData.manaCurrent, wandStats.chunkF.manaMax), 0f)
         helperData.index = helperData.index % cypherList.size
         val c = computedOperationMap[CypherAttributes.CAST_DELAY.value()]
         val r = computedOperationMap[CypherAttributes.RECHARGE_TIME.value()]
@@ -87,20 +88,22 @@ class CypherModifierHelper(
     /***/
     private fun castLoop() {
         var current: AbstractCypher
-        while(helperData.draw >= 1 && helperData.index < cypherList.size) {
-            current = cypherList[helperData.index]
+        var i: Int
+        while(helperData.draw >= 1 && helperData.index < cypherList.size) { // compare first then ++
+            i = helperData.index++
+            current = cypherList[i]
+            if (current is EmptyCypher) continue
             println("preInvoke $current \ncurrent mana: ${helperData.manaCurrent}")
             if (helperData.manaCurrent <= current.manaDrain) {
-                println("mana not enough, skip. current index: ${helperData.index}")
-                helperData.index++
+                println("mana not enough, skip. current index: $i")
                 continue
             }
             helperData.manaCurrent -= current.manaDrain
             helperData.draw--
-            helperData.index++
             preInvoke(current)
             if (current is ModifierCypher) invokeListTmp.add(current)
         }
+
        invokeList = invokeListTmp.toList()
        for (c in projCyList) {
            invoke(c, invokeList)

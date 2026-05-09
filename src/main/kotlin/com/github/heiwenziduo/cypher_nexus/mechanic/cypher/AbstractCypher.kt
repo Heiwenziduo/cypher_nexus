@@ -25,6 +25,8 @@ import java.util.function.Supplier
 sealed class AbstractCypher: IRegisterable {
     open val manaDrain: Float = 0f
     open val draw: Int = 0
+    /** whether the cypher shows in the index(left side) */
+    open val hide: Boolean = false
     private var _flag: Int = 0
     /** use #addFlag during init */
     val flag: Int
@@ -45,10 +47,10 @@ sealed class AbstractCypher: IRegisterable {
 
     init {
         initializeData()
-        addAttribute(CypherAttributes.CAST_DELAY, CypherAttributeOperation.ADD, 0.0)
-        addAttribute(CypherAttributes.RECHARGE_TIME, CypherAttributeOperation.ADD, 0.0)
-        addAttribute(CypherAttributes.RECOIL, CypherAttributeOperation.ADD, 0.0)
-        addAttribute(CypherAttributes.SPREAD, CypherAttributeOperation.ADD, 0.0)
+//        addAttribute(CypherAttributes.CAST_DELAY, CypherAttributeOperation.ADD, 0.0)
+//        addAttribute(CypherAttributes.RECHARGE_TIME, CypherAttributeOperation.ADD, 0.0)
+//        addAttribute(CypherAttributes.RECOIL, CypherAttributeOperation.ADD, 0.0)
+//        addAttribute(CypherAttributes.SPREAD, CypherAttributeOperation.ADD, 0.0)
     }
 
     /**
@@ -122,7 +124,7 @@ sealed class AbstractCypher: IRegisterable {
 
 
     enum class TranslationKey() {
-        DESCRIPTION,
+        DESCRIPTION, // -> .description
         ;
 
         override fun toString(): String {

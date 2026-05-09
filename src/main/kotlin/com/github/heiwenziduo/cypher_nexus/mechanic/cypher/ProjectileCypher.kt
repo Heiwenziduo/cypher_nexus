@@ -1,6 +1,10 @@
 package com.github.heiwenziduo.cypher_nexus.mechanic.cypher
 
 import com.github.heiwenziduo.cypher_nexus.init.mod.CypherCategoryRegistry
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.level.Level
+import net.minecraft.world.phys.Vec3
 
 abstract class ProjectileCypher(
     override val manaDrain: Float
@@ -11,4 +15,16 @@ abstract class ProjectileCypher(
 //        CypherAttributeRegistry.REGISTRY.holders().forEach { h -> println(h.value()) } // empty when cyphers init
     }
     override val category = CypherCategoryRegistry.PROJECTILE
+
+    final override fun createProjectile(
+        level: Level,
+        helper: CypherModifierHelper,
+        caster: LivingEntity?,
+        stack: ItemStack?,
+        startPos: Vec3,
+        direction: Vec3?,
+        invokeList: List<AbstractCypher>
+    ) {
+        super.createProjectile(level, helper, caster, stack, startPos, direction, invokeList)
+    }
 }

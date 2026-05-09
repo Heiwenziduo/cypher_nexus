@@ -34,6 +34,7 @@ open class BasicWandItem(
         .component(WAND_HIGH_PAYLOAD, WandDataHighPayload.DEFAULT)
         .component(WAND_FREQUENT, WandDataFrequent.DEFAULT)
 ), IWandLike {
+    override val isEditableWand = true
 
     // test
 //    val testData: List<AbstractCypher> = listOf( // there should be a method to reach registry items here
@@ -101,15 +102,14 @@ open class BasicWandItem(
             val frequent = stack.get(WAND_FREQUENT)
 
             // test
-            val testData: List<AbstractCypher> = listOf(
-                    ModCyphers.T_T_T_Modifier.value(),
-                    ModCyphers.SNOWBALL.value()
-                )
-            val t = WandDataHighPayload(testData)
+//            val testData: List<AbstractCypher> = listOf(
+//                    ModCyphers.T_T_T_Modifier.value(),
+//                    ModCyphers.SNOWBALL.value()
+//                )
+//            val t = WandDataHighPayload(testData)
 
             if (invariable != null && highPayload != null && frequent != null)
-//                return IWandLike.WandDataBundle(invariable, highPayload, frequent)
-                return IWandLike.WandDataBundle(invariable, t, frequent)
+                return IWandLike.WandDataBundle(invariable, highPayload, frequent)
         }
         return null
     }
@@ -143,4 +143,12 @@ open class BasicWandItem(
     }
 
 
+    companion object {
+        // TODO check data authentic
+
+        fun editWand(stack: ItemStack, list: List<AbstractCypher>) {
+            println("editWand: $stack")
+            stack.set(WAND_HIGH_PAYLOAD, WandDataHighPayload(list))
+        }
+    }
 }

@@ -25,7 +25,7 @@ import thedarkcolour.kotlinforforge.neoforge.forge.MOD_BUS
 object ModCyphers {
     val RESOURCE_KEY: ResourceKey<Registry<AbstractCypher>> =
         ResourceKey.createRegistryKey(CypherNexus.modResource("cypher"))
-    val REGISTRY: Registry<AbstractCypher> = RegistryBuilder(RESOURCE_KEY).sync(true).create()
+    val REGISTRY: Registry<AbstractCypher> = RegistryBuilder(RESOURCE_KEY).sync(true).defaultKey(EmptyCypher.resource).create()
 
     val DEFERRED_REGISTER: DeferredRegister<AbstractCypher> =
         DeferredRegister.create(REGISTRY, CypherNexus.MOD_ID)
@@ -45,6 +45,8 @@ object ModCyphers {
         return c
     }
 
+
+    val EMPTY_CYPHER = registerCypher(EmptyCypher) // technical
 
     // TODO should these be sorted by functionality? or just by alphabet?
 
@@ -79,5 +81,4 @@ object ModCyphers {
     // passive
 
     // other
-    val EMPTY_CYPHER = registerCypher(EmptyCypher) // technical
 }
