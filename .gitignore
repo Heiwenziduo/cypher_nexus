@@ -126,3 +126,6 @@ runs/
 
 # datagen cache
 **/resources/.cache/
+
+# network resources
+**/resources/assets/cypher_nexus/textures/cypher/
