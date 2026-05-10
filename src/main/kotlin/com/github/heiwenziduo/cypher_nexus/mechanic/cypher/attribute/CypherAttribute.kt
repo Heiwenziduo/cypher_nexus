@@ -18,10 +18,12 @@ open class CypherAttribute(
     val min: Double,
     val max: Double,
     val sync: Boolean = true,
-    val target: AttributeTarget
+    val applyOn: AttributeApply,
+    /** whether the attr will show on tooltips */
+    val hide: Boolean = false,
 ): IRegisterable {
     val isProjectileAttribute: Boolean
-        get() = target == AttributeTarget.PROJECTILE
+        get() = applyOn == AttributeApply.PROJECTILE
 
     init {
         // UntitledWorld.LOGGER.debug("CypherAttribute created: {}", resource.toString())
@@ -46,8 +48,8 @@ open class CypherAttribute(
         Component.translatable("cypher.attribute.${resource.namespace}.${resource.path}")
 
 
-    enum class AttributeTarget {
-        CASTING,
+    enum class AttributeApply {
+        INVOKING,
         PROJECTILE
     }
 }

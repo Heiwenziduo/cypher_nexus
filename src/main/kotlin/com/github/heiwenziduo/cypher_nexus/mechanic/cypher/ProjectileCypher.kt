@@ -19,12 +19,12 @@ abstract class ProjectileCypher(
     final override fun createProjectile(
         level: Level,
         helper: CypherModifierHelper,
-        caster: LivingEntity?,
+        invoker: LivingEntity?,
         stack: ItemStack?,
         startPos: Vec3,
         direction: Vec3?,
         invokeList: List<AbstractCypher>
     ) {
-        super.createProjectile(level, helper, caster, stack, startPos, direction, invokeList)
+        super.createProjectile(level, helper, invoker, stack, startPos, direction, invokeList)
     }
 }

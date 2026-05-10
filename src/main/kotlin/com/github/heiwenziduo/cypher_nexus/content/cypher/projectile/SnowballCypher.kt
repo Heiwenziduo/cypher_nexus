@@ -13,14 +13,8 @@ object SnowballCypher : ProjectileCypher(
     override val resource = CypherNexus.modResource("snowball")
 
     init {
-//        addAttribute(CypherAttributeRegistry.SPEED, 0.8)
-
-        // test
-        addAttribute(CypherAttributes.DAMAGE, 1.0)
-        addAttribute(CypherAttributes.SPEED, 0.5)
-        addAttribute(CypherAttributes.EXISTING, 200.0)
-        addAttribute(CypherAttributes.BOUNCE, 5.0)
-
+        addAttribute(CypherAttributes.SPEED, 0.8)
+        addAttribute(CypherAttributes.EXISTING, 300.0)
     }
 
     override fun visualEffectOnHit(level: Level, projectile: CypherProjectile) {

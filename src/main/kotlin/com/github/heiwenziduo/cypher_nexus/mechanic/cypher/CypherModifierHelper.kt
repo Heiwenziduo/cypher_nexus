@@ -2,13 +2,18 @@ package com.github.heiwenziduo.cypher_nexus.mechanic.cypher
 
 import com.github.heiwenziduo.cypher_nexus.CypherNexus
 import com.github.heiwenziduo.cypher_nexus.init.mod.CypherAttributes
+import com.github.heiwenziduo.cypher_nexus.init.mod.CypherBehaviorHookRegistry
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.attribute.CypherAttribute
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.attribute.CypherAttributeOperation
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.flag.IFlaggable
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.HookContainer
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.HookModule
 import com.github.heiwenziduo.cypher_nexus.mechanic.wand.data.WandDataFrequent
 import com.github.heiwenziduo.cypher_nexus.mechanic.wand.data.WandDataInvariable
 import com.github.heiwenziduo.cypher_nexus.utility.mod.CypherUtility
+import com.github.heiwenziduo.cypher_nexus.utility.mod.PosDirePair
 import net.minecraft.core.Holder
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
@@ -19,22 +24,23 @@ import kotlin.math.min
 /** a modifier carrier created when user manually cast, or a trigger-cypher is fired */
 class CypherModifierHelper(
     val level: Level,
-    val caster: LivingEntity?,
+    val invoker: LivingEntity?,
     val stack: ItemStack?,
 
     val wandStats: WandDataInvariable,
     val cypherList: List<AbstractCypher>,
     val helperData: HelperDataBundle,
 
-    val invokePos: Vec3,
-    val invokeDire: Vec3 = Vec3.ZERO,
+    /** direction doesn't have to be normalized */
+    val invokePosDire: PosDirePair,
 ) : IFlaggable {
     val computedOperationMap = HashMap<CypherAttribute, HashMap<CypherAttributeOperation, Double>>()
+    val invokingAttrMap = HashMap<CypherAttribute, Double>()
     val invokeListTmp = mutableListOf<AbstractCypher>()
     var invokeList = listOf<AbstractCypher>()
     private val projCyList = mutableListOf<AbstractProjectileCypher>()
     override var enabledFlags: Int = 0
-    // val hooks = HookContainer()
+    val invokeHookContainer = HookContainer(HookModule.HookType.INVOKING)
 
     // the operation-system
     fun addAttribute(map: HashMap<Holder<CypherAttribute>, HashMap<CypherAttributeOperation, Double>>) {
@@ -89,10 +95,12 @@ class CypherModifierHelper(
     private fun castLoop() {
         var current: AbstractCypher
         var i: Int
-        while(helperData.draw >= 1 && helperData.index < cypherList.size) { // compare first then ++
+        // FIXME auto back to index0 when only empty remain
+        while(helperData.draw >= 1 && helperData.index < cypherList.size) {
             i = helperData.index++
             current = cypherList[i]
             if (current is EmptyCypher) continue
+
             println("preInvoke $current \ncurrent mana: ${helperData.manaCurrent}")
             if (helperData.manaCurrent <= current.manaDrain) {
                 println("mana not enough, skip. current index: $i")
@@ -101,13 +109,18 @@ class CypherModifierHelper(
             helperData.manaCurrent -= current.manaDrain
             helperData.draw--
             preInvoke(current)
-            if (current is ModifierCypher) invokeListTmp.add(current)
+            if (current is ModifierCypher) {
+                invokeListTmp.add(current)
+            }
         }
 
-       invokeList = invokeListTmp.toList()
-       for (c in projCyList) {
-           invoke(c, invokeList)
-       }
+        val pair = invokeHookContainer.cumulateHooks(CypherBehaviorHookRegistry.INVOKE_REDIRECT_POS, invokePosDire)
+        { h, l, i -> h.redirectPosDireServer(level as ServerLevel, invoker, l, i) }
+
+        invokeList = invokeListTmp.toList()
+        for (c in projCyList) {
+            invoke(c, invokeList, pair)
+        }
     }
 
     /***/
@@ -115,16 +128,16 @@ class CypherModifierHelper(
         helperData.draw += cypher.draw
         enableFlag(cypher.flag)
         cypher.addAttribute(this) // computedMap will include both Consumer-attr(BASE) and modifier-attr
-        cypher.onCastServer(level, caster, stack, this, wandStats.chunkF.wandLength)
+        cypher.onCastServer(level, invoker, stack, this, wandStats.chunkF.wandLength)
+        invokeHookContainer.add(cypher)
 
         when(cypher) {
             is AbstractProjectileCypher -> projCyList.add(cypher)
             is AbstractNonProjectileCypher -> ""
         }
     }
-    private fun invoke(cypher: AbstractProjectileCypher, invokes: List<AbstractCypher>) {
-        // TODO redirect starting position event
-        cypher.createProjectile(level, this, caster, stack, invokePos, invokeDire, invokes)
+    private fun invoke(cypher: AbstractProjectileCypher, invokes: List<AbstractCypher>, posDirePair: PosDirePair) {
+        cypher.createProjectile(level, this, invoker, stack, posDirePair, invokes)
     }
 
 

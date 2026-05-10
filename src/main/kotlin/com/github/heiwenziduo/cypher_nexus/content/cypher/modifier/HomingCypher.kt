@@ -1,19 +1,26 @@
 package com.github.heiwenziduo.cypher_nexus.content.cypher.modifier
 
 import com.github.heiwenziduo.cypher_nexus.CypherNexus
-import com.github.heiwenziduo.cypher_nexus.content.hook.IProjectileTickHook
+import com.github.heiwenziduo.cypher_nexus.content.entity.CypherProjectile
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.ModifierCypher
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.projectile.TickBehaviorHook
+import net.minecraft.world.level.Level
 
 object HomingCypher: ModifierCypher(
     manaDrain = 50f
-), IProjectileTickHook {
+), TickBehaviorHook {
     override val resource = CypherNexus.modResource("homing")
+    override fun tickBehaviorBoth(
+        level: Level,
+        projectile: CypherProjectile,
+        strength: Int
+    ) {
+        // TODO
+    }
 
     init {
 
     }
 
-    override fun onProjectileTick() {
-        TODO("Not yet implemented")
-    }
+
 }

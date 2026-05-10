@@ -6,10 +6,10 @@ import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.CypherModifierHelper.
 import com.github.heiwenziduo.cypher_nexus.mechanic.wand.data.WandDataFrequent
 import com.github.heiwenziduo.cypher_nexus.mechanic.wand.data.WandDataHighPayload
 import com.github.heiwenziduo.cypher_nexus.mechanic.wand.data.WandDataInvariable
+import com.github.heiwenziduo.cypher_nexus.utility.mod.PosDirePair
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
-import net.minecraft.world.phys.Vec3
 
 /**
  * ---casting logics here---
@@ -17,13 +17,13 @@ import net.minecraft.world.phys.Vec3
  * */
 interface IWandLike {
 
-    abstract fun getWandData(stack: ItemStack?, caster: LivingEntity?): WandDataBundle?
-    abstract fun setWandData(stack: ItemStack?, invariable: WandDataInvariable?, highPayload: WandDataHighPayload?, frequent: WandDataFrequent)
+    fun getWandData(stack: ItemStack?, caster: LivingEntity?): WandDataBundle?
+    fun setWandData(stack: ItemStack?, invariable: WandDataInvariable?, highPayload: WandDataHighPayload?, frequent: WandDataFrequent)
     fun setWandData(stack: ItemStack?, frequent: WandDataFrequent) = setWandData(stack, null, null, frequent)
     fun setWandData(stack: ItemStack?, bundle: WandDataBundle) = setWandData(stack, bundle.invariable, bundle.highPayload, bundle.frequent)
 
-    abstract fun getInvokePos(level: Level, caster: LivingEntity, wandLength: Float): Vec3
-    abstract fun getInvokeDire(level: Level, caster: LivingEntity): Vec3
+    /** direction doesn't have to be normalized */
+    fun getInvokePosDire(level: Level, invoker: LivingEntity, wandLength: Float): PosDirePair
 
     /** for item implementations to determine whether it can be modified in cypher-index */
     val isEditableWand: Boolean
@@ -39,9 +39,9 @@ interface IWandLike {
     /**
      * try a manual "draw", may not success due to delay/recharge/disabled/noMana/E.D. e.t.c.
      * */
-    fun tryConduct(level: Level, caster: LivingEntity, stack: ItemStack?): Boolean {
+    fun tryConduct(level: Level, invoker: LivingEntity, stack: ItemStack?): Boolean {
         // TODO let fake-player/machine can cast cyphers
-        val wandData = getWandData(stack, caster)
+        val wandData = getWandData(stack, invoker)
         if (wandData == null) return false
         val (invariable, highPayload, frequent) = wandData
         if (frequent.delay > 0) {
@@ -60,8 +60,8 @@ interface IWandLike {
 
 
         val bundle = HelperDataBundle(invariable.chunkI.draw, frequent)
-        val helper = CypherModifierHelper(level, caster, stack, invariable, cypherList, bundle,
-            getInvokePos(level, caster, invariable.chunkF.wandLength), getInvokeDire(level, caster))
+        val helper = CypherModifierHelper(level, invoker, stack, invariable, cypherList, bundle,
+            getInvokePosDire(level, invoker, invariable.chunkF.wandLength),)
         helper.start()
 
         // retrieve data from helper and write to components

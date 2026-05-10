@@ -8,11 +8,15 @@ class HookModule <HOOK : Any> (
     override val resource: ResourceLocation,
     val hook: KClass<HOOK>,
     val sync: Boolean = true,
-    val target: HookTarget
+    val type: HookType
 ): IRegisterable {
 
-    enum class HookTarget {
-        CASTING,
+    override fun toString(): String {
+        return "module_${hook.simpleName}"
+    }
+
+    enum class HookType {
+        INVOKING,
         PROJECTILE
     }
 }

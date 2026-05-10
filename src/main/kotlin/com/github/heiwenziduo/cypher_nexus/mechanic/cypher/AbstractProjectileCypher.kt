@@ -3,6 +3,7 @@ package com.github.heiwenziduo.cypher_nexus.mechanic.cypher
 import com.github.heiwenziduo.cypher_nexus.content.entity.CypherProjectile
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.attribute.CypherAttribute
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.attribute.CypherAttributeOperation
+import com.github.heiwenziduo.cypher_nexus.utility.mod.PosDirePair
 import net.minecraft.core.Holder
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.item.ItemStack
@@ -10,11 +11,15 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.phys.Vec3
 
 abstract class AbstractProjectileCypher: AbstractCypher() {
+    fun createProjectile(
+        level: Level, helper: CypherModifierHelper, invoker: LivingEntity?,
+        stack: ItemStack?, posDirePair: PosDirePair, invokeList: List<AbstractCypher> = listOf()
+    ) = createProjectile(level, helper, invoker, stack, posDirePair.position, posDirePair.direction, invokeList)
      open fun createProjectile(
-         level: Level, helper: CypherModifierHelper, caster: LivingEntity?,
-         stack: ItemStack?, startPos: Vec3, direction: Vec3?, invokeList: List<AbstractCypher> = listOf()
+         level: Level, helper: CypherModifierHelper, invoker: LivingEntity?,
+         stack: ItemStack?, startPos: Vec3, direction: Vec3?, invokeList: List<AbstractCypher>
      ) {
-        val projectile = CypherProjectile(level, caster, this, helper, direction, invokeList)
+        val projectile = CypherProjectile(level, invoker, this, helper, direction?.normalize(), invokeList)
         projectile.setPos(startPos)
         level.addFreshEntity(projectile)
     }

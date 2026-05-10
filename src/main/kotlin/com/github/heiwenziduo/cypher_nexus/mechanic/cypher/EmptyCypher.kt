@@ -23,7 +23,7 @@ object EmptyCypher: AbstractProjectileCypher() {
     override fun createProjectile(
         level: Level,
         helper: CypherModifierHelper,
-        caster: LivingEntity?,
+        invoker: LivingEntity?,
         stack: ItemStack?,
         startPos: Vec3,
         direction: Vec3?,

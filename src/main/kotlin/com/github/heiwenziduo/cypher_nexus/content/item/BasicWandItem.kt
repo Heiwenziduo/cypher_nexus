@@ -3,12 +3,12 @@ package com.github.heiwenziduo.cypher_nexus.content.item
 import com.github.heiwenziduo.cypher_nexus.init.ModDataComponents.WAND_FREQUENT
 import com.github.heiwenziduo.cypher_nexus.init.ModDataComponents.WAND_HIGH_PAYLOAD
 import com.github.heiwenziduo.cypher_nexus.init.ModDataComponents.WAND_INVARIABLE
-import com.github.heiwenziduo.cypher_nexus.init.mod.ModCyphers
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.AbstractCypher
 import com.github.heiwenziduo.cypher_nexus.mechanic.wand.IWandLike
 import com.github.heiwenziduo.cypher_nexus.mechanic.wand.data.WandDataFrequent
 import com.github.heiwenziduo.cypher_nexus.mechanic.wand.data.WandDataHighPayload
 import com.github.heiwenziduo.cypher_nexus.mechanic.wand.data.WandDataInvariable
+import com.github.heiwenziduo.cypher_nexus.utility.mod.PosDirePair
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResultHolder
 import net.minecraft.world.entity.Entity
@@ -19,7 +19,6 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.UseAnim
 import net.minecraft.world.level.Level
-import net.minecraft.world.phys.Vec3
 import kotlin.math.min
 
 /**
@@ -130,17 +129,12 @@ open class BasicWandItem(
     }
 
     /** for an Item Wand, pos and dire just use the living's view vector */
-    override fun getInvokePos(level: Level, caster: LivingEntity, wandLength: Float): Vec3 {
-        val dir = getInvokeDire(level, caster)
-        return caster.eyePosition.add(dir.scale(wandLength.toDouble()))
+    override fun getInvokePosDire(level: Level, invoker: LivingEntity, wandLength: Float): PosDirePair {
+        val dire = invoker.lookAngle
+        val pos = invoker.eyePosition.add(dire.scale(wandLength.toDouble()))
+        return PosDirePair(pos, dire)
     }
 
-    override fun getInvokeDire(
-        level: Level,
-        caster: LivingEntity
-    ): Vec3 {
-        return caster.lookAngle.normalize()
-    }
 
 
     companion object {

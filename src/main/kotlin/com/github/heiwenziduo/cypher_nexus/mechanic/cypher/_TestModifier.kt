@@ -1,15 +1,13 @@
-package com.github.heiwenziduo.cypher_nexus.content.cypher
+package com.github.heiwenziduo.cypher_nexus.mechanic.cypher
 
 import com.github.heiwenziduo.cypher_nexus.CypherNexus
 import com.github.heiwenziduo.cypher_nexus.content.entity.CypherProjectile
 import com.github.heiwenziduo.cypher_nexus.init.mod.CypherAttributes
-import com.github.heiwenziduo.cypher_nexus.init.mod.CypherBehaviorHookRegistry.TICK_BEHAVIOR
-import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.ModifierCypher
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.attribute.CypherAttributeOperation
-import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.BeforeExpireHook
-import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.FirstTickHook
-import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.HitEntityHook
-import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.TickBehaviorHook
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.projectile.BeforeExpireHook
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.projectile.FirstTickHook
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.projectile.HitEntityHook
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.projectile.TickBehaviorHook
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.Level
 

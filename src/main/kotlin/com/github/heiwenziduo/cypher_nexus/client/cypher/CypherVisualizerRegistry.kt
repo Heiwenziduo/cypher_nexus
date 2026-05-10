@@ -2,7 +2,7 @@ package com.github.heiwenziduo.cypher_nexus.client.cypher
 
 import com.github.heiwenziduo.cypher_nexus.client.cypher.visualizer.EnderTeleportationVi
 import com.github.heiwenziduo.cypher_nexus.client.cypher.visualizer.SnowballVi
-import com.github.heiwenziduo.cypher_nexus.client.cypher.visualizer.modifier.TestVi
+import com.github.heiwenziduo.cypher_nexus.client.cypher.visualizer.TestVis
 import com.github.heiwenziduo.cypher_nexus.init.mod.ModCyphers
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.AbstractCypher
 import net.minecraft.resources.ResourceLocation
@@ -27,7 +27,8 @@ object CypherVisualizerRegistry {
     }
 
     init {
-        register(TestVi)
+        register(TestVis.Modifier)
+        register(TestVis.Projectile)
 
         register(SnowballVi)
         register(EnderTeleportationVi)

@@ -37,23 +37,9 @@ object CypherCategoryRegistry {
     val OTHER_RESOURCE = CypherNexus.modResource("other")
 
 
-    val PROJECTILE = registerCategory(CypherCategory(
-        PROJECTILE_RESOURCE
-    ))
-
-    val STATIC_PROJECTILE = registerCategory(CypherCategory(
-        STATIC_PROJECTILE_RESOURCE
-    ))
-
-    val MODIFIER = registerCategory(CypherCategory(
-        MODIFIER_RESOURCE
-    ))
-
-    val PASSIVE = registerCategory(CypherCategory(
-        PASSIVE_RESOURCE
-    ))
-
-    val OTHER = registerCategory(CypherCategory(
-        OTHER_RESOURCE
-    ))
+    val PROJECTILE = registerCategory(CypherCategory(PROJECTILE_RESOURCE))
+    val STATIC_PROJECTILE = registerCategory(CypherCategory(STATIC_PROJECTILE_RESOURCE))
+    val MODIFIER = registerCategory(CypherCategory(MODIFIER_RESOURCE))
+    val PASSIVE = registerCategory(CypherCategory(PASSIVE_RESOURCE))
+    val OTHER = registerCategory(CypherCategory(OTHER_RESOURCE))
 }

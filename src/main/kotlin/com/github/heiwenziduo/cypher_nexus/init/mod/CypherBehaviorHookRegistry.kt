@@ -1,14 +1,14 @@
 package com.github.heiwenziduo.cypher_nexus.init.mod
 
 import com.github.heiwenziduo.cypher_nexus.CypherNexus
-import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.BeforeExpireHook
-import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.FirstTickHook
-import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.HitEntityHook
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.HookModule
-import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.TickBehaviorHook
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.invoking.InvokeRedirectPosHook
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.projectile.BeforeExpireHook
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.projectile.FirstTickHook
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.projectile.HitEntityHook
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.projectile.TickBehaviorHook
 import net.minecraft.core.Registry
 import net.minecraft.resources.ResourceKey
-import net.neoforged.neoforge.registries.DeferredHolder
 import net.neoforged.neoforge.registries.DeferredRegister
 import net.neoforged.neoforge.registries.RegistryBuilder
 import thedarkcolour.kotlinforforge.neoforge.forge.MOD_BUS
@@ -27,13 +27,15 @@ object CypherBehaviorHookRegistry {
         DEFERRED_REGISTER.register(MOD_BUS)
     }
 
-    fun <T : Any> registerHook(path: String, hook: KClass<T>, target: HookModule.HookTarget): Supplier<out HookModule<T>> {
+    fun <T : Any> registerHook(path: String, hook: KClass<T>, target: HookModule.HookType): Supplier<out HookModule<T>> {
         // I find checking DeferredHolder<R, T>'s type is annoying...
-        return DEFERRED_REGISTER.register(path) { resource -> HookModule(resource, hook, target = target) }
+        return DEFERRED_REGISTER.register(path) { resource -> HookModule(resource, hook, type = target) }
     }
 
-    val BEFORE_EXPIRE = registerHook("before_expire", BeforeExpireHook::class, HookModule.HookTarget.PROJECTILE)
-    val FIRST_TICK = registerHook("first_tick", FirstTickHook::class, HookModule.HookTarget.PROJECTILE)
-    val HIT_ENTITY = registerHook("hit_entity", HitEntityHook::class, HookModule.HookTarget.PROJECTILE)
-    val TICK_BEHAVIOR = registerHook("tick_behavior", TickBehaviorHook::class, HookModule.HookTarget.PROJECTILE)
+    val INVOKE_REDIRECT_POS = registerHook("invoke_redirect_pos", InvokeRedirectPosHook::class, HookModule.HookType.INVOKING)
+
+    val BEFORE_EXPIRE = registerHook("before_expire", BeforeExpireHook::class, HookModule.HookType.PROJECTILE)
+    val FIRST_TICK = registerHook("first_tick", FirstTickHook::class, HookModule.HookType.PROJECTILE)
+    val HIT_ENTITY = registerHook("hit_entity", HitEntityHook::class, HookModule.HookType.PROJECTILE)
+    val TICK_BEHAVIOR = registerHook("tick_behavior", TickBehaviorHook::class, HookModule.HookType.PROJECTILE)
 }
