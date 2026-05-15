@@ -31,6 +31,7 @@ object ClientSetup {
         LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().user.name)
         // only on physical client
         // sided setup is the last step of 4-step neo lifecycle, here registry is fully prepared
+        CypherVisualizerRegistry.init()
     }
 
 //    @SubscribeEvent

@@ -1,4 +1,4 @@
-package com.github.heiwenziduo.cypher_nexus.network.clientbound
+package com.github.heiwenziduo.cypher_nexus.network.client
 
 import com.github.heiwenziduo.cypher_nexus.CypherNexus
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.AbstractCypher
@@ -7,20 +7,20 @@ import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload
 
-data class OpenIndexScreen(
+data class ClientboundOpenIndexScreen(
     val cyphersTotal: List<AbstractCypher>,
     val cyphersUnlocked: List<AbstractCypher>,
 ) : CustomPacketPayload {
     override fun type() = TYPE
 
     companion object {
-        val TYPE: CustomPacketPayload.Type<OpenIndexScreen> =
+        val TYPE: CustomPacketPayload.Type<ClientboundOpenIndexScreen> =
             CustomPacketPayload.Type(CypherNexus.modResource("open_index_screen"))
 
-        val STREAM: StreamCodec<RegistryFriendlyByteBuf, OpenIndexScreen> = StreamCodec.composite(
-            CNCodecs.CYPHER_LIST_STREAM, OpenIndexScreen::cyphersTotal,
-            CNCodecs.CYPHER_LIST_STREAM, OpenIndexScreen::cyphersUnlocked,
-            ::OpenIndexScreen
+        val STREAM: StreamCodec<RegistryFriendlyByteBuf, ClientboundOpenIndexScreen> = StreamCodec.composite(
+            CNCodecs.CYPHER_LIST_STREAM, ClientboundOpenIndexScreen::cyphersTotal,
+            CNCodecs.CYPHER_LIST_STREAM, ClientboundOpenIndexScreen::cyphersUnlocked,
+            ::ClientboundOpenIndexScreen
         )
     }
 }

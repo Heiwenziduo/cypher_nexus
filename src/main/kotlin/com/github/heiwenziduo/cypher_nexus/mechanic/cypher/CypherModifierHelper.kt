@@ -17,7 +17,6 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
-import net.minecraft.world.phys.Vec3
 import kotlin.math.max
 import kotlin.math.min
 
@@ -34,6 +33,9 @@ class CypherModifierHelper(
     /** direction doesn't have to be normalized */
     val invokePosDire: PosDirePair,
 ) : IFlaggable {
+    companion object {
+        const val MAX_DEPTH = 1
+    }
     val computedOperationMap = HashMap<CypherAttribute, HashMap<CypherAttributeOperation, Double>>()
     val invokingAttrMap = HashMap<CypherAttribute, Double>()
     val invokeListTmp = mutableListOf<AbstractCypher>()
@@ -41,10 +43,13 @@ class CypherModifierHelper(
     private val projCyList = mutableListOf<AbstractProjectileCypher>()
     override var enabledFlags: Int = 0
     val invokeHookContainer = HookContainer(HookModule.HookType.INVOKING)
-
+    private var _recurDepth = 0
+    val recurDepth
+        get() = _recurDepth
     // the operation-system
     fun addAttribute(map: HashMap<Holder<CypherAttribute>, HashMap<CypherAttributeOperation, Double>>) {
         map.forEach{ holder, opMap ->
+            // TODO base value is not used here
             opMap.forEach { o, d -> addAttribute(holder.value(), o, d) }
         }
     }
@@ -75,7 +80,7 @@ class CypherModifierHelper(
         helperData.recharge += wandStats.chunkI.rechargeTime
 
         // TODO onCastStartEvent
-        castLoop()
+        conductLoop()
 
         helperData.manaCurrent = max(min(helperData.manaCurrent, wandStats.chunkF.manaMax), 0f)
         helperData.index = helperData.index % cypherList.size
@@ -92,16 +97,23 @@ class CypherModifierHelper(
     }
 
     /***/
-    private fun castLoop() {
+    private fun conductLoop() {
+        val startIndex = helperData.index
+        var currentDepth = 0
         var current: AbstractCypher
         var i: Int
-        // FIXME auto back to index0 when only empty remain
-        while(helperData.draw >= 1 && helperData.index < cypherList.size) {
+        while(helperData.draw >= 1) {
             i = helperData.index++
+            if (helperData.index >= cypherList.size) {
+                helperData.index = helperData.index % cypherList.size
+                currentDepth++
+                if (currentDepth > MAX_DEPTH) break
+            }
+
             current = cypherList[i]
             if (current is EmptyCypher) continue
 
-            println("preInvoke $current \ncurrent mana: ${helperData.manaCurrent}")
+            println("preInvoke [$current] \ncurrent mana: ${helperData.manaCurrent}")
             if (helperData.manaCurrent <= current.manaDrain) {
                 println("mana not enough, skip. current index: $i")
                 continue
@@ -109,34 +121,54 @@ class CypherModifierHelper(
             helperData.manaCurrent -= current.manaDrain
             helperData.draw--
             preInvoke(current)
-            if (current is ModifierCypher) {
+            if (current is AbstractNonProjectileCypher) {
                 invokeListTmp.add(current)
+            }
+
+            if (currentDepth == MAX_DEPTH && helperData.index >= startIndex) {
+                println("----reach max recursive depth----\n")
+                break
             }
         }
 
+        // check if there only empty, if so, reset index to 0 (start reload)
+        var isFinished = true
+        if (currentDepth <= 0) { // if recursive, set to 0 immediately after conducting
+            for (i in cypherList.size - 1 downTo helperData.index) {
+                val cy = cypherList[i]
+                if (cy !is EmptyCypher) {
+                    isFinished = false
+                    break
+                }
+            }
+        }
+        if (isFinished) helperData.index = 0
+
+
+
+        // if (projCyList.isEmpty()) return
         val pair = invokeHookContainer.cumulateHooks(CypherBehaviorHookRegistry.INVOKE_REDIRECT_POS, invokePosDire)
         { h, l, i -> h.redirectPosDireServer(level as ServerLevel, invoker, l, i) }
 
         invokeList = invokeListTmp.toList()
         for (c in projCyList) {
-            invoke(c, invokeList, pair)
+            invokeProjectile(c, invokeList, pair)
         }
     }
 
     /***/
     private fun preInvoke(cypher: AbstractCypher) {
         helperData.draw += cypher.draw
-        enableFlag(cypher.flag)
         cypher.addAttribute(this) // computedMap will include both Consumer-attr(BASE) and modifier-attr
-        cypher.onCastServer(level, invoker, stack, this, wandStats.chunkF.wandLength)
+        cypher.onInvokeServer(level, invoker, stack, this, wandStats.chunkF.wandLength)
         invokeHookContainer.add(cypher)
 
         when(cypher) {
             is AbstractProjectileCypher -> projCyList.add(cypher)
-            is AbstractNonProjectileCypher -> ""
+            is AbstractNonProjectileCypher -> enableFlag(cypher.flag)
         }
     }
-    private fun invoke(cypher: AbstractProjectileCypher, invokes: List<AbstractCypher>, posDirePair: PosDirePair) {
+    private fun invokeProjectile(cypher: AbstractProjectileCypher, invokes: List<AbstractCypher>, posDirePair: PosDirePair) {
         cypher.createProjectile(level, this, invoker, stack, posDirePair, invokes)
     }
 
@@ -149,8 +181,9 @@ class CypherModifierHelper(
         var recharge: Int,
         var manaCurrent: Float,
     ) {
+
         constructor(draw: Int, data: WandDataFrequent) : this(draw, data.index, data.delay, data.recharge, data.manaCurrent)
-        fun frequentData() = WandDataFrequent(manaCurrent, index, delay, recharge, 0)
+        fun frequentData() = WandDataFrequent(manaCurrent, index, delay, recharge,)
     }
 
 }

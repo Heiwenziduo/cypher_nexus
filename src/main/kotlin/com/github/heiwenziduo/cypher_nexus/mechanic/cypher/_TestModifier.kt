@@ -3,8 +3,9 @@ package com.github.heiwenziduo.cypher_nexus.mechanic.cypher
 import com.github.heiwenziduo.cypher_nexus.CypherNexus
 import com.github.heiwenziduo.cypher_nexus.content.entity.CypherProjectile
 import com.github.heiwenziduo.cypher_nexus.init.mod.CypherAttributes
+import com.github.heiwenziduo.cypher_nexus.init.mod.CypherCategoryRegistry.OTHER
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.attribute.CypherAttributeOperation
-import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.projectile.BeforeExpireHook
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.projectile.BeforeDiscardHook
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.projectile.FirstTickHook
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.projectile.HitEntityHook
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.projectile.TickBehaviorHook
@@ -13,7 +14,8 @@ import net.minecraft.world.level.Level
 
 object _TestModifier: ModifierCypher(
     manaDrain = 60f
-), TickBehaviorHook, FirstTickHook, BeforeExpireHook, HitEntityHook {
+), TickBehaviorHook, FirstTickHook, BeforeDiscardHook, HitEntityHook {
+    override val category = OTHER
     override val resource = CypherNexus.modResource("test_modifier")
     override fun tickBehaviorBoth(level: Level, projectile: CypherProjectile, strength: Int) {
         if (projectile.tickCount % 20 != 0) return
@@ -30,10 +32,11 @@ object _TestModifier: ModifierCypher(
         else println("server firstTickBoth")
     }
 
-    override fun beforeExpireBoth(
+    override fun beforeDiscardBoth(
         level: Level,
         projectile: CypherProjectile,
-        strength: Int
+        strength: Int,
+        reason: CypherProjectile.DiscardReason
     ) {
         if (level.isClientSide) println("client beforeExpireBoth")
         else println("server beforeExpireBoth")

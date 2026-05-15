@@ -31,8 +31,10 @@ abstract class AbstractProjectileCypher: AbstractCypher() {
 
 
     // due to cost, should prioritise these to hook on expire
-    /** called on client side. due to cost, should prioritise these to hook on expire */
+    /** called when projectile hits something
+     * @param level on client side. due to cost, should prioritise these to hook-on-expire */
     open fun visualEffectOnHit(level: Level, projectile: CypherProjectile) {}
-    /** called on client side. due to cost, should prioritise these to hook on expire */
+    /** called when projectile naturally expire
+    * @param level on client side. due to cost, should prioritise these to hook-on-expire */
     open fun visualEffectOnExpire(level: Level, projectile: CypherProjectile) {}
 }

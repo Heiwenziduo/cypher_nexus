@@ -8,13 +8,14 @@ import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.world.level.Level
 
 object SnowballCypher : ProjectileCypher(
-    manaDrain = 10f
+    manaDrain = 3f
 ) {
     override val resource = CypherNexus.modResource("snowball")
 
     init {
         addAttribute(CypherAttributes.SPEED, 0.8)
         addAttribute(CypherAttributes.EXISTING, 300.0)
+        addAttribute(CypherAttributes.GRAVITY_FACTOR, 0.03)
     }
 
     override fun visualEffectOnHit(level: Level, projectile: CypherProjectile) {

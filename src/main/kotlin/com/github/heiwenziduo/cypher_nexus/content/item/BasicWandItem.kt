@@ -49,6 +49,7 @@ open class BasicWandItem(
     override fun use(level: Level, player: Player, usedHand: InteractionHand): InteractionResultHolder<ItemStack> {
         val stack = player.getItemInHand(usedHand)
 
+        // TODO
         tryConduct(level, player, stack)
 
         return InteractionResultHolder.success(stack)
@@ -66,11 +67,12 @@ open class BasicWandItem(
 
 
     }
+    /** update the "frequent" data */
     protected fun wandTick(stack: ItemStack, player: Player) {
         val (invariable, highPayload, frequent) = getWandData(stack, player)?: return // kotliiiiin?
         var flag = false
         val (maxMana, manaRegen) = invariable.chunkF
-        var (manaCurrent, index, delay, recharge, rechargeTotal) = frequent
+        var (manaCurrent, index, delay, recharge, ) = frequent
         if (manaCurrent < maxMana) {
             manaCurrent = min(manaCurrent + manaRegen, maxMana)
             flag = true
@@ -85,7 +87,7 @@ open class BasicWandItem(
             flag = true
         }
 
-        if (flag) stack.set(WAND_FREQUENT, WandDataFrequent(manaCurrent, index, delay, recharge, rechargeTotal))
+        if (flag) stack.set(WAND_FREQUENT, WandDataFrequent(manaCurrent, index, delay, recharge, ))
     }
 
     override fun getUseAnimation(stack: ItemStack): UseAnim {
@@ -142,7 +144,20 @@ open class BasicWandItem(
 
         fun editWand(stack: ItemStack, list: List<AbstractCypher>) {
             println("editWand: $stack")
-            stack.set(WAND_HIGH_PAYLOAD, WandDataHighPayload(list))
+            // TODO maybe we should use BasicWandItem instead?
+            if (stack.item is IWandLike) {
+                stack.set(WAND_HIGH_PAYLOAD, WandDataHighPayload(list))
+            }
+        }
+
+        fun resetIndex(stack: ItemStack) {
+            println("resetIndex: $stack")
+            if (stack.item is IWandLike) {
+                val fre = stack.get(WAND_FREQUENT)
+                if (fre != null) {
+                    stack.set(WAND_FREQUENT, fre.fromStart())
+                }
+            }
         }
     }
 }

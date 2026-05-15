@@ -127,5 +127,5 @@ runs/
 # datagen cache
 **/resources/.cache/
 
-# network resources
-**/resources/assets/cypher_nexus/textures/cypher/
+# due to resources lience
+# **/resources/assets/cypher_nexus/textures/cypher/

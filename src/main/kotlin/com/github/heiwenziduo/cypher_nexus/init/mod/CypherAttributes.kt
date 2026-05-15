@@ -47,17 +47,17 @@ object CypherAttributes {
     val RECHARGE_TIME = registerAttribute("recharge_time", 0.0, target = AttributeApply.INVOKING)
     /** degree */
     val SPREAD = registerAttribute("spread", 0.0, 0.0, 720.0, target = AttributeApply.INVOKING)
-    val RECOIL = registerAttribute("recoil", 0.0, 0.0, 10.0, target = AttributeApply.INVOKING)
+    val RECOIL = registerAttribute("recoil", 0.0, 0.0, 10.0, target = AttributeApply.INVOKING, hide = true)
 
 
     // ================================ projectile
     val DAMAGE = registerAttribute("damage", 0.0, sync = false)
-    /** 1 <-> 100% */
+    /** 1.00 <-> 100% */
     val CRIT_CHANCE = registerAttribute("crit_chance", 0.0, 0.0, sync = false)
     /** block per tick, but will show block/sec */
     val SPEED = registerAttribute("speed", 0.0, 0.0, 8.0)
     /** tick */
-    val EXISTING = registerAttribute("existing", 20.0)
+    val EXISTING = registerAttribute("existing", 300.0)
     val EFFECT_RADIUS = registerAttribute("effect_redius", 1.0, 0.125, 16.0)
     /** int, bounce times */
     val BOUNCE = registerAttribute("bounce", 0.0, 0.0, 50.0)

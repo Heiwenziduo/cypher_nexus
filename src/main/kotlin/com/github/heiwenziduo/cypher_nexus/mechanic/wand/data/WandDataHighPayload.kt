@@ -3,6 +3,7 @@ package com.github.heiwenziduo.cypher_nexus.mechanic.wand.data
 import com.github.heiwenziduo.cypher_nexus.init.mod.ModCyphers
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.AbstractCypher
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.EmptyCypher
+import com.github.heiwenziduo.cypher_nexus.utility.mod.ArrayOfCyphers
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.network.RegistryFriendlyByteBuf
@@ -16,7 +17,7 @@ data class WandDataHighPayload(val cypherList: List<AbstractCypher>) {
 
     companion object {
 
-        val DEFAULT = WandDataHighPayload(listOf(EmptyCypher, EmptyCypher, EmptyCypher, EmptyCypher, EmptyCypher, EmptyCypher))
+        val DEFAULT = WandDataHighPayload(ArrayOfCyphers(6).toList())
 
 //        val SPELL_DATA_CODEC: Codec<AbstractCypher> = ResourceLocation.CODEC.xmap(
 //            { id -> ModCyphers.REGISTRY.get(id) }, // How to read (String ID -> Cypher Object)

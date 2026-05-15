@@ -1,7 +1,6 @@
 package com.github.heiwenziduo.cypher_nexus.mechanic.cypher
 
 import com.github.heiwenziduo.cypher_nexus.CypherNexus
-import com.github.heiwenziduo.cypher_nexus.init.mod.CypherAttributes
 import com.github.heiwenziduo.cypher_nexus.init.mod.CypherBehaviorHookRegistry
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.attribute.CypherAttribute
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.attribute.CypherAttributeOperation
@@ -13,11 +12,9 @@ import net.minecraft.core.Holder
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.ResourceLocation
-import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.Entity
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
-import net.neoforged.neoforge.registries.DeferredHolder
-import java.util.function.Supplier
 
 /**
  *
@@ -47,10 +44,6 @@ sealed class AbstractCypher: IRegisterable {
 
     init {
         initializeData()
-//        addAttribute(CypherAttributes.CAST_DELAY, CypherAttributeOperation.ADD, 0.0)
-//        addAttribute(CypherAttributes.RECHARGE_TIME, CypherAttributeOperation.ADD, 0.0)
-//        addAttribute(CypherAttributes.RECOIL, CypherAttributeOperation.ADD, 0.0)
-//        addAttribute(CypherAttributes.SPREAD, CypherAttributeOperation.ADD, 0.0)
     }
 
     /**
@@ -79,7 +72,7 @@ sealed class AbstractCypher: IRegisterable {
 
 
     protected open fun initializeData() {
-        // TODO: read from CODEC
+        // TODO: read from json
     }
 
     /**
@@ -97,7 +90,7 @@ sealed class AbstractCypher: IRegisterable {
 
     /** custom logic up to subclasses */
     // TODO maybe change this to "hook"
-    open fun onCastServer(level: Level, caster: LivingEntity?, stack: ItemStack?, helper: CypherModifierHelper, wandLength: Float) {}
+    open fun onInvokeServer(level: Level, caster: Entity?, stack: ItemStack?, helper: CypherModifierHelper, wandLength: Float) {}
 
     // ============================================================================================================
 

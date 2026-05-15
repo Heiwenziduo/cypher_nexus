@@ -3,7 +3,7 @@ package com.github.heiwenziduo.cypher_nexus.init.mod
 import com.github.heiwenziduo.cypher_nexus.CypherNexus
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.HookModule
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.invoking.InvokeRedirectPosHook
-import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.projectile.BeforeExpireHook
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.projectile.BeforeDiscardHook
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.projectile.FirstTickHook
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.projectile.HitEntityHook
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.projectile.TickBehaviorHook
@@ -34,7 +34,7 @@ object CypherBehaviorHookRegistry {
 
     val INVOKE_REDIRECT_POS = registerHook("invoke_redirect_pos", InvokeRedirectPosHook::class, HookModule.HookType.INVOKING)
 
-    val BEFORE_EXPIRE = registerHook("before_expire", BeforeExpireHook::class, HookModule.HookType.PROJECTILE)
+    val BEFORE_DISCARD = registerHook("before_discard", BeforeDiscardHook::class, HookModule.HookType.PROJECTILE)
     val FIRST_TICK = registerHook("first_tick", FirstTickHook::class, HookModule.HookType.PROJECTILE)
     val HIT_ENTITY = registerHook("hit_entity", HitEntityHook::class, HookModule.HookType.PROJECTILE)
     val TICK_BEHAVIOR = registerHook("tick_behavior", TickBehaviorHook::class, HookModule.HookType.PROJECTILE)

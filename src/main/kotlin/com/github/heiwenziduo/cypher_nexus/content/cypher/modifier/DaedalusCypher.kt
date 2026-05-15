@@ -12,11 +12,11 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
 
-object IcarusCypher : ModifierCypher(
+object DaedalusCypher : ModifierCypher(
     manaDrain = 50f
 ), InvokeRedirectPosHook {
     const val MARGIN = 0.3f
-    override val resource = CypherNexus.modResource("icarus")
+    override val resource = CypherNexus.modResource("daedalus")
     init {
         addAttribute(CypherAttributes.SPEED, CypherAttributeOperation.MULTIPLY_BASE, 0.3)
     }

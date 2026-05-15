@@ -20,11 +20,15 @@ package com.github.heiwenziduo.cypher_nexus.mechanic.cypher.flag
 
 /** a flag is basically a bundle of booleans, all flag-bits are 0 by default */
 enum class CypherFlags(override val value: Int): IFlaggable.IFlagEnum {
+    /** self-explanatory */
     HURT_OWNER(1),
     // TODO deal pierce & bounce logic
     PIERCE_ENTITY(2),
     PIERCE_BLOCK(4),
+    /** skip dealing damage process totally */
     NO_DAMAGE(8),
+    /** #displayFireAnimation */
+    WITH_FIRE(16),
 
 
     ;

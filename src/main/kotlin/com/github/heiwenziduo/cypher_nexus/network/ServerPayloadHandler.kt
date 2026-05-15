@@ -4,14 +4,14 @@ import com.github.heiwenziduo.cypher_nexus.CypherNexus
 import com.github.heiwenziduo.cypher_nexus.content.item.BasicWandItem
 import com.github.heiwenziduo.cypher_nexus.init.ModDataComponents.WAND_INVARIABLE
 import com.github.heiwenziduo.cypher_nexus.mechanic.wand.IWandLike
-import com.github.heiwenziduo.cypher_nexus.network.serverbound.EditWandCyphers
+import com.github.heiwenziduo.cypher_nexus.network.server.ServerboundEditWandCyphers
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.item.ItemStack
 import net.neoforged.neoforge.network.handling.IPayloadContext
 
 /** client counterpart resides in com.github.heiwenziduo.cypher_nexus.client.network */
 object ServerPayloadHandler {
-    fun editWandCyphers(data: EditWandCyphers, context: IPayloadContext) {
+    fun editWandCyphers(data: ServerboundEditWandCyphers, context: IPayloadContext) {
         println("server receive package -> editWandCyphers: \n$data")
 
 
@@ -39,6 +39,7 @@ object ServerPayloadHandler {
 
             if (!stack.isEmpty) {
                 BasicWandItem.editWand(stack, data.cyphers)
+                BasicWandItem.resetIndex(stack)
             }
 
         }.exceptionally {

@@ -44,8 +44,8 @@ interface IWandLike {
         val wandData = getWandData(stack, invoker)
         if (wandData == null) return false
         val (invariable, highPayload, frequent) = wandData
-        if (frequent.delay > 0) {
-            if (!level.isClientSide) println("casting rejected due to: \ndelay: ${frequent.delay}")
+        if (!validateConduct(frequent)) {
+            if (!level.isClientSide) println("casting rejected due to: $frequent")
             return false
         }
 
@@ -69,9 +69,13 @@ interface IWandLike {
 
         // auto-sync
         CypherNexus.LOGGER.debug("server write to data component: {}", bundle)
-
         CypherNexus.LOGGER.debug("Casting finish...")
         return true
+    }
+
+    fun validateConduct(frequent: WandDataFrequent): Boolean {
+        val disable = frequent.delay > 0 || (frequent.index == 0 && frequent.recharge > 0)
+        return !disable
     }
 
 

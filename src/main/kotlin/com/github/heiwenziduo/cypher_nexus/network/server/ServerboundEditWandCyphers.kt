@@ -1,4 +1,4 @@
-package com.github.heiwenziduo.cypher_nexus.network.serverbound
+package com.github.heiwenziduo.cypher_nexus.network.server
 
 import com.github.heiwenziduo.cypher_nexus.CypherNexus
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.AbstractCypher
@@ -8,20 +8,20 @@ import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload
 
-data class EditWandCyphers(
+data class ServerboundEditWandCyphers(
     val uuid: String,
     val cyphers : List<AbstractCypher>
 ) : CustomPacketPayload {
     override fun type() = TYPE
 
     companion object {
-        val TYPE: CustomPacketPayload.Type<EditWandCyphers> =
+        val TYPE: CustomPacketPayload.Type<ServerboundEditWandCyphers> =
             CustomPacketPayload.Type(CypherNexus.modResource("edit_wand_cyphers"))
 
-        val STREAM: StreamCodec<RegistryFriendlyByteBuf, EditWandCyphers> = StreamCodec.composite(
-            ByteBufCodecs.STRING_UTF8, EditWandCyphers::uuid,
-            CNCodecs.CYPHER_LIST_STREAM, EditWandCyphers::cyphers,
-            ::EditWandCyphers
+        val STREAM: StreamCodec<RegistryFriendlyByteBuf, ServerboundEditWandCyphers> = StreamCodec.composite(
+            ByteBufCodecs.STRING_UTF8, ServerboundEditWandCyphers::uuid,
+            CNCodecs.CYPHER_LIST_STREAM, ServerboundEditWandCyphers::cyphers,
+            ::ServerboundEditWandCyphers
         )
     }
 }

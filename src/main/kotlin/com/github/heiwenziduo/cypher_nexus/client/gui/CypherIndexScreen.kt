@@ -7,7 +7,7 @@ import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.EmptyCypher
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.category.CypherCategory
 import com.github.heiwenziduo.cypher_nexus.mechanic.wand.IWandLike
 import com.github.heiwenziduo.cypher_nexus.mechanic.wand.data.WandDataInvariable
-import com.github.heiwenziduo.cypher_nexus.network.serverbound.EditWandCyphers
+import com.github.heiwenziduo.cypher_nexus.network.server.ServerboundEditWandCyphers
 import com.github.heiwenziduo.cypher_nexus.utility.mod.ArrayOfCyphers
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
@@ -364,10 +364,10 @@ class CypherIndexScreen(
         // TODO send msg to server
         if (hasEdited && currentInvariableData != null) {
             val u = currentInvariableData!!.chunkU.uuid
-            PacketDistributor.sendToServer(EditWandCyphers(u, currentEditCyphers.toList()))
+            PacketDistributor.sendToServer(ServerboundEditWandCyphers(u, currentEditCyphers.toList()))
         }
         editedMap.forEach { uu, cyphers ->
-            PacketDistributor.sendToServer(EditWandCyphers(uu, cyphers))
+            PacketDistributor.sendToServer(ServerboundEditWandCyphers(uu, cyphers))
         }
     }
 

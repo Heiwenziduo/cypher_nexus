@@ -3,6 +3,7 @@ package com.github.heiwenziduo.cypher_nexus.mechanic.cypher
 import com.github.heiwenziduo.cypher_nexus.CypherNexus
 import com.github.heiwenziduo.cypher_nexus.init.mod.CypherCategoryRegistry
 import net.minecraft.network.chat.MutableComponent
+import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
@@ -32,9 +33,9 @@ object EmptyCypher: AbstractProjectileCypher() {
         // do nothing
     }
 
-    override fun onCastServer(
+    override fun onInvokeServer(
         level: Level,
-        caster: LivingEntity?,
+        caster: Entity?,
         stack: ItemStack?,
         helper: CypherModifierHelper,
         wandLength: Float

@@ -1,8 +1,11 @@
 package com.github.heiwenziduo.cypher_nexus.client.cypher
 
+import com.github.heiwenziduo.cypher_nexus.client.cypher.visualizer.ArrowVi
 import com.github.heiwenziduo.cypher_nexus.client.cypher.visualizer.EnderTeleportationVi
 import com.github.heiwenziduo.cypher_nexus.client.cypher.visualizer.SnowballVi
+import com.github.heiwenziduo.cypher_nexus.client.cypher.visualizer.SpitVi
 import com.github.heiwenziduo.cypher_nexus.client.cypher.visualizer.TestVis
+import com.github.heiwenziduo.cypher_nexus.content.cypher.projectile.EnderRecall
 import com.github.heiwenziduo.cypher_nexus.init.mod.ModCyphers
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.AbstractCypher
 import net.minecraft.resources.ResourceLocation
@@ -17,6 +20,9 @@ object CypherVisualizerRegistry {
     fun register(visualizer: ICypherVisualizer) {
         _visualizers[visualizer.cypher()] = visualizer
     }
+    fun register(cypher: AbstractCypher, visualizer: ICypherVisualizer) {
+        _visualizers[cypher] = visualizer
+    }
 
     fun get(cypherId: ResourceLocation): ICypherVisualizer? {
         val cy = ModCyphers.REGISTRY.get(cypherId)
@@ -26,11 +32,15 @@ object CypherVisualizerRegistry {
         return _visualizers[cypher]
     }
 
-    init {
+    fun init() {
         register(TestVis.Modifier)
         register(TestVis.Projectile)
 
         register(SnowballVi)
         register(EnderTeleportationVi)
+        register(EnderRecall, EnderTeleportationVi)
+        register(ArrowVi)
+        register(SpitVi)
+
     }
 }

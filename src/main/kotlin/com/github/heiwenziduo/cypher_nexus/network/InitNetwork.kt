@@ -2,8 +2,8 @@ package com.github.heiwenziduo.cypher_nexus.network
 
 import com.github.heiwenziduo.cypher_nexus.CypherNexus
 import com.github.heiwenziduo.cypher_nexus.client.network.ClientPayloadHandler
-import com.github.heiwenziduo.cypher_nexus.network.clientbound.OpenIndexScreen
-import com.github.heiwenziduo.cypher_nexus.network.serverbound.EditWandCyphers
+import com.github.heiwenziduo.cypher_nexus.network.client.ClientboundOpenIndexScreen
+import com.github.heiwenziduo.cypher_nexus.network.server.ServerboundEditWandCyphers
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent
@@ -31,14 +31,14 @@ object InitNetwork {
 //        )
 
         registrar.playToClient(
-            OpenIndexScreen.TYPE,
-            OpenIndexScreen.STREAM,
+            ClientboundOpenIndexScreen.TYPE,
+            ClientboundOpenIndexScreen.STREAM,
             ClientPayloadHandler::openIndexScreen
         )
 
         registrar.playToServer(
-            EditWandCyphers.TYPE,
-            EditWandCyphers.STREAM,
+            ServerboundEditWandCyphers.TYPE,
+            ServerboundEditWandCyphers.STREAM,
             ServerPayloadHandler::editWandCyphers
         )
     }
