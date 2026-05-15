@@ -14,8 +14,7 @@ import net.minecraft.world.level.Level
 object SpitCypher : ProjectileCypher(
     manaDrain = 5f
 ) {
-    override val resource = CypherNexus.modResource("arrow")
-    val stack = ItemStack(Items.ARROW)
+    override val resource = CypherNexus.modResource("spit")
 
     init {
         addAttribute(CypherAttributes.RECHARGE_TIME, 2.0)
@@ -28,11 +27,7 @@ object SpitCypher : ProjectileCypher(
     }
 
     override fun visualEffectOnHit(level: Level, projectile: CypherProjectile) {
-        // check: ItemParticleOption(ParticleTypes.ITEM, itemstack), and ParticleTypes.ITEM_SNOWBALL
         val pos = projectile.position()
-        for (i in 0..7) {
-            level.addParticle(ItemParticleOption(ParticleTypes.ITEM, stack),
-                pos.x, pos.y, pos.z, 0.0, 0.0, 0.0)
-        }
+
     }
 }

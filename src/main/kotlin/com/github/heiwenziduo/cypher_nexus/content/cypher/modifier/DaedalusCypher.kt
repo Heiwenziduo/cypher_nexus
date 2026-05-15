@@ -1,6 +1,7 @@
 package com.github.heiwenziduo.cypher_nexus.content.cypher.modifier
 
 import com.github.heiwenziduo.cypher_nexus.CypherNexus
+import com.github.heiwenziduo.cypher_nexus.content.entity.CypherProjectile
 import com.github.heiwenziduo.cypher_nexus.init.mod.CypherAttributes
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.ModifierCypher
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.attribute.CypherAttributeOperation
@@ -31,8 +32,9 @@ object DaedalusCypher : ModifierCypher(
         val (start, direction) = pair
         if (invoker != null && direction != Vec3.ZERO) {
             val route = direction.normalize().scale(length)
-            // FIXME why use invoker?
-            val hit = RayCastUtility.getProjectileHitResult(start, invoker, { e -> e != invoker },
+            // FIXME why use invoker as projectile?
+            val hit = RayCastUtility.getProjectileHitResult(start, invoker,
+                { e -> e != invoker && e.canBeHitByProjectile() },
                 route, level, MARGIN)
             var remote = start.add(route)
             if (hit.type != HitResult.Type.MISS) {

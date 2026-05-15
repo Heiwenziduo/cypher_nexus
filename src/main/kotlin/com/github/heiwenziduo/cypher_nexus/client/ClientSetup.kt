@@ -4,6 +4,7 @@ import com.github.heiwenziduo.cypher_nexus.CypherNexus
 import com.github.heiwenziduo.cypher_nexus.CypherNexus.LOGGER
 import com.github.heiwenziduo.cypher_nexus.client.cypher.CypherVisualizerRegistry
 import com.github.heiwenziduo.cypher_nexus.client.cypher.CypherProjectileRenderer
+import com.github.heiwenziduo.cypher_nexus.client.gui.WandDataOverlay
 import com.github.heiwenziduo.cypher_nexus.init.ModEntities.CYPHER_PROJECTILE
 import net.minecraft.client.Minecraft
 import net.neoforged.api.distmarker.Dist
@@ -13,6 +14,7 @@ import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent
 import net.neoforged.neoforge.client.event.EntityRenderersEvent
 import net.neoforged.neoforge.client.event.EntityRenderersEvent.RegisterRenderers
+import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent
 
 @EventBusSubscriber(modid = CypherNexus.MOD_ID, value = [Dist.CLIENT])
 object ClientSetup {
@@ -52,5 +54,10 @@ object ClientSetup {
     @SubscribeEvent
     private fun registerLayerDefinitions(event: EntityRenderersEvent.RegisterLayerDefinitions) {
 
+    }
+
+    @SubscribeEvent
+    private fun registerGuiLayersEvent(event: RegisterGuiLayersEvent) {
+        event.registerAboveAll(CypherNexus.modResource("wand_data"), WandDataOverlay)
     }
 }
