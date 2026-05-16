@@ -126,6 +126,18 @@ object ModCyphers {
         .attribute(CypherAttributes.CAST_DELAY, CypherAttributeOperation.ADD, -7.0)
         .attribute(CypherAttributes.RECHARGE_TIME, CypherAttributeOperation.ADD, -5.0))
 
+    const val COLOR_MULTI_INVOKE = 0xFF98A087.toInt()
+    val DOUBLE_INVOKING = registerCypher(SimpleModifier(1f, "double_invoking", 2, COLOR_MULTI_INVOKE))
+    val TREBLE_INVOKING = registerCypher(SimpleModifier(5f, "treble_invoking", 3, COLOR_MULTI_INVOKE))
+    val QUADRUPLE_INVOKING = registerCypher(SimpleModifier(20f, "quadruple_invoking", 4, COLOR_MULTI_INVOKE))
+    val OCTUPLE_INVOKING = registerCypher(SimpleModifier(50f, "octuple_invoking", 8, COLOR_MULTI_INVOKE))
+    val DOUBLE_SCATTER = registerCypher(SimpleModifier(0f, "double_scatter", 2, COLOR_MULTI_INVOKE)
+        .attribute(CypherAttributes.SPREAD, CypherAttributeOperation.ADD, 20.0))
+    val TREBLE_SCATTER = registerCypher(SimpleModifier(1f, "treble_scatter", 3, COLOR_MULTI_INVOKE)
+        .attribute(CypherAttributes.SPREAD, CypherAttributeOperation.ADD, 30.0))
+    val QUADRUPLE_SCATTER = registerCypher(SimpleModifier(5f, "quadruple_scatter", 4, COLOR_MULTI_INVOKE)
+        .attribute(CypherAttributes.SPREAD, CypherAttributeOperation.ADD, 40.0))
+
     // passive
 
     // other
