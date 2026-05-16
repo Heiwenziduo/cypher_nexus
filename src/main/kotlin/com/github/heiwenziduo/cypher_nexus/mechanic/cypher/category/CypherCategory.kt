@@ -6,7 +6,8 @@ import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.ResourceLocation
 
 class CypherCategory(
-    override val resource: ResourceLocation
+    override val resource: ResourceLocation,
+    val color: Int
 ): IRegisterable {
     /** lang-JSON key: cypher.category.{MOD_ID}.{category_name} */
     override fun translation(): MutableComponent =

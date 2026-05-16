@@ -11,7 +11,7 @@ import com.github.heiwenziduo.cypher_nexus.content.cypher.projectile.EnderRecall
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher._TestModifier
 import com.github.heiwenziduo.cypher_nexus.content.cypher.projectile.EnderTeleportationCypher
 import com.github.heiwenziduo.cypher_nexus.content.cypher.projectile.SnowballCypher
-import com.github.heiwenziduo.cypher_nexus.content.cypher.projectile.SpitCypher
+import com.github.heiwenziduo.cypher_nexus.content.cypher.projectile.LlamaSpitCypher
 import com.github.heiwenziduo.cypher_nexus.mechanic.CypherNotFoundException
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.AbstractCypher
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.EmptyCypher
@@ -68,7 +68,7 @@ object ModCyphers {
     val SNOWBALL = registerCypher(SnowballCypher)
     val ENDER_TELEPORTATION = registerCypher(EnderTeleportationCypher)
     val ENDER_RECALL = registerCypher(EnderRecall)
-    val SPIT = registerCypher(SpitCypher)
+    val LLAMA_SPIT = registerCypher(LlamaSpitCypher)
 
     // static projectile
 
@@ -121,8 +121,8 @@ object ModCyphers {
     val HOMING = registerCypher(HomingCypher)
     val PIERCE_ENTITY = registerCypher(PierceEntityCypher)
     val DAEDALUS = registerCypher(DaedalusCypher)
-    val NOTHING_THERE = registerCypher(SimpleModifier(44f, "nothing_there")
-        .attribute(CypherAttributes.EXISTING, CypherAttributeOperation.SET, 2.0)
+    val NULLIFIER = registerCypher(SimpleModifier(44f, "nullifier")
+        .attribute(CypherAttributes.EXISTING, CypherAttributeOperation.SET, 1.0)
         .attribute(CypherAttributes.CAST_DELAY, CypherAttributeOperation.ADD, -7.0)
         .attribute(CypherAttributes.RECHARGE_TIME, CypherAttributeOperation.ADD, -5.0))
 

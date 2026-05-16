@@ -33,6 +33,7 @@ object EnderRecall : ProjectileCypher(
             val teleportation = CypherProjectile.from(level, EnderTeleportationCypher, projectile.owner, )
             teleportation.setPos(pos)
             teleportation.existing = 60 // recall after 3seconds
+            teleportation.gravity = 0.01f
             level.addFreshEntity(teleportation)
         }
     }

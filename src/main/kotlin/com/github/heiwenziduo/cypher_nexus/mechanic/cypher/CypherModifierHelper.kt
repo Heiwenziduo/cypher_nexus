@@ -147,11 +147,10 @@ class CypherModifierHelper(
 
 
         // if (projCyList.isEmpty()) return
-        val pair = invokeHookContainer.cumulateHooks(CypherBehaviorHookRegistry.INVOKE_REDIRECT_POS, invokePosDire)
-        { h, l, i -> h.redirectPosDireServer(level as ServerLevel, invoker, l, i) }
-
         invokeList = invokeListTmp.toList()
-        for (c in projCyList) {
+        for ((i, c) in projCyList.withIndex()) {
+            val pair = invokeHookContainer.cumulateHooks(CypherBehaviorHookRegistry.INVOKE_REDIRECT_POS, invokePosDire)
+            { h, l, pair -> h.redirectPosDireServer(level as ServerLevel, invoker, l, pair, i) }
             invokeProjectile(c, invokeList, pair)
         }
     }

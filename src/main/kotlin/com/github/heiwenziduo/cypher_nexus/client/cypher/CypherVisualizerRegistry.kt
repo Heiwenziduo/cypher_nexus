@@ -3,7 +3,7 @@ package com.github.heiwenziduo.cypher_nexus.client.cypher
 import com.github.heiwenziduo.cypher_nexus.client.cypher.visualizer.ArrowVi
 import com.github.heiwenziduo.cypher_nexus.client.cypher.visualizer.EnderTeleportationVi
 import com.github.heiwenziduo.cypher_nexus.client.cypher.visualizer.SnowballVi
-import com.github.heiwenziduo.cypher_nexus.client.cypher.visualizer.SpitVi
+import com.github.heiwenziduo.cypher_nexus.client.cypher.visualizer.LlamaSpitVi
 import com.github.heiwenziduo.cypher_nexus.client.cypher.visualizer.TestVis
 import com.github.heiwenziduo.cypher_nexus.content.cypher.projectile.EnderRecall
 import com.github.heiwenziduo.cypher_nexus.init.mod.ModCyphers
@@ -40,7 +40,7 @@ object CypherVisualizerRegistry {
         register(EnderTeleportationVi)
         register(EnderRecall, EnderTeleportationVi)
         register(ArrowVi)
-        register(SpitVi)
+        register(LlamaSpitVi)
 
     }
 }

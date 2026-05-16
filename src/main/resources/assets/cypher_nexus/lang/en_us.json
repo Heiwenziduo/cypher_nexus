@@ -6,15 +6,19 @@
 
   "block.cypher_nexus.cypher_index": "Cypher Index",
 
+  "cypher.attribute.cypher_nexus.mana_drain": "Mana Drain",
+  "cypher.attribute.cypher_nexus.draw": "Draw",
   "cypher.attribute.cypher_nexus.cast_delay": "Cast Delay",
   "cypher.attribute.cypher_nexus.recharge_time": "Recharge",
-  "cypher.attribute.cypher_nexus.damage": "Damage",
-  "cypher.attribute.cypher_nexus.speed": "Speed",
   "cypher.attribute.cypher_nexus.spread": "Spread",
   "cypher.attribute.cypher_nexus.recoil": "Recoil",
-  "cypher.attribute.cypher_nexus.redius": "Redius",
-  "cypher.attribute.cypher_nexus.bounce": "Bounce",
+  "cypher.attribute.cypher_nexus.damage": "Damage",
   "cypher.attribute.cypher_nexus.crit_chance": "Crit",
+  "cypher.attribute.cypher_nexus.speed": "Speed",
+  "cypher.attribute.cypher_nexus.existing": "Existing",
+  "cypher.attribute.cypher_nexus.effect_redius": "Redius",
+  "cypher.attribute.cypher_nexus.bounce": "Bounce",
+  "cypher.attribute.cypher_nexus.gravity_factor": "Gravity",
 
   "cypher.category.cypher_nexus.projectile": "Projectile",
   "cypher.category.cypher_nexus.static_projectile": "Static",
@@ -22,13 +26,32 @@
   "cypher.category.cypher_nexus.passive": "Passive",
   "cypher.category.cypher_nexus.other": "Other",
 
-  "cypher.cypher_nexus.modifier.damage_boost": "Damage Boost",
+  "cypher.cypher_nexus.modifier.power": "Power",
+  "cypher.cypher_nexus.modifier.power.description": "Power... I need more power...",
+  "cypher.cypher_nexus.modifier.brisk": "Brisk",
+  "cypher.cypher_nexus.modifier.fiery": "Fiery",
+  "cypher.cypher_nexus.modifier.antigravity": "Antigravity",
+  "cypher.cypher_nexus.modifier.mana_surge": "Mana Surge",
+  "cypher.cypher_nexus.modifier.heavily_strong": "Heavy & Strong",
+  "cypher.cypher_nexus.modifier.peaceful": "Peaceful",
+  "cypher.cypher_nexus.modifier.bouncy": "Bouncy",
+  "cypher.cypher_nexus.modifier.no_more_bounce": "No More Bounce",
+  "cypher.cypher_nexus.modifier.no_more_damage": "No More Damage",
+  "cypher.cypher_nexus.modifier.extend_time": "Extend Time",
+  "cypher.cypher_nexus.modifier.curtail_time": "Curtail Time",
   "cypher.cypher_nexus.modifier.homing": "Homing",
+  "cypher.cypher_nexus.modifier.pierce_entity": "Pierce Entity",
+  "cypher.cypher_nexus.modifier.daedalus": "Daedalus",
+  "cypher.cypher_nexus.modifier.nullifier": "Nullifier",
+  "cypher.cypher_nexus.projectile.arrow": "Arrow",
   "cypher.cypher_nexus.projectile.snowball": "Snowball",
+  "cypher.cypher_nexus.projectile.ender_teleportation": "Ender Teleportation",
+  "cypher.cypher_nexus.projectile.ender_recall": "Ender Recall",
+  "cypher.cypher_nexus.projectile.llama_spit": "Llama Spit",
 
   "gui.cypher_nexus.cypher_index.": "--tmp",
 
-  "item_group.cypher_nexus": "Untitled World All",
+  "item_group.cypher_nexus": "Cypher Nexus",
 
   "item.cypher_nexus.basic_wand": "Basic Wand"
 }

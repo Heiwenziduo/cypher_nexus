@@ -1,6 +1,8 @@
 package com.github.heiwenziduo.cypher_nexus.mechanic.cypher
 
 import com.github.heiwenziduo.cypher_nexus.CypherNexus
+import com.github.heiwenziduo.cypher_nexus.CypherNexus.MOD_ID
+import com.github.heiwenziduo.cypher_nexus.init.mod.CypherAttributes
 import com.github.heiwenziduo.cypher_nexus.init.mod.CypherBehaviorHookRegistry
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.attribute.CypherAttribute
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.attribute.CypherAttributeOperation
@@ -8,6 +10,8 @@ import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.category.CypherCatego
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.flag.CypherFlags
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.HookModule
 import com.github.heiwenziduo.cypher_nexus.utility.i.IRegisterable
+import net.minecraft.ChatFormatting
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 import net.minecraft.core.Holder
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
@@ -24,6 +28,8 @@ sealed class AbstractCypher: IRegisterable {
     open val draw: Int = 0
     /** whether the cypher shows in the index(left side) */
     open val hide: Boolean = false
+    /** override colors from category */
+    open val color: Int = 0
     private var _flag: Int = 0
     /** use #addFlag during init */
     val flag: Int
@@ -113,6 +119,43 @@ sealed class AbstractCypher: IRegisterable {
         ResourceLocation.fromNamespaceAndPath("${resource.namespace}",
             "textures/cypher/${category.value().registryName()}/${resource.path}.png")
 
+    /** detailed tooltip in index-screen */
+    open val attributesTooltip: List<MutableComponent> by lazy {
+        // since attributes won't change once initialized
+        val components = mutableListOf<MutableComponent>()
+        val mana = Component.literal("  ")
+            .append(Component.translatable("cypher.attribute.$MOD_ID.mana_drain")) // not attribute though keeping lang format
+            .append(Component.literal(": "))
+            .append(Component.literal("$manaDrain").withStyle(ChatFormatting.YELLOW))
+        components.add(mana)
+
+        if (draw > 1) {
+            val draw = Component.literal("  ")
+                .append(Component.translatable("cypher.attribute.$MOD_ID.draw"))
+                .append(Component.literal(": "))
+                .append(Component.literal("$draw").withStyle(ChatFormatting.YELLOW))
+            components.add(draw)
+        }
+
+        // keep the order attrs registered
+        for (holder in CypherAttributes.REGISTRY.holders()) {
+            if (holder.value().hide) continue
+            val opMap = _attributeMap.getOrElse(holder) { continue }
+            var values: MutableComponent? = null
+            CypherAttributeOperation.entries.forEach { op ->
+                val v = opMap.getOrElse(op) { return@forEach }
+                if (values == null) values = op.format(v)
+                else values.append("; ").append(op.format(v))
+            }
+            val comp = Component.literal("  ")
+                .append(holder.value().translation())
+                .append(Component.literal(": "))
+                .append(values?: Component.literal("ERROR"))
+            components.add(comp)
+        }
+
+        components
+    }
 
 
 

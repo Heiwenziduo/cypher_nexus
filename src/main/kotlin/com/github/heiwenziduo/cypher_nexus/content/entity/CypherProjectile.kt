@@ -78,6 +78,9 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
     var bounce: Int
         get() = entityData.get(BOUNCE)
         set(value) = entityData.set(BOUNCE, value)
+    var gravity: Float
+        get() = entityData.get(GRAVITY)
+        set(value) = entityData.set(GRAVITY, value)
 
 
     // should be immutable after initialization
@@ -132,6 +135,7 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
         existing = getAttrOrProjDefault(CypherAttributes.EXISTING).toInt()
 //        speed = getAttrOrDefault(CypherAttributes.SPEED)
         bounce = getAttrOrProjDefault(CypherAttributes.BOUNCE).toInt()
+        gravity = getAttrOrProjDefault(CypherAttributes.GRAVITY_FACTOR).toFloat()
 
         // prepareMotion
         moveDirection = direction?: invoker?.lookAngle?.normalize()?: moveDirection
@@ -176,6 +180,9 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
         val BOUNCE: EntityDataAccessor<Int> = SynchedEntityData.defineId(
             CypherProjectile::class.java,
             EntityDataSerializers.INT)
+        val GRAVITY: EntityDataAccessor<Float> = SynchedEntityData.defineId(
+            CypherProjectile::class.java,
+            EntityDataSerializers.FLOAT)
     }
     override fun defineSynchedData(builder: SynchedEntityData.Builder) {
         builder.define(CYPHER, EmptyCypher)
@@ -185,6 +192,7 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
 //        builder.define(SPEED, 0f)
         builder.define(EXISTING, 1)
         builder.define(BOUNCE, 0)
+        builder.define(GRAVITY, 0f)
     }
 
     private fun syncHooks(modifiers: List<AbstractCypher>, thiz: AbstractCypher? = null) {
@@ -267,8 +275,7 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
     override fun shoot(x: Double, y: Double, z: Double, velocity: Float, inaccuracy: Float) { } // do nothing, don't call
 
     override fun applyGravity() {
-        val g0 = getAttrOrProjDefault(CypherAttributes.GRAVITY_FACTOR)
-        deltaMovement = deltaMovement.add(0.0, -g0, 0.0)
+        deltaMovement = deltaMovement.add(0.0, -(gravity).toDouble(), 0.0)
     }
     protected fun applySpeedChange() {
         // TODO hook, speed

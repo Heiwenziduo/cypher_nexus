@@ -5,16 +5,12 @@ import com.github.heiwenziduo.cypher_nexus.content.entity.CypherProjectile
 import com.github.heiwenziduo.cypher_nexus.init.mod.CypherAttributes
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.ProjectileCypher
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.attribute.CypherAttributeOperation
-import net.minecraft.core.particles.ItemParticleOption
-import net.minecraft.core.particles.ParticleTypes
-import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 
-object SpitCypher : ProjectileCypher(
+object LlamaSpitCypher : ProjectileCypher(
     manaDrain = 5f
 ) {
-    override val resource = CypherNexus.modResource("spit")
+    override val resource = CypherNexus.modResource("llama_spit")
 
     init {
         addAttribute(CypherAttributes.RECHARGE_TIME, 2.0)

@@ -25,7 +25,8 @@ object DaedalusCypher : ModifierCypher(
         level: ServerLevel,
         invoker: LivingEntity?,
         strength: Int,
-        pair: PosDirePair
+        pair: PosDirePair,
+        index: Int
     ): PosDirePair {
         val height = -8.0 + 16.0 * strength
         val length = 12.0 + 4.0 * strength

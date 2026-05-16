@@ -1,21 +1,18 @@
 package com.github.heiwenziduo.cypher_nexus.client.cypher.visualizer
 
 import com.github.heiwenziduo.cypher_nexus.client.cypher.ICypherVisualizer
-import com.github.heiwenziduo.cypher_nexus.content.cypher.projectile.SpitCypher
+import com.github.heiwenziduo.cypher_nexus.content.cypher.projectile.LlamaSpitCypher
 import com.github.heiwenziduo.cypher_nexus.content.entity.CypherProjectile
 import com.mojang.blaze3d.vertex.PoseStack
-import com.mojang.blaze3d.vertex.VertexConsumer
 import com.mojang.math.Axis
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.block.BlockRenderDispatcher
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher
 import net.minecraft.client.renderer.entity.ItemRenderer
-import net.minecraft.client.renderer.entity.LlamaSpitRenderer
-import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.util.Mth
 
-object SpitVi : ICypherVisualizer {
-    override fun cypher() = SpitCypher
+object LlamaSpitVi : ICypherVisualizer {
+    override fun cypher() = LlamaSpitCypher
 
     override fun render(
         projectile: CypherProjectile,

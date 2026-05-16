@@ -1,5 +1,6 @@
 package com.github.heiwenziduo.cypher_nexus.client.gui
 
+import com.github.heiwenziduo.cypher_nexus.CypherNexus.MOD_ID
 import com.github.heiwenziduo.cypher_nexus.init.ModDataComponents.WAND_HIGH_PAYLOAD
 import com.github.heiwenziduo.cypher_nexus.init.ModDataComponents.WAND_INVARIABLE
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.AbstractCypher
@@ -9,10 +10,14 @@ import com.github.heiwenziduo.cypher_nexus.mechanic.wand.IWandLike
 import com.github.heiwenziduo.cypher_nexus.mechanic.wand.data.WandDataInvariable
 import com.github.heiwenziduo.cypher_nexus.network.server.ServerboundEditWandCyphers
 import com.github.heiwenziduo.cypher_nexus.utility.mod.ArrayOfCyphers
+import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.Screen
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
+import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner
 import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.item.ItemStack
@@ -32,7 +37,7 @@ class CypherIndexScreen(
         const val ICON_TEXTURE = 12
         const val ICON_SIZE = 12
         const val MARGIN = 8 // space between content and border
-        const val PADDING = 2 // space between icons
+        const val PADDING = 3 // space between icons
         const val ITEM_SIZE = ICON_SIZE + PADDING
         const val CATEGORY_TITLE_PADDING = 18
 
@@ -254,15 +259,27 @@ class CypherIndexScreen(
 
     private fun renderCypherIcon(guiGraphics: GuiGraphics, cypher: AbstractCypher, x: Int, y: Int) {
         if (cypher !is EmptyCypher) {
-            // TODO add a border, colored by category
+            val borderColor = if (cypher.color > 0) cypher.color else cypher.category.value().color
+            guiGraphics.renderOutline(x - 1, y - 1, ICON_SIZE + 2, ICON_SIZE + 2, borderColor)
             guiGraphics.blit(cypher.texture(), x, y, 0f, 0f, ICON_SIZE, ICON_SIZE, ICON_TEXTURE, ICON_TEXTURE)
         }
     }
     private fun renderCypherTooltip(guiGraphics: GuiGraphics, cypher: AbstractCypher, mouseX: Int, mouseY: Int) {
         if (HoverContext.isHolding) return
         if (cypher is EmptyCypher) return
-        // FIXME popup oversize and out of screen
-        guiGraphics.renderTooltip(font, cypher.translation(), mouseX, mouseY)
+        val components = mutableListOf<ClientTooltipComponent>()
+
+        val titleText = cypher.translation().withStyle(ChatFormatting.GOLD)
+        components.add(ClientTooltipComponent.create(titleText.visualOrderText))
+        val descText = cypher.translation(AbstractCypher.TranslationKey.DESCRIPTION).withStyle(ChatFormatting.GRAY)
+        components.add(CypherDescriptionTooltip(CypherDescriptionTooltip.TooltipDataBundle(descText, cypher.texture())))
+
+        // TODO too ugly
+        for (c in cypher.attributesTooltip) {
+            components.add(ClientTooltipComponent.create(c.visualOrderText))
+        }
+
+        guiGraphics.renderTooltipInternal(font, components, mouseX, mouseY, DefaultTooltipPositioner.INSTANCE)
     }
 
     private fun renderScrollbar(guiGraphics: GuiGraphics) {

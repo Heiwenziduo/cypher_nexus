@@ -58,14 +58,14 @@ object WandDataOverlay : LayeredDraw.Layer {
             0.5f)
         startY += 8 // Move down for the next bar
 
-        val castDelayProgress = frequent.delay.toFloat() / delay0
+        val castDelayProgress = (delay0 - frequent.delay) / delay0
         if (castDelayProgress > 0f) {
             drawProgressBar(guiGraphics, startX, startY, barWidth, 3, castDelayProgress,
                 0xFFFF8C00.toInt(),
                 0xFFFFD700.toInt(),
                 0.5f)
         }
-        val rechargeProgress = frequent.recharge.toFloat() / recharge0
+        val rechargeProgress = (recharge0 - frequent.recharge) / recharge0
         if (rechargeProgress > 0f && frequent.index == 0) {
             drawProgressBar(guiGraphics, startX, startY, barWidth, 3, rechargeProgress,
                 0xFF228B22.toInt(),
