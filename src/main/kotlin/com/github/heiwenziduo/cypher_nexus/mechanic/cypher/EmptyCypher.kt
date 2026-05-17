@@ -2,7 +2,6 @@ package com.github.heiwenziduo.cypher_nexus.mechanic.cypher
 
 import com.github.heiwenziduo.cypher_nexus.CypherNexus
 import com.github.heiwenziduo.cypher_nexus.init.mod.CypherCategoryRegistry
-import net.minecraft.network.chat.MutableComponent
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.item.ItemStack
@@ -23,7 +22,7 @@ object EmptyCypher: AbstractProjectileCypher() {
 
     override fun createProjectile(
         level: Level,
-        helper: CypherModifierHelper,
+        helper: CypherInvokerHelper,
         invoker: LivingEntity?,
         stack: ItemStack?,
         startPos: Vec3,
@@ -37,7 +36,7 @@ object EmptyCypher: AbstractProjectileCypher() {
         level: Level,
         caster: Entity?,
         stack: ItemStack?,
-        helper: CypherModifierHelper,
+        helper: CypherInvokerHelper,
         wandLength: Float
     ) {
         // do nothing

@@ -1,17 +1,19 @@
 package com.github.heiwenziduo.cypher_nexus.init.mod
 
 import com.github.heiwenziduo.cypher_nexus.CypherNexus
-import com.github.heiwenziduo.cypher_nexus.content.cypher.SimpleModifier
+import com.github.heiwenziduo.cypher_nexus.content.cypher.modifier.SimpleModifier
 import com.github.heiwenziduo.cypher_nexus.content.cypher.modifier.HomingCypher
 import com.github.heiwenziduo.cypher_nexus.content.cypher.modifier.DaedalusCypher
 import com.github.heiwenziduo.cypher_nexus.content.cypher.modifier.FieryCypher
 import com.github.heiwenziduo.cypher_nexus.content.cypher.modifier.PierceEntityCypher
 import com.github.heiwenziduo.cypher_nexus.content.cypher.projectile.ArrowCypher
-import com.github.heiwenziduo.cypher_nexus.content.cypher.projectile.EnderRecall
+import com.github.heiwenziduo.cypher_nexus.content.cypher.projectile.EnderRecallCypher
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher._TestModifier
 import com.github.heiwenziduo.cypher_nexus.content.cypher.projectile.EnderTeleportationCypher
 import com.github.heiwenziduo.cypher_nexus.content.cypher.projectile.SnowballCypher
 import com.github.heiwenziduo.cypher_nexus.content.cypher.projectile.LlamaSpitCypher
+import com.github.heiwenziduo.cypher_nexus.content.cypher.projectile.SpawnEggCypher
+import com.github.heiwenziduo.cypher_nexus.content.cypher.static_projectile.ExplosionCypher
 import com.github.heiwenziduo.cypher_nexus.mechanic.CypherNotFoundException
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.AbstractCypher
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.EmptyCypher
@@ -67,16 +69,18 @@ object ModCyphers {
     val ARROW = registerCypher(ArrowCypher)
     val SNOWBALL = registerCypher(SnowballCypher)
     val ENDER_TELEPORTATION = registerCypher(EnderTeleportationCypher)
-    val ENDER_RECALL = registerCypher(EnderRecall)
+    val ENDER_RECALL = registerCypher(EnderRecallCypher)
     val LLAMA_SPIT = registerCypher(LlamaSpitCypher)
+    val SPAWN_EGG = registerCypher(SpawnEggCypher)
 
     // static projectile
+    val EXPLOSION = registerCypher(ExplosionCypher)
 
     // modifier
     val POWER = registerCypher(SimpleModifier(5f, "power")
         .attribute(CypherAttributes.DAMAGE, CypherAttributeOperation.ADD, 1.0)
         .attribute(CypherAttributes.RECOIL, CypherAttributeOperation.ADD, 1.0))
-    val BRISK = registerCypher(SimpleModifier(5f, "brisk").attribute(CypherAttributes.SPEED, CypherAttributeOperation.MULTIPLY_TOTAL, 1.5))
+    val BRISK = registerCypher(SimpleModifier(5f, "brisk").attribute(CypherAttributes.SPEED, CypherAttributeOperation.MULTIPLY_TOTAL, 2.0))
     val FIERY = registerCypher(FieryCypher)
     val ANTIGRAVITY = registerCypher(SimpleModifier(1f, "antigravity").attribute(CypherAttributes.GRAVITY_FACTOR, CypherAttributeOperation.MULTIPLY_TOTAL, -1.0))
 
@@ -106,17 +110,18 @@ object ModCyphers {
         .attribute(CypherAttributes.DAMAGE, CypherAttributeOperation.ADD, 4.0)
         .attribute(CypherAttributes.SPEED, CypherAttributeOperation.MULTIPLY_TOTAL, 0.75)
         .attribute(CypherAttributes.RECOIL, CypherAttributeOperation.ADD, 2.0)
-        .attribute(CypherAttributes.GRAVITY_FACTOR, CypherAttributeOperation.ADD, 0.01))
+        .attribute(CypherAttributes.GRAVITY_FACTOR, CypherAttributeOperation.ADD, 0.01)
+        .attribute(CypherAttributes.FRICTION_FACTOR, CypherAttributeOperation.MULTIPLY_BASE, 1.0))
     val PEACEFUL = registerCypher(SimpleModifier(5f, "peaceful").flag(CypherFlags.NO_DAMAGE))
     val BOUNCY = registerCypher(SimpleModifier(5f, "bouncy").attribute(CypherAttributes.BOUNCE, CypherAttributeOperation.ADD, 5.0))
     val NO_MORE_BOUNCE = registerCypher(SimpleModifier(0f, "no_more_bounce").attribute(CypherAttributes.BOUNCE, CypherAttributeOperation.SET, 0.0))
-    val NO_MORE_DAMAGE = registerCypher(SimpleModifier(0f, "no_more_damage").attribute(CypherAttributes.DAMAGE, CypherAttributeOperation.MULTIPLY_TOTAL, 0.0))
+    val NO_MORE_DAMAGE = registerCypher(SimpleModifier(0f, "no_more_damage").attribute(CypherAttributes.DAMAGE, CypherAttributeOperation.SET, 0.0))
     val EXTEND_TIME = registerCypher(SimpleModifier(35f, "extend_time")
         .attribute(CypherAttributes.RECHARGE_TIME, CypherAttributeOperation.ADD, 4.0)
-        .attribute(CypherAttributes.EXISTING, CypherAttributeOperation.MULTIPLY_TOTAL, 1.25))
+        .attribute(CypherAttributes.EXISTING, CypherAttributeOperation.MULTIPLY_TOTAL, 1.5))
     val CURTAIL_TIME = registerCypher(SimpleModifier(35f, "curtail_time")
         .attribute(CypherAttributes.RECHARGE_TIME, CypherAttributeOperation.ADD, -4.0)
-        .attribute(CypherAttributes.EXISTING, CypherAttributeOperation.MULTIPLY_TOTAL, 0.8))
+        .attribute(CypherAttributes.EXISTING, CypherAttributeOperation.MULTIPLY_TOTAL, 0.66))
 
     val HOMING = registerCypher(HomingCypher)
     val PIERCE_ENTITY = registerCypher(PierceEntityCypher)

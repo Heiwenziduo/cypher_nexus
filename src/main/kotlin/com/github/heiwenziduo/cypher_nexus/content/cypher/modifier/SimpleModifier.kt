@@ -1,4 +1,4 @@
-package com.github.heiwenziduo.cypher_nexus.content.cypher
+package com.github.heiwenziduo.cypher_nexus.content.cypher.modifier
 
 import com.github.heiwenziduo.cypher_nexus.CypherNexus
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.ModifierCypher

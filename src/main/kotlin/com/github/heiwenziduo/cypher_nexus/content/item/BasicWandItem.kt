@@ -96,7 +96,7 @@ open class BasicWandItem(
 
     override fun getWandData(stack: ItemStack?, caster: LivingEntity?): IWandLike.WandDataBundle? {
 //        var stack0: ItemStack
-//        if (stack == null && living != null) stack0 = living.getItemInHand(InteractionHand.MAIN_HAND)
+//        if (egg == null && living != null) stack0 = living.getItemInHand(InteractionHand.MAIN_HAND)
         if (stack != null) {
             val invariable = stack.get(WAND_INVARIABLE)
             val highPayload = stack.get(WAND_HIGH_PAYLOAD)

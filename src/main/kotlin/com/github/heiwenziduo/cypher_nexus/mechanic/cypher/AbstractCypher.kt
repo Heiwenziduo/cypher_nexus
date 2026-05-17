@@ -11,7 +11,6 @@ import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.flag.CypherFlags
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.HookModule
 import com.github.heiwenziduo.cypher_nexus.utility.i.IRegisterable
 import net.minecraft.ChatFormatting
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 import net.minecraft.core.Holder
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
@@ -72,7 +71,7 @@ sealed class AbstractCypher: IRegisterable {
     /**
      * add Attributes to the helper
      * */
-    fun addAttribute(helper: CypherModifierHelper) {
+    fun addAttribute(helper: CypherInvokerHelper) {
         helper.addAttribute(_attributeMap)
     }
 
@@ -96,7 +95,7 @@ sealed class AbstractCypher: IRegisterable {
 
     /** custom logic up to subclasses */
     // TODO maybe change this to "hook"
-    open fun onInvokeServer(level: Level, caster: Entity?, stack: ItemStack?, helper: CypherModifierHelper, wandLength: Float) {}
+    open fun onInvokeServer(level: Level, caster: Entity?, stack: ItemStack?, helper: CypherInvokerHelper, wandLength: Float) {}
 
     // ============================================================================================================
 
@@ -123,6 +122,13 @@ sealed class AbstractCypher: IRegisterable {
     open val attributesTooltip: List<MutableComponent> by lazy {
         // since attributes won't change once initialized
         val components = mutableListOf<MutableComponent>()
+
+        val cate = Component.literal("  ")
+            .append(Component.translatable("cypher.attribute.$MOD_ID.category"))
+            .append(Component.literal(": "))
+            .append(category.value().translation().withStyle(ChatFormatting.YELLOW))
+        components.add(cate)
+
         val mana = Component.literal("  ")
             .append(Component.translatable("cypher.attribute.$MOD_ID.mana_drain")) // not attribute though keeping lang format
             .append(Component.literal(": "))
@@ -150,7 +156,7 @@ sealed class AbstractCypher: IRegisterable {
             val comp = Component.literal("  ")
                 .append(holder.value().translation())
                 .append(Component.literal(": "))
-                .append(values?: Component.literal("ERROR"))
+                .append(values?: Component.literal("ERROR").withStyle(ChatFormatting.YELLOW))
             components.add(comp)
         }
 

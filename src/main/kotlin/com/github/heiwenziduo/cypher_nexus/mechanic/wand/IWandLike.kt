@@ -1,8 +1,8 @@
 package com.github.heiwenziduo.cypher_nexus.mechanic.wand
 
 import com.github.heiwenziduo.cypher_nexus.CypherNexus
-import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.CypherModifierHelper
-import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.CypherModifierHelper.HelperDataBundle
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.CypherInvokerHelper
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.CypherInvokerHelper.HelperDataBundle
 import com.github.heiwenziduo.cypher_nexus.mechanic.wand.data.WandDataFrequent
 import com.github.heiwenziduo.cypher_nexus.mechanic.wand.data.WandDataHighPayload
 import com.github.heiwenziduo.cypher_nexus.mechanic.wand.data.WandDataInvariable
@@ -60,7 +60,7 @@ interface IWandLike {
 
 
         val bundle = HelperDataBundle(invariable.chunkI.draw, frequent)
-        val helper = CypherModifierHelper(level, invoker, stack, invariable, cypherList, bundle,
+        val helper = CypherInvokerHelper(level, invoker, stack, invariable, cypherList, bundle,
             getInvokePosDire(level, invoker, invariable.chunkF.wandLength),)
         helper.start()
 

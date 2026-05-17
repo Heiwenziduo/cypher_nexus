@@ -12,11 +12,11 @@ import net.minecraft.world.phys.Vec3
 
 abstract class AbstractProjectileCypher: AbstractCypher() {
     fun createProjectile(
-        level: Level, helper: CypherModifierHelper, invoker: LivingEntity?,
+        level: Level, helper: CypherInvokerHelper, invoker: LivingEntity?,
         stack: ItemStack?, posDirePair: PosDirePair, invokeList: List<AbstractCypher> = listOf()
     ) = createProjectile(level, helper, invoker, stack, posDirePair.position, posDirePair.direction, invokeList)
      open fun createProjectile(
-         level: Level, helper: CypherModifierHelper, invoker: LivingEntity?,
+         level: Level, helper: CypherInvokerHelper, invoker: LivingEntity?,
          stack: ItemStack?, startPos: Vec3, direction: Vec3?, invokeList: List<AbstractCypher>
      ) {
         val projectile = CypherProjectile(level, invoker, this, helper, direction?.normalize(), invokeList)

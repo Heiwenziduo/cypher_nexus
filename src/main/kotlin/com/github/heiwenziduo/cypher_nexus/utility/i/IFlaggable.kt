@@ -1,4 +1,4 @@
-package com.github.heiwenziduo.cypher_nexus.mechanic.cypher.flag
+package com.github.heiwenziduo.cypher_nexus.utility.i
 
 /** utilities to store, use, computed bit-integers */
 interface IFlaggable {

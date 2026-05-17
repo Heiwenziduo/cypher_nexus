@@ -10,11 +10,11 @@ import com.github.heiwenziduo.cypher_nexus.init.mod.CypherBehaviorHookRegistry.H
 import com.github.heiwenziduo.cypher_nexus.init.mod.CypherBehaviorHookRegistry.TICK_BEHAVIOR
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.AbstractCypher
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.AbstractProjectileCypher
-import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.CypherModifierHelper
+import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.CypherInvokerHelper
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.EmptyCypher
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.attribute.CypherAttribute
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.flag.CypherFlags
-import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.flag.IFlaggable
+import com.github.heiwenziduo.cypher_nexus.utility.i.IFlaggable
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.HookContainer
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.HookModule
 import com.github.heiwenziduo.cypher_nexus.utility.RayCastUtility
@@ -44,14 +44,14 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
     private var _cypher: AbstractProjectileCypher
         get() = entityData.get(CYPHER) as AbstractProjectileCypher
         set(value) = entityData.set(CYPHER, value)
-    /** only modifier cyphers, check CypherModifierHelper#castLoop */
+    /** only NonProjectile cyphers, check CypherModifierHelper#preInvoke */
     private var _invokeList: List<AbstractCypher>
         get() = entityData.get(CYPHER_LIST)
         set(value) = entityData.set(CYPHER_LIST, value)
 
     val cypher
         get() = _cypher
-    /** only modifier cyphers, check CypherModifierHelper#castLoop */
+    /** only NonProjectile cyphers, check CypherModifierHelper#preInvoke */
     val invokeList
         get() = _invokeList
 
@@ -62,16 +62,6 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
         get() = entityData.get(FLAG)
         set(value) = entityData.set(FLAG, value)
 
-//    var moveDirection: Vec3
-//        get() {
-//            val v3f = entityData.get(MOVE_DIRECTION)
-//            return Vec3(v3f)
-//        }
-//        set(value) = entityData.set(MOVE_DIRECTION, value.toVector3f())
-//    var speed: Double
-//        get() = entityData.get(SPEED).toDouble()
-//        set(value) = entityData.set(SPEED, value.toFloat())
-
     var existing: Int
         get() = entityData.get(EXISTING)
         set(value) = entityData.set(EXISTING, value)
@@ -81,6 +71,9 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
     var gravity: Float
         get() = entityData.get(GRAVITY)
         set(value) = entityData.set(GRAVITY, value)
+    var speedFactor: Float
+        get() = entityData.get(SPEED_FACTOR)
+        set(value) = entityData.set(SPEED_FACTOR, value)
 
 
     // should be immutable after initialization
@@ -113,7 +106,7 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
     }
 
     constructor(
-        level: Level, invoker: LivingEntity?, cypher0: AbstractProjectileCypher, helper: CypherModifierHelper,
+        level: Level, invoker: LivingEntity?, cypher0: AbstractProjectileCypher, helper: CypherInvokerHelper,
         direction: Vec3? = null, invokeList0: List<AbstractCypher> = listOf()) : this(CYPHER_PROJECTILE.get(), level)
     {
         owner = invoker
@@ -133,9 +126,9 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
         }
         // sync attrs render-related
         existing = getAttrOrProjDefault(CypherAttributes.EXISTING).toInt()
-//        speed = getAttrOrDefault(CypherAttributes.SPEED)
         bounce = getAttrOrProjDefault(CypherAttributes.BOUNCE).toInt()
         gravity = getAttrOrProjDefault(CypherAttributes.GRAVITY_FACTOR).toFloat()
+        speedFactor = 1f - getAttrOrProjDefault(CypherAttributes.FRICTION_FACTOR).toFloat()
 
         // prepareMotion
         moveDirection = direction?: invoker?.lookAngle?.normalize()?: moveDirection
@@ -168,12 +161,6 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
         val FLAG: EntityDataAccessor<Int> = SynchedEntityData.defineId(
             CypherProjectile::class.java,
             EntityDataSerializers.INT)
-//        val MOVE_DIRECTION: EntityDataAccessor<Vector3f> = SynchedEntityData.defineId(
-//            CypherProjectile::class.java,
-//            EntityDataSerializers.VECTOR3)
-//        val SPEED: EntityDataAccessor<Float> = SynchedEntityData.defineId(
-//            CypherProjectile::class.java,
-//            EntityDataSerializers.FLOAT)
         val EXISTING: EntityDataAccessor<Int> = SynchedEntityData.defineId(
             CypherProjectile::class.java,
             EntityDataSerializers.INT)
@@ -183,16 +170,18 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
         val GRAVITY: EntityDataAccessor<Float> = SynchedEntityData.defineId(
             CypherProjectile::class.java,
             EntityDataSerializers.FLOAT)
+        val SPEED_FACTOR: EntityDataAccessor<Float> = SynchedEntityData.defineId(
+            CypherProjectile::class.java,
+            EntityDataSerializers.FLOAT)
     }
     override fun defineSynchedData(builder: SynchedEntityData.Builder) {
         builder.define(CYPHER, EmptyCypher)
         builder.define(CYPHER_LIST, listOf())
         builder.define(FLAG, 0)
-//        builder.define(MOVE_DIRECTION, Vector3f(0f, 0f, 0f))
-//        builder.define(SPEED, 0f)
         builder.define(EXISTING, 1)
         builder.define(BOUNCE, 0)
         builder.define(GRAVITY, 0f)
+        builder.define(SPEED_FACTOR, 0.99f)
     }
 
     private fun syncHooks(modifiers: List<AbstractCypher>, thiz: AbstractCypher? = null) {
@@ -227,7 +216,7 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
         { h, i -> h.tickBehaviorBoth(level(), this, i) }
         projectileTick()
         modifierTick()
-        if (existing == tickCount) {
+        if (existing == tickCount || haveFlag(CypherFlags.LIMITED_EXISTING)) {
             // here's a trick, if player make existing-time less or equal to 0, projectile will last till the game quit
             myDiscard(DiscardReason.EXPIRE)
         }
@@ -278,8 +267,7 @@ open class CypherProjectile(entityType: EntityType<out Projectile>, level: Level
         deltaMovement = deltaMovement.add(0.0, -(gravity).toDouble(), 0.0)
     }
     protected fun applySpeedChange() {
-        // TODO hook, speed
-        val f: Float = if (isInWater) 0.8f else 0.99f
+        val f: Float = if (isInWater) 0.8f * speedFactor else speedFactor
         deltaMovement = deltaMovement.scale(f.toDouble())
     }
 

@@ -30,7 +30,7 @@ class CypherProjectileRenderer(
         // super.render(projectile, entityYaw, partialTick, poseStack, bufferSource, packedLight)
 
         poseStack.pushPose()
-        // use which stack depends on the visualizer implementation
+        // use which egg depends on the visualizer implementation
         for (modifier in projectile.invokeList) {
             CypherVisualizerRegistry.get(modifier)?.render(
                 projectile, entityYaw, partialTick, poseStack, bufferSource, packedLight, itemRenderer, blockRenderer, entityRenderDispatcher

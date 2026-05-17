@@ -344,8 +344,8 @@ class CypherIndexScreen(
                 }
             }
         }
-//        for ((i, stack) in wandList.withIndex()) {
-//            guiGraphics.renderItem(stack, indexWidth + 30 * i, 30 * i)
+//        for ((i, egg) in wandList.withIndex()) {
+//            guiGraphics.renderItem(egg, indexWidth + 30 * i, 30 * i)
 //        }
         // wand data grid
     }

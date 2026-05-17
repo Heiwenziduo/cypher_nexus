@@ -7,10 +7,9 @@ import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.ProjectileCypher
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.flag.CypherFlags
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.projectile.BeforeDiscardHook
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.hook.projectile.FirstTickHook
-import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.world.level.Level
 
-object EnderRecall : ProjectileCypher(
+object EnderRecallCypher : ProjectileCypher(
     manaDrain = 25f
 ), BeforeDiscardHook, FirstTickHook {
     override val resource = CypherNexus.modResource("ender_recall")
@@ -32,7 +31,7 @@ object EnderRecall : ProjectileCypher(
             val pos = projectile.position()
             val teleportation = CypherProjectile.from(level, EnderTeleportationCypher, projectile.owner, )
             teleportation.setPos(pos)
-            teleportation.existing = 60 // recall after 3seconds
+            teleportation.existing = 100 // recall after 5seconds, at most
             teleportation.gravity = 0.01f
             level.addFreshEntity(teleportation)
         }

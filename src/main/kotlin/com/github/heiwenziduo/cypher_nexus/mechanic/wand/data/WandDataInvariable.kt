@@ -92,5 +92,12 @@ data class WandDataInvariable(val chunkF: WandDataChunkF, val chunkI: WandDataCh
                 println(data.chunkU)
                 return data
             }
+
+//        val SUB_INVOKER : WandDataInvariable = WandDataInvariable(
+//            WandDataChunkF(1.0E9f, 0f, 0f),
+//            WandDataChunkI(99, 1, 0, 0),
+//            WandDataChunkL(listOf()),
+//            WandDataChunkU(UUID.randomUUID().toString())
+//        )
     }
 }

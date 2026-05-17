@@ -30,7 +30,8 @@ object LlamaSpitVi : ICypherVisualizer {
         poseStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTick, projectile.yRotO, projectile.yRot) - 90.0f))
         poseStack.mulPose(Axis.ZP.rotationDegrees(Mth.lerp(partialTick, projectile.xRotO, projectile.xRot)))
 
-        // FIXME llamaspit model is private
+        // FIXME
+        // Q: How to dynamically use model?
 
 //        this.model.setupAnim(projectile, partialTick, 0.0f, -0.1f, 0.0f, 0.0f)
 //        val vertexconsumer: VertexConsumer =

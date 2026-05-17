@@ -4,8 +4,9 @@ import com.github.heiwenziduo.cypher_nexus.client.cypher.visualizer.ArrowVi
 import com.github.heiwenziduo.cypher_nexus.client.cypher.visualizer.EnderTeleportationVi
 import com.github.heiwenziduo.cypher_nexus.client.cypher.visualizer.SnowballVi
 import com.github.heiwenziduo.cypher_nexus.client.cypher.visualizer.LlamaSpitVi
+import com.github.heiwenziduo.cypher_nexus.client.cypher.visualizer.SpawnEggVi
 import com.github.heiwenziduo.cypher_nexus.client.cypher.visualizer.TestVis
-import com.github.heiwenziduo.cypher_nexus.content.cypher.projectile.EnderRecall
+import com.github.heiwenziduo.cypher_nexus.content.cypher.projectile.EnderRecallCypher
 import com.github.heiwenziduo.cypher_nexus.init.mod.ModCyphers
 import com.github.heiwenziduo.cypher_nexus.mechanic.cypher.AbstractCypher
 import net.minecraft.resources.ResourceLocation
@@ -38,9 +39,10 @@ object CypherVisualizerRegistry {
 
         register(SnowballVi)
         register(EnderTeleportationVi)
-        register(EnderRecall, EnderTeleportationVi)
+        register(EnderRecallCypher, EnderTeleportationVi)
         register(ArrowVi)
         register(LlamaSpitVi)
+        register(SpawnEggVi)
 
     }
 }

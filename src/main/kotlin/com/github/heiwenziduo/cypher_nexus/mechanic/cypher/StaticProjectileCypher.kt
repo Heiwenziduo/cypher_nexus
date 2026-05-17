@@ -6,11 +6,10 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.Vec3
 
-abstract class ProjectileCypher(
+abstract class StaticProjectileCypher(
     override val manaDrain: Float
 ) : AbstractProjectileCypher() {
-
-    override val category = CypherCategoryRegistry.PROJECTILE
+    override val category = CypherCategoryRegistry.STATIC_PROJECTILE
 
     final override fun createProjectile(
         level: Level,

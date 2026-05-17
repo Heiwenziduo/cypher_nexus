@@ -19,7 +19,7 @@ object DaedalusCypher : ModifierCypher(
     const val MARGIN = 0.3f
     override val resource = CypherNexus.modResource("daedalus")
     init {
-        addAttribute(CypherAttributes.SPEED, CypherAttributeOperation.MULTIPLY_BASE, 0.3)
+        addAttribute(CypherAttributes.SPEED, CypherAttributeOperation.MULTIPLY_TOTAL, 1.25)
     }
     override fun redirectPosDireServer(
         level: ServerLevel,
